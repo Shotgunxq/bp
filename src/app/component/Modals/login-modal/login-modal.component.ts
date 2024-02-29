@@ -4,7 +4,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-login-modal',
   templateUrl: './login-modal.component.html',
-  styleUrl: './login-modal.component.css'
+  styleUrl: './login-modal.component.scss'
 })
 export class LoginModalComponent {
 
