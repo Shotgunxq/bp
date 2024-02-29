@@ -1,0 +1,29 @@
+<!-- <div class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <p></p>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="loginBtn">Login</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<form (ngSubmit)="authenticateUser()">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" [(ngModel)]="username" required>
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" [(ngModel)]="password" required>
+
+  <button type="submit">Login</button>
+</form>

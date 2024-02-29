@@ -1,0 +1,7 @@
+#logoHolder {
+    position: absolute;
+    bottom: 0; /* Adjust as needed */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%);
+    z-index: 1; /* Adjust as needed to place it above or below the modal */
+  }
