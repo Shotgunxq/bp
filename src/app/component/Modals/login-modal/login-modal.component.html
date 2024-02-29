@@ -1,4 +1,4 @@
-<div class="modal">
+<!-- <div class="modal">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -16,4 +16,14 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
+
+<form (ngSubmit)="authenticateUser()">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" [(ngModel)]="username" required>
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" [(ngModel)]="password" required>
+
+  <button type="submit">Login</button>
+</form>

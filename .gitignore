@@ -400,3 +400,5 @@ FodyWeavers.xsd
 node_modules/
 angular/
 .angular
+package-lock.json
+.package-lock.json

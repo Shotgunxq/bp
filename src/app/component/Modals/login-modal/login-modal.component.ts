@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LdapService } from '../../../services/ldap.service';
 
 @Component({
   selector: 'app-login-modal',
@@ -7,5 +7,22 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './login-modal.component.scss'
 })
 export class LoginModalComponent {
+  username: string = '';
+  password: string = '';
 
+  constructor(private ldapService: LdapService) {}
+
+  authenticateUser() {
+    this.ldapService.authenticate(this.username, this.password)
+      .subscribe(
+        (response) => {
+          // Authentication successful, handle accordingly
+          console.log('Authentication successful', response);
+        },
+        (error) => {
+          // Authentication failed, handle accordingly
+          console.error('Authentication failed', error);
+        }
+      );
+  }
 }
