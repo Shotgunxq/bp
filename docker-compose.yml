@@ -1,0 +1,27 @@
+version: '3'
+services:
+
+  angular-frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.angular
+    ports:
+      - "80:80"
+    depends_on:
+      - node-backend
+
+  node-backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.node
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: your_database_name
+      POSTGRES_USER: your_database_user
+      POSTGRES_PASSWORD: your_database_password
