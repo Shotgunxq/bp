@@ -4,20 +4,20 @@ services:
   angular-frontend:
     build:
       context: ./
-      dockerfile: Dockerfile.angular
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
-    depends_on:
-      - node-backend
+      - "80:4200"
+    # depends_on:
+    #   - node-backend
 
-  node-backend:
-    build:
-      context: ./
-      dockerfile: Dockerfile.node
-    ports:
-      - "3000:3000"
-    depends_on:
-      - postgres-db
+  # node-backend:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile.node
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - postgres-db
 
   postgres-db:
     image: postgres:latest

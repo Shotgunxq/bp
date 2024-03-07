@@ -402,3 +402,4 @@ angular/
 .angular
 package-lock.json
 .package-lock.json
+dist/
