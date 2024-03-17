@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
 
   angular-frontend:
@@ -21,7 +21,13 @@ services:
 
   postgres-db:
     image: postgres:latest
+    container_name: postgres-db
+    restart: always
     environment:
-      POSTGRES_DB: your_database_name
-      POSTGRES_USER: your_database_user
-      POSTGRES_PASSWORD: your_database_password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d

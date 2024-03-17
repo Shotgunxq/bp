@@ -32,6 +32,11 @@ COPY --chown=1001:0 nginx/nginx.conf "${NGINX_CONF_PATH}"
 COPY --from=builder --chown=1001:0 $WORK_DIR/dist/browser .
 RUN chmod -R 775 .
 
+FROM postgres
+WORKDIR /docker-entrypoint-initdb.d
+ADD init.sql /docker-entrypoint-initdb.d
+EXPOSE 5432
+
 #execute nginx
 EXPOSE 4200
 CMD ["nginx", "-g", "daemon off;"]
