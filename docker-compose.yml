@@ -1,10 +1,10 @@
-version: '3.8'
+version: '3'
 services:
 
   angular-frontend:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.test
     ports:
       - "80:4200"
     # depends_on:
@@ -19,15 +19,15 @@ services:
   #   depends_on:
   #     - postgres-db
 
-  postgres-db:
-    image: postgres:latest
-    container_name: postgres-db
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres123
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data:/var/lib/postgresql/data
-      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+  # postgres-db:
+  #   image: postgres:latest
+  #   container_name: postgres-db
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres123
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - ./data:/var/lib/postgresql/data
+  #     - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d

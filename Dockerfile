@@ -34,7 +34,7 @@ RUN chmod -R 775 .
 
 FROM postgres
 WORKDIR /docker-entrypoint-initdb.d
-ADD init.sql /docker-entrypoint-initdb.d
+ADD scripts/db/init.sql /docker-entrypoint-initdb.d
 EXPOSE 5432
 
 #execute nginx
