@@ -40,4 +40,18 @@ RUN chmod -R 775 .
 
 # Expose port 80 for the Angular app
 EXPOSE 4200
+
+ARG WORK_DIR='/app'
+COPY ./scripts/db/init.sh /docker-entrypoint-initdb.d
+COPY ./scripts/db/init.sql ./scripts/db/init.sql
+# RUN /scripts/db/init.sh
+
+# ARG WORK_DIR='/app'
+
+# RUN mkdir -p /docker-entrypoint-initdb.d/
+
+
 CMD ["nginx", "-g", "daemon off;"]
+
+
+

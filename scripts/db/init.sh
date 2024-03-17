@@ -1,1 +1,1 @@
-psql -U $POSTGRES_USER -d $POSTGRES_DB -a -f /app/scripts/db/init.sql
+psql -h localhost -U postgres -d postgres -a -f /app/scripts/db/init.sql
