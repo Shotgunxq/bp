@@ -4,14 +4,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginModalComponent } from './component/Modals/login-modal/login-modal.component';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+import { LoginModalComponent } from './components/Modals/login-modal/login-modal.component';
 @NgModule({
   declarations: [
-    AppComponent,
-    LoginModalComponent
-  ],
+    AppComponent, LoginModalComponent  ],
   imports: [
     BrowserModule,
     NgbModule,
