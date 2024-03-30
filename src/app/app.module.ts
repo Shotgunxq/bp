@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { MatGridListModule } from '@angular/material/grid-list';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
@@ -12,6 +12,7 @@ import { LoginModalComponent } from './components/Modals/login-modal/login-modal
     AppComponent, LoginModalComponent  ],
   imports: [
     BrowserModule,
+    MatGridListModule,
     NgbModule,
     AppRoutingModule,
     FormsModule, // Add FormsModule to imports
