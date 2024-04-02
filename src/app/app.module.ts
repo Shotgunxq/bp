@@ -12,11 +12,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MenuPageComponent } from './pages/menu-page/menu-page.component';
+import { TestWritingComponent } from './components/test-writing/test-writing.component';
 
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; // Import MatSlideToggleModule here
 
 @NgModule({
   declarations: [
-    AppComponent, LoginModalComponent, MenuPageComponent],
+    AppComponent, LoginModalComponent, MenuPageComponent, TestWritingComponent],
   imports: [
     BrowserModule,
     MatGridListModule,
@@ -26,7 +28,9 @@ import { MenuPageComponent } from './pages/menu-page/menu-page.component';
     NgbModule,
     AppRoutingModule,
     FormsModule, // Add FormsModule to imports
-    HttpClientModule // Add HttpClientModule to imports
+    HttpClientModule, // Add HttpClientModule to imports
+    MatSlideToggleModule // Import MatSlideToggleModule here
+
   ],
   providers: [],
   bootstrap: [AppComponent]
