@@ -20,9 +20,19 @@
 
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
+// @import '/theme.scss';
+// Import your custom theme
 
 
 body {
     background-color: #1363C1;  // Change this color to your desired background color
     overflow: hidden;
+  }
+
+  #zaklad{
+    background-color: #1363C1;
+  }
+
+  #asdasd{
+    background-color: grey;
   }
