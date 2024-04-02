@@ -14,7 +14,13 @@
 // @include angular-material-theme($theme);
 
 
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+// $theme:mat-light-theme($theme-primary, $theme-accent, $theme-warn);
+
+// @include angular-material-theme($theme);
+
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+
 
 body {
     background-color: #1363C1;  // Change this color to your desired background color
