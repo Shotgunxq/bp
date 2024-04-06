@@ -2,8 +2,9 @@ const express = require('express');
 const db = require('./db');
 
 const app = express();
+const PORT = 3000;
 
-app.get('/', async (req, res) => {
+app.get('/test/api', async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM easy_exercises');
     res.json(result.rows);
@@ -13,17 +14,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-// const app = require('express')();
-// const PORT = 3000;
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}.`);
-// });
-
-// app.get('/asd', (req, res) => {
-//     res.status(200);
-//     res.send('Hello World');
-// });
