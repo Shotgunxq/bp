@@ -1,1 +1,50 @@
-// @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+.container {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  max-height: 80%;
+}
+
+.section {
+  // display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center; /* Centers the text horizontally */
+  margin-top: 50px; /* Adjust the top margin as needed */
+}
+
+.toggle-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toggle-section .toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toggle-section .toggle span {
+  margin-bottom: 5px; /* Adjust the spacing between the span and the toggle button */
+}
+
+.toggle-section .input {
+  margin-top: 10px; /* Adjust the spacing between the toggle button and the input */
+}
+
+button {
+  margin-top: 10px;
+}
+
+h1 {
+  color: white;
+}
+span {
+  color: white;
+}
+
+// mat-grid-tile {
+//   background-color: aqua;
+// }

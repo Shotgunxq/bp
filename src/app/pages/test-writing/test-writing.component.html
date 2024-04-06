@@ -1,27 +1,70 @@
-<div >
+<div class="container">
+  <div class="section">
+    <!-- <mat-grid-list cols="2">
+      <mat-grid-tile> -->
     <h1 id="pocetuloh">Počet úloh</h1>
-        <input matInput type="number" placeholder="Počet úloh">
-    </div>
-<div>
-    <h1 id="typuloh">Typ úloh</h1>
-        <div>
-            <mat-slide-toggle>Ľahké</mat-slide-toggle>
-            <input type="number" name="" id="" placeholder="pocetuloh">
+    <!-- </mat-grid-tile>
+      <mat-grid-tile> -->
+    <input matInput type="number" placeholder="Počet úloh" />
+    <!-- </mat-grid-tile>
+    </mat-grid-list> -->
+  </div>
+
+  <div class="section">
+    <mat-grid-list cols="4">
+      <mat-grid-tile>
+        <h1 id="typuloh">Typ úloh</h1>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="toggle-section">
+          <div class="toggle">
+            <span>Ľahké</span>
+            <mat-slide-toggle></mat-slide-toggle>
+          </div>
+          <div class="input">
+            <input type="number" name="" id="" placeholder="Počet úloh" />
+          </div>
         </div>
-        <div>
-            <mat-slide-toggle>Stredné</mat-slide-toggle>
-            <input type="number" name="" id="" placeholder="pocetuloh">
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="toggle-section">
+          <div class="toggle">
+            <span>Stredné</span>
+            <mat-slide-toggle></mat-slide-toggle>
+          </div>
+          <div class="input">
+            <input type="number" name="" id="" placeholder="Počet úloh" />
+          </div>
         </div>
-        <div>
-            <mat-slide-toggle>Ťažké</mat-slide-toggle>
-            <input type="number" name="" id="" placeholder="pocetuloh">
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="toggle-section">
+          <div class="toggle">
+            <span>Ťažké</span>
+            <mat-slide-toggle></mat-slide-toggle>
+          </div>
+          <div class="input">
+            <input type="number" name="" id="" placeholder="Počet úloh" />
+          </div>
         </div>
-</div>
-<div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+
+  <div class="section">
+    <!-- <mat-grid-list cols="2">
+      <mat-grid-tile> -->
     <h1 id="casovylimit">Časový limit</h1>
-    <input matInput type="time">
-</div>
-<div>
-    <br>
-    <button mat-raised-button color="primary" (click)="getData()" >Generovať</button>
+    <!-- </mat-grid-tile>
+      <mat-grid-tile> -->
+    <input matInput type="time" />
+    <!-- </mat-grid-tile>
+    </mat-grid-list> -->
+  </div>
+
+  <div class="section">
+    <button mat-raised-button color="primary" (click)="getData()">
+      Generovať
+    </button>
+  </div>
 </div>
