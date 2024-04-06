@@ -8,8 +8,8 @@ import { MatDividerModule } from '@angular/material/divider';
   templateUrl: './menu-page.component.html',
   styleUrl: './menu-page.component.scss',
   // providers: [MatGridListModule],
-  standalone: true,
-  imports: [MatGridListModule, MatButtonModule ,MatIconModule, MatDividerModule],
+  // standalone: true,
+  // imports: [MatGridListModule, MatButtonModule ,MatIconModule, MatDividerModule],
 })
 export class MenuPageComponent {
 

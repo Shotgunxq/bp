@@ -1,1 +1,27 @@
-<p>test-writing works!</p>
+<div >
+    <h1 id="pocetuloh">Počet úloh</h1>
+        <input matInput type="number" placeholder="Počet úloh">
+    </div>
+<div>
+    <h1 id="typuloh">Typ úloh</h1>
+        <div>
+            <mat-slide-toggle>Ľahké</mat-slide-toggle>
+            <input type="number" name="" id="" placeholder="pocetuloh">
+        </div>
+        <div>
+            <mat-slide-toggle>Stredné</mat-slide-toggle>
+            <input type="number" name="" id="" placeholder="pocetuloh">
+        </div>
+        <div>
+            <mat-slide-toggle>Ťažké</mat-slide-toggle>
+            <input type="number" name="" id="" placeholder="pocetuloh">
+        </div>
+</div>
+<div>
+    <h1 id="casovylimit">Časový limit</h1>
+    <input matInput type="time">
+</div>
+<div>
+    <br>
+    <button mat-raised-button color="primary" (click)="getData()" >Generovať</button>
+</div>

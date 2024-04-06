@@ -1,0 +1,16 @@
+// // custom-theme.scss
+
+// // Define your primary and accent colors
+
+// // @import '@angular/material/theming';
+
+// // @include mat-core();
+
+// $primary: mat-palette($mat-indigo);
+// $accent: mat-palette($mat-pink, A200, A100, A400);
+
+// // Create a theme using your primary and accent colors
+// $custom-theme: mat-light-theme($primary, $accent);
+
+// // Include typography and other theme mixins
+// @include indigo-pink($theme);
