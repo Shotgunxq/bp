@@ -1,14 +1,12 @@
-version: '3.8'
+version: "3.8"
 services:
-
   angular-frontend:
-  # container_name: frontend
+    # container_name: frontend
     build:
       context: ./
       dockerfile: Dockerfile.test
     ports:
       - "80:4200"
-
     depends_on:
       - node-backend
 
