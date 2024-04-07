@@ -10,7 +10,7 @@ export class TestWritingComponent {
   constructor(private http: HttpClient) {}
 
   getData() {
-    this.http.get("http://localhost:3000/test/api").subscribe(
+    this.http.get<any>("http://localhost:3000/test/api").subscribe(
       (response) => {
         console.log("Data:", response);
         // Process the data here
