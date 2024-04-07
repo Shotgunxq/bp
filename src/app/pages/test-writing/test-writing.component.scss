@@ -1,8 +1,11 @@
 .container {
-  max-width: 80%;
-  margin: 0 auto;
+  max-width: 60%;
+  margin: auto;
+  margin-top: 4%;
   padding: 20px;
   max-height: 80%;
+  background-color: white;
+  border-radius: 40px;
 }
 
 .section {
@@ -12,6 +15,9 @@
   justify-content: center;
   text-align: center; /* Centers the text horizontally */
   margin-top: 50px; /* Adjust the top margin as needed */
+  background-color: lightgray;
+  border-radius: 20px;
+  padding: 1%;
 }
 
 .toggle-section {
@@ -39,10 +45,10 @@ button {
 }
 
 h1 {
-  color: white;
+  color: black;
 }
 span {
-  color: white;
+  color: black;
 }
 
 // mat-grid-tile {
