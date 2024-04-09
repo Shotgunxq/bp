@@ -11,6 +11,14 @@ export class TestCreationComponent {
   isEasyEnabled: boolean = false;
   isMediumEnabled: boolean = false;
   isHardEnabled: boolean = false;
+
+  preventNegativeValue(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.value && parseInt(input.value, 10) < 0) {
+      input.value = "0";
+    }
+  }
+
   constructor(
     private router: Router,
     private http: HttpClient,

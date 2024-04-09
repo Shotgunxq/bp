@@ -1,7 +1,12 @@
 <div class="container">
   <div class="section">
     <h1 id="pocetuloh">Počet úloh celkovo</h1>
-    <input matInput type="number" placeholder="Počet úloh" />
+    <input
+      matInput
+      type="number"
+      placeholder="Počet úloh"
+      (input)="preventNegativeValue($event)"
+    />
   </div>
 
   <div class="section">
@@ -20,6 +25,7 @@
               placeholder="Počet úloh"
               id="easyCount"
               [disabled]="!isEasyEnabled"
+              (input)="preventNegativeValue($event)"
             />
           </div>
         </div>
@@ -37,6 +43,7 @@
               placeholder="Počet úloh"
               id="mediumCount"
               [disabled]="!isMediumEnabled"
+              (input)="preventNegativeValue($event)"
             />
           </div>
         </div>
@@ -54,6 +61,7 @@
               placeholder="Počet úloh"
               id="hardCount"
               [disabled]="!isHardEnabled"
+              (input)="preventNegativeValue($event)"
             />
           </div>
         </div>
