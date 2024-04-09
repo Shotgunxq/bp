@@ -6,6 +6,7 @@ import { LoginModalComponent } from "./components/Modals/login-modal/login-modal
 import { StatsPageComponent } from "./pages/stats-page/stats-page.component";
 import { TestDoneComponent } from "./pages/test-done/test-done.component";
 import { MaterialsPageComponent } from "./pages/materials-page/materials-page.component";
+import { TestWritingComponent } from "./pages/test-writing/test-writing.component";
 
 const routes: Routes = [
   { component: LoginModalComponent, path: "" },
@@ -14,6 +15,8 @@ const routes: Routes = [
   { component: StatsPageComponent, path: "stats" },
   { component: TestDoneComponent, path: "done" },
   { component: MaterialsPageComponent, path: "mats" },
+  { component: TestWritingComponent, path: "test-writing" },
+  { path: "**", redirectTo: "" },
 ];
 
 @NgModule({

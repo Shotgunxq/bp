@@ -11,10 +11,16 @@
         <div class="toggle-section">
           <div class="toggle">
             <span>Ľahké</span>
-            <mat-slide-toggle></mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="isEasyEnabled"></mat-slide-toggle>
           </div>
           <div class="input">
-            <input type="number" name="" id="" placeholder="Počet" />
+            <input
+              matInput
+              type="number"
+              placeholder="Počet úloh"
+              id="easyCount"
+              [disabled]="!isEasyEnabled"
+            />
           </div>
         </div>
       </mat-grid-tile>
@@ -22,10 +28,16 @@
         <div class="toggle-section">
           <div class="toggle">
             <span>Stredné</span>
-            <mat-slide-toggle></mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="isMediumEnabled"></mat-slide-toggle>
           </div>
           <div class="input">
-            <input type="number" name="" id="" placeholder="Počet" />
+            <input
+              matInput
+              type="number"
+              placeholder="Počet úloh"
+              id="mediumCount"
+              [disabled]="!isMediumEnabled"
+            />
           </div>
         </div>
       </mat-grid-tile>
@@ -33,10 +45,16 @@
         <div class="toggle-section">
           <div class="toggle">
             <span>Ťažké</span>
-            <mat-slide-toggle></mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="isHardEnabled"></mat-slide-toggle>
           </div>
           <div class="input">
-            <input type="number" name="" id="" placeholder="Počet" />
+            <input
+              matInput
+              type="number"
+              placeholder="Počet úloh"
+              id="hardCount"
+              [disabled]="!isHardEnabled"
+            />
           </div>
         </div>
       </mat-grid-tile>
