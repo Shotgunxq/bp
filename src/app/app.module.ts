@@ -17,7 +17,8 @@ import { TestCreationComponent } from "./pages/test-creation/test-creation.compo
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { StatsPageComponent } from "./pages/stats-page/stats-page.component";
 import { MaterialsPageComponent } from "./pages/materials-page/materials-page.component";
-import { TestDoneComponent } from "./pages/test-done/test-done.component"; // Import MatSlideToggleModule here
+import { TestDoneComponent } from "./pages/test-done/test-done.component";
+import { TestWritingComponent } from './pages/test-writing/test-writing.component'; // Import MatSlideToggleModule here
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { TestDoneComponent } from "./pages/test-done/test-done.component"; // Im
     StatsPageComponent,
     MaterialsPageComponent,
     TestDoneComponent,
+    TestWritingComponent,
   ],
   imports: [
     BrowserModule,
