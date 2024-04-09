@@ -2,11 +2,11 @@ import { Component } from "@angular/core";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { HttpClient } from "@angular/common/http";
 @Component({
-  selector: "app-test-writing",
-  templateUrl: "./test-writing.component.html",
-  styleUrl: "./test-writing.component.scss",
+  selector: 'app-test-creation',
+  templateUrl: './test-creation.component.html',
+  styleUrl: './test-creation.component.scss',
 })
-export class TestWritingComponent {
+export class TestCreationComponent {
   constructor(private http: HttpClient) {}
 
   getData() {
