@@ -12,6 +12,10 @@ export class TestCreationComponent {
   isMediumEnabled: boolean = false;
   isHardEnabled: boolean = false;
 
+  easyExercises: any[] = [];
+  mediumExercises: any[] = [];
+  hardExercises: any[] = [];
+
   preventNegativeValue(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.value && parseInt(input.value, 10) < 0) {
@@ -49,6 +53,9 @@ export class TestCreationComponent {
       .subscribe(
         (response) => {
           console.log("Data:", response);
+          this.easyExercises = response.easy;
+          this.mediumExercises = response.medium;
+          this.hardExercises = response.hard;
           this.router.navigate(["/test-writing"], {
             state: { data: response },
           });

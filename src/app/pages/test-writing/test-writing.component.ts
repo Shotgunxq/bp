@@ -1,19 +1,23 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Router, Navigation } from "@angular/router";
 
 @Component({
   selector: "app-test-writing",
   templateUrl: "./test-writing.component.html",
-  styleUrl: "./test-writing.component.scss",
+  styleUrls: ["./test-writing.component.scss"],
 })
 export class TestWritingComponent implements OnInit {
-  testData: any;
+  data: any;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
-    this.route?.data?.subscribe((data) => {
-      this.testData = data;
-    });
+    const navigation: Navigation | null = this.router.getCurrentNavigation();
+    if (navigation && navigation.extras && navigation.extras.state) {
+      // Use type assertion to inform TypeScript about the structure of 'extras.state'
+      this.data = navigation.extras.state["data"];
+    } else {
+      console.error("No data available in navigation state.");
+    }
   }
 }

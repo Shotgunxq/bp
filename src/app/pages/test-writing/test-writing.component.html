@@ -1,1 +1,31 @@
-<p>test-writing works!</p>
+<div class="container">
+  <h1>Fetched Data</h1>
+  <p>Here is the data fetched from the server:</p>
+  <p>{{ data }}</p>
+  <div *ngIf="data">
+    <div *ngIf="data.easy && data.easy.length > 0">
+      <h2>Easy Exercises</h2>
+      <ul>
+        <li *ngFor="let exercise of data.easy">
+          <p>Task ID: {{ exercise.task_id }}</p>
+          <p>Description: {{ exercise.description }}</p>
+          <p>Answer: {{ exercise.answer }}</p>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="data.medium && data.medium.length > 0">
+      <h2>Medium Exercises</h2>
+      <p>No medium exercises available</p>
+    </div>
+
+    <div *ngIf="data.hard && data.hard.length > 0">
+      <h2>Hard Exercises</h2>
+      <p>No hard exercises available</p>
+    </div>
+  </div>
+
+  <div *ngIf="!data">
+    <p>No data available</p>
+  </div>
+</div>
