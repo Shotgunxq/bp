@@ -1,0 +1,34 @@
+.exerciseModal {
+  background-color: white;
+  border-radius: 30px;
+  margin-top: 25%;
+  //   padding-top: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  height: 90%;
+}
+
+.exerciseDesc {
+  background-color: lightgrey;
+  border-radius: 30px;
+  margin-top: 5%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  //   width: 90%;
+  height: 90%;
+}
+
+#answerCheck {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2%;
+}

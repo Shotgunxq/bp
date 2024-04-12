@@ -1,38 +1,49 @@
 <div class="container">
-  <h1>Fetched Data</h1>
   <div *ngIf="data">
-    <div *ngIf="data.easy && data.easy.length > 0">
-      <h2>Easy Exercises</h2>
-      <ul>
-        <li *ngFor="let exercise of data.easy">
-          <p>Task ID: {{ exercise.task_id }}</p>
-          <p>Description: {{ exercise.description }}</p>
-          <p>Answer: {{ exercise.answer }}</p>
-        </li>
-      </ul>
-    </div>
+    <!-- Display current exercise -->
+    <div class="exerciseModal" *ngIf="currentExercise">
+      <!-- <h2>Exercise {{ currentExerciseIndex + 1 }}</h2> -->
+      <p class="exerciseDesc">
+        Znenie úlohy:<br />
+        {{ currentExercise.description }}
+      </p>
+      <!-- Input field for user's answer -->
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="userAnswer"
+        placeholder="Enter your answer"
+      />
 
-    <div *ngIf="data.medium && data.medium.length > 0">
-      <h2>Medium Exercises</h2>
-      <ul>
-        <li *ngFor="let exercise of data.medium">
-          <p>Task ID: {{ exercise.task_id }}</p>
-          <p>Description: {{ exercise.description }}</p>
-          <p>Answer: {{ exercise.answer }}</p>
-        </li>
-      </ul>
-    </div>
+      <!-- Submit button to check the answer -->
+      <button
+        mat-flat-button
+        color="primary"
+        id="answerCheck"
+        (click)="checkAnswer()"
+      >
+        Check Answer
+      </button>
 
-    <div *ngIf="data.hard && data.hard.length > 0">
-      <h2>Hard Exercises</h2>
-      <ul>
-        <li *ngFor="let exercise of data.hard">
-          <p>Task ID: {{ exercise.task_id }}</p>
-          <p>Description: {{ exercise.description }}</p>
-          <p>Answer: {{ exercise.answer }}</p>
-        </li>
-      </ul>
+      <!-- Display whether the answer is correct or not -->
+      <p *ngIf="answerChecked">{{ answerMessage }}</p>
     </div>
+    <div *ngIf="!currentExercise">
+      <p>No exercises available</p>
+    </div>
+  </div>
+
+  <!-- Navigation buttons -->
+  <div class="navigation-buttons" *ngIf="data && data.easy.length > 1">
+    <button (click)="prevExercise()" [disabled]="currentExerciseIndex === 0">
+      Previous
+    </button>
+    <button
+      (click)="nextExercise()"
+      [disabled]="currentExerciseIndex === data.easy.length - 1"
+    >
+      Next
+    </button>
   </div>
 
   <div *ngIf="!data">
