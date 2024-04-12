@@ -3,6 +3,18 @@
     <!-- Display current exercise -->
     <div class="exerciseModal" *ngIf="currentExercise">
       <!-- <h2>Exercise {{ currentExerciseIndex + 1 }}</h2> -->
+
+      <!-- Display exercise navigation buttons -->
+      <div class="exercise-buttons" *ngIf="data && data.easy.length > 1">
+        <button
+          id="exerciseNavButton"
+          *ngFor="let exercise of data.easy; let i = index"
+          (click)="jumpToExercise(i)"
+          [class.selected]="i === currentExerciseIndex"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
       <p class="exerciseDesc">
         Znenie úlohy:<br />
         {{ currentExercise.description }}
@@ -31,19 +43,6 @@
     <div *ngIf="!currentExercise">
       <p>No exercises available</p>
     </div>
-  </div>
-
-  <!-- Navigation buttons -->
-  <div class="navigation-buttons" *ngIf="data && data.easy.length > 1">
-    <button (click)="prevExercise()" [disabled]="currentExerciseIndex === 0">
-      Previous
-    </button>
-    <button
-      (click)="nextExercise()"
-      [disabled]="currentExerciseIndex === data.easy.length - 1"
-    >
-      Next
-    </button>
   </div>
 
   <div *ngIf="!data">

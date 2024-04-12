@@ -61,4 +61,12 @@ export class TestWritingComponent implements OnInit {
     this.answerChecked = false;
     this.answerMessage = "";
   }
+
+  jumpToExercise(index: number): void {
+    if (index >= 0 && index < this.data.easy.length) {
+      this.currentExerciseIndex = index;
+      this.currentExercise = this.data.easy[index];
+      this.resetAnswer();
+    }
+  }
 }
