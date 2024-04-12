@@ -9,15 +9,15 @@ import { Router, Navigation } from "@angular/router";
 export class TestWritingComponent implements OnInit {
   data: any;
 
-  constructor(private router: Router) {}
+  constructor() {}
 
   ngOnInit(): void {
-    const navigation: Navigation | null = this.router.getCurrentNavigation();
-    if (navigation && navigation.extras && navigation.extras.state) {
-      // Use type assertion to inform TypeScript about the structure of 'extras.state'
-      this.data = navigation.extras.state["data"];
-    } else {
-      console.error("No data available in navigation state.");
-    }
+    this.data = history.state["data"];
+    // const navigation: Navigation | null = this.router.getCurrentNavigation();
+    // if (navigation && navigation.extras && navigation.extras.state) {
+    //   this.data = navigation.extras.state["data"];
+    // } else {
+    //   console.error("No data available in navigation state.");
+    // }
   }
 }
