@@ -1,14 +1,16 @@
 .exerciseModal {
   background-color: white;
   border-radius: 30px;
-  margin-top: 25%;
+  margin-top: 12.5%;
+  margin-left: auto;
+  margin-right: auto;
   //   padding-top: auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90%;
+  width: 80%;
   height: 90%;
 }
 
@@ -37,8 +39,6 @@
   width: 50px; /* Adjust the width and height to your preference */
   height: 50px; /* Same as width to make it a perfect circle */
   border-radius: 50%; /* Makes the button circular */
-  //   background-color: #3498db; /* Set background color */
-  //   color: #fff; /* Set text color */
   border: 2px solid transparent; /* Add transparent border to maintain button size */
   cursor: pointer; /* Change cursor to pointer on hover */
   transition:
@@ -47,13 +47,10 @@
   margin-right: 20px;
 
   &:hover {
-    background-color: #3498db; /* Change background color on hover */
+    background-color: #3498db9e; /* Change background color on hover */
   }
 
   &.selected {
-    //   background-color: #007bff; /* Change this to the desired color */
-    //   color: #ffffff; /* Text color for selected button */
-
     background-color: #3498db; /* Change background color on hover */
     border-color: #000; /* Change border color on hover */
   }
