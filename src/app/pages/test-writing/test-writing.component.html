@@ -25,14 +25,17 @@
         type="text"
         [(ngModel)]="userAnswer"
         placeholder="Enter your answer"
+        [value]="currentExercise.userAnswer"
       />
 
+      <!-- Submit button to check the answer -->
       <!-- Submit button to check the answer -->
       <button
         mat-flat-button
         color="primary"
         id="answerCheck"
         (click)="checkAnswer()"
+        [disabled]="answerChecked"
       >
         Check Answer
       </button>

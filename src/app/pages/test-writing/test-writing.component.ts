@@ -47,12 +47,17 @@ export class TestWritingComponent implements OnInit {
   }
 
   checkAnswer(): void {
-    if (this.userAnswer === this.currentExercise.answer) {
+    if (this.currentExercise) {
+      // Save the user's answer to the current exercise
+      this.currentExercise.userAnswer = this.userAnswer;
+
+      // Set answer checked status and message
+      if (this.userAnswer === this.currentExercise.answer) {
+        this.answerMessage = "Correct!";
+      } else {
+        this.answerMessage = "Incorrect. Try again.";
+      }
       this.answerChecked = true;
-      this.answerMessage = "Correct!";
-    } else {
-      this.answerChecked = true;
-      this.answerMessage = "Incorrect. Try again.";
     }
   }
 
