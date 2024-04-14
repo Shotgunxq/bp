@@ -51,6 +51,7 @@ span {
   color: black;
 }
 
-// mat-grid-tile {
-//   background-color: aqua;
-// }
+.invalid-input {
+  border-color: red; /* Style for invalid input */
+  background-color: rgba(255, 0, 0, 0.203);
+}
