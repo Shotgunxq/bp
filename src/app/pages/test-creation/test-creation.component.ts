@@ -8,6 +8,9 @@ import { Router } from "@angular/router";
   styleUrl: "./test-creation.component.scss",
 })
 export class TestCreationComponent {
+  times: number[] = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
+  selectedTime: number = 5; // Default selected time
+
   isEasyEnabled: boolean = false;
   isMediumEnabled: boolean = false;
   isHardEnabled: boolean = false;
@@ -27,6 +30,18 @@ export class TestCreationComponent {
     private router: Router,
     private http: HttpClient,
   ) {}
+
+  // limitTimeInput(event: Event) {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   const maxTime = "60:00"; // Maximum time allowed (60 minutes)
+  //   if (inputElement.value > maxTime) {
+  //     inputElement.value = maxTime;
+  //   }
+  // }
+
+  validateTime(): boolean {
+    return this.selectedTime >= 5 && this.selectedTime <= 60;
+  }
 
   validateTotalExerciseCount(): boolean {
     const totalExerciseInput = document.getElementById(

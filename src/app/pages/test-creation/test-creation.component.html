@@ -73,10 +73,20 @@
       </mat-grid-tile>
     </mat-grid-list>
   </div>
-
+  <!-- 
   <div class="section">
     <h1 id="casovylimit">Časový limit</h1>
-    <input matInput type="time" />
+    <input matInput type="time" id="timeLimit" max="12:59" />
+  </div> -->
+  <div class="section">
+    <mat-form-field id="timeSelect" appearance="fill">
+      <mat-label>Časový limit</mat-label>
+      <mat-select [(value)]="selectedTime">
+        <mat-option *ngFor="let time of times" [value]="time"
+          >{{ time }} minút</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <div class="section">

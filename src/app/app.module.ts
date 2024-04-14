@@ -18,7 +18,10 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { StatsPageComponent } from "./pages/stats-page/stats-page.component";
 import { MaterialsPageComponent } from "./pages/materials-page/materials-page.component";
 import { TestDoneComponent } from "./pages/test-done/test-done.component";
-import { TestWritingComponent } from './pages/test-writing/test-writing.component'; // Import MatSlideToggleModule here
+import { TestWritingComponent } from "./pages/test-writing/test-writing.component"; // Import MatSlideToggleModule here
+import { MatSelectModule } from "@angular/material/select";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -42,6 +45,9 @@ import { TestWritingComponent } from './pages/test-writing/test-writing.componen
     FormsModule, // Add FormsModule to imports
     HttpClientModule, // Add HttpClientModule to imports
     MatSlideToggleModule, // Import MatSlideToggleModule here
+    MatSelectModule,
+    BrowserAnimationsModule,
+    NoopAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
