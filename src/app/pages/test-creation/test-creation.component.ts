@@ -28,7 +28,37 @@ export class TestCreationComponent {
     private http: HttpClient,
   ) {}
 
+  validateTotalExerciseCount(): boolean {
+    const totalExerciseInput = document.getElementById(
+      "totalExerciseCount",
+    ) as HTMLInputElement;
+    const easyCountInput = document.getElementById(
+      "easyCount",
+    ) as HTMLInputElement;
+    const mediumCountInput = document.getElementById(
+      "mediumCount",
+    ) as HTMLInputElement;
+    const hardCountInput = document.getElementById(
+      "hardCount",
+    ) as HTMLInputElement;
+
+    // Parse inputs to integers or treat them as zero if empty or invalid
+    const totalExerciseCount =
+      parseInt(totalExerciseInput.value.trim(), 10) || 0;
+    const easyCount = parseInt(easyCountInput.value.trim(), 10) || 0;
+    const mediumCount = parseInt(mediumCountInput.value.trim(), 10) || 0;
+    const hardCount = parseInt(hardCountInput.value.trim(), 10) || 0;
+
+    return totalExerciseCount === easyCount + mediumCount + hardCount;
+  }
+
   getData() {
+    if (!this.validateTotalExerciseCount()) {
+      console.error(
+        "Total exercise count does not match the sum of easy, medium, and hard exercises.",
+      );
+      return;
+    }
     const easyCountInput = document.getElementById(
       "easyCount",
     ) as HTMLInputElement;
