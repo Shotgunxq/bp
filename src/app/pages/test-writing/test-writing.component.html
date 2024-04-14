@@ -11,6 +11,9 @@
           *ngFor="let exercise of data.easy; let i = index"
           (click)="jumpToExercise(i)"
           [class.selected]="i === currentExerciseIndex"
+          [class.answered]="
+            exercise.userAnswer !== undefined && exercise.userAnswer !== ''
+          "
         >
           {{ i + 1 }}
         </button>
@@ -25,7 +28,7 @@
         type="text"
         [(ngModel)]="userAnswer"
         placeholder="Enter your answer"
-        [value]="currentExercise.userAnswer"
+        [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''"
       />
 
       <!-- Submit button to check the answer -->
