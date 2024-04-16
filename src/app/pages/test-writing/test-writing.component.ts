@@ -14,9 +14,9 @@ export class TestWritingComponent implements OnInit {
   answerChecked: boolean = false;
   answerMessage: string = '';
 
-  generatedExercises: Exercise[] = []; // Property to hold generated exercises
-  currentGeneratedExerciseIndex: number = 0;
-  currentGeneratedExercise: Exercise | undefined;
+  // generatedExercises: Exercise[] = []; // Property to hold generated exercises
+  // currentGeneratedExerciseIndex: number = 0;
+  // currentGeneratedExercise: Exercise | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,15 +26,21 @@ export class TestWritingComponent implements OnInit {
   ngOnInit(): void {
     // this.data = this.route.snapshot.data["data"];
     this.data = history.state.data;
+
+    const generatedExercises: Exercise[] = binomialProbabilityRandom();
+    console.log('Generated exercises:', generatedExercises);
+
     if (this.data && this.data.easy && this.data.easy.length > 0) {
+      // Combine existing exercises with generated exercises using the spread operator
+      this.data.easy = [...this.data.easy, ...generatedExercises];
+      this.currentExercise = this.data.easy[0];
+    } else {
+      // If there are no fetched exercises, use only the generated exercises
+      this.data = { easy: generatedExercises };
       this.currentExercise = this.data.easy[0];
     }
 
-    // Generate exercises using binomial probability
-    this.generatedExercises = binomialProbabilityRandom();
-    if (this.generatedExercises.length > 0) {
-      this.currentGeneratedExercise = this.generatedExercises[0];
-    }
+    console.log('Data writing concated:', this.data);
   }
 
   prevExercise(): void {

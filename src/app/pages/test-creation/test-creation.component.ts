@@ -27,6 +27,8 @@ export class TestCreationComponent {
   mediumExercises: any[] = [];
   hardExercises: any[] = [];
 
+  generatedExercises: Exercise[] = []; // Property to hold generated exercises
+
   constructor(
     private router: Router,
     private http: HttpClient
@@ -73,22 +75,23 @@ export class TestCreationComponent {
 
     const queryParams = `?easy=${easyCount}&medium=${mediumCount}&hard=${hardCount}`;
 
+    // const generatedExercises: Exercise[] = binomialProbabilityRandom();
+    // console.log('Generated exercises:', generatedExercises);
+
     this.http.get<any>('http://localhost:3000/test/api' + queryParams).subscribe(
       response => {
-        console.log('Data:', response);
+        // console.log('Data fetched from DB:', response);
         this.easyExercises = response.easy;
         this.mediumExercises = response.medium;
         this.hardExercises = response.hard;
 
         // Generate exercises using binomial probability
-        // const generatedExercises: Exercise[] = binomialProbabilityRandom();
 
         // Combine generated exercises with fetched exercises
         // this.easyExercises = this.easyExercises.concat(generatedExercises);
-        // console.log(this.easyExercises);
+        // console.log('Merged data (generated and fetched): ', this.easyExercises);
         // this.mediumExercises.push(...generatedExercises.medium);
         // this.hardExercises.push(...generatedExercises.hard);
-
         this.router.navigate(['/test-writing'], {
           state: { data: response },
         });
