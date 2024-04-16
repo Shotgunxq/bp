@@ -2,14 +2,7 @@ import { Component } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Exercise, binomialProbabilityRandom } from '../../services/binomialProbability';
-// const result: BinomialResult = binomialProbabilityRandom();
-// console.log(`Počet opakovaní: ${result.n}`);
-// console.log(`Počet úspechov: ${result.k}`);
-// console.log(`Pravdepodobnosť úspechu: ${result.p}`);
-// console.log(
-//   `Pravdepodobnosť získania presne ${result.k} hláv pri ${result.n} hodoch mincí je ${result.probability}`,
-// );
+
 @Component({
   selector: 'app-test-creation',
   templateUrl: './test-creation.component.html',
@@ -26,8 +19,6 @@ export class TestCreationComponent {
   easyExercises: any[] = [];
   mediumExercises: any[] = [];
   hardExercises: any[] = [];
-
-  generatedExercises: Exercise[] = []; // Property to hold generated exercises
 
   constructor(
     private router: Router,
@@ -75,23 +66,12 @@ export class TestCreationComponent {
 
     const queryParams = `?easy=${easyCount}&medium=${mediumCount}&hard=${hardCount}`;
 
-    // const generatedExercises: Exercise[] = binomialProbabilityRandom();
-    // console.log('Generated exercises:', generatedExercises);
-
     this.http.get<any>('http://localhost:3000/test/api' + queryParams).subscribe(
       response => {
-        // console.log('Data fetched from DB:', response);
         this.easyExercises = response.easy;
         this.mediumExercises = response.medium;
         this.hardExercises = response.hard;
 
-        // Generate exercises using binomial probability
-
-        // Combine generated exercises with fetched exercises
-        // this.easyExercises = this.easyExercises.concat(generatedExercises);
-        // console.log('Merged data (generated and fetched): ', this.easyExercises);
-        // this.mediumExercises.push(...generatedExercises.medium);
-        // this.hardExercises.push(...generatedExercises.hard);
         this.router.navigate(['/test-writing'], {
           state: { data: response },
         });

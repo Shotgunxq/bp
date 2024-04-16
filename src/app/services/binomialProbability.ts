@@ -17,7 +17,7 @@ export function binomialProbabilityRandom(): Exercise[] {
     // Randomly generate values
     const n: number = Math.floor(Math.random() * 10) + 1;
     const k: number = Math.floor(Math.random() * (n + 1));
-    const p: number = Math.round(Math.random() * 10000) / 10000;
+    const p: number = Math.round(Math.random() * 100) / 100; //zaokrúhlene na 2 desatinné miesta
 
     // Calculate probability
     const probability: number = calculateProbability(n, k, p);
@@ -58,5 +58,8 @@ function calculateProbability(n: number, k: number, p: number): number {
 
 // Function to generate description
 function generateDescription(n: number, k: number, p: number): string {
-  return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
+  // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
+  console.log(`n=${n}, k=${k}, p=${p}`);
+  return `Aká je pravdepodobnosť získania presne ${k} hláv pri ${n} hodoch mincí ak pravdepodobnosť úspechu je ${p}? \n
+  Zaokrúhľte na 3 desatinné miesta.`;
 }

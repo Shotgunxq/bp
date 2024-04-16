@@ -14,10 +14,6 @@ export class TestWritingComponent implements OnInit {
   answerChecked: boolean = false;
   answerMessage: string = '';
 
-  // generatedExercises: Exercise[] = []; // Property to hold generated exercises
-  // currentGeneratedExerciseIndex: number = 0;
-  // currentGeneratedExercise: Exercise | undefined;
-
   constructor(
     private route: ActivatedRoute,
     private router: Router
