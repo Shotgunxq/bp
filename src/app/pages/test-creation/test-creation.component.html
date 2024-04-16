@@ -10,8 +10,7 @@
       [ngClass]="{
         'valid-input': validateTotalExerciseCount(),
         'invalid-input': !validateTotalExerciseCount()
-      }"
-    />
+      }" />
   </div>
 
   <div class="section">
@@ -30,8 +29,7 @@
               placeholder="Počet úloh"
               id="easyCount"
               [disabled]="!isEasyEnabled"
-              (input)="preventNegativeValue($event)"
-            />
+              (input)="preventNegativeValue($event)" />
           </div>
         </div>
       </mat-grid-tile>
@@ -48,8 +46,7 @@
               placeholder="Počet úloh"
               id="mediumCount"
               [disabled]="!isMediumEnabled"
-              (input)="preventNegativeValue($event)"
-            />
+              (input)="preventNegativeValue($event)" />
           </div>
         </div>
       </mat-grid-tile>
@@ -66,8 +63,7 @@
               placeholder="Počet úloh"
               id="hardCount"
               [disabled]="!isHardEnabled"
-              (input)="preventNegativeValue($event)"
-            />
+              (input)="preventNegativeValue($event)" />
           </div>
         </div>
       </mat-grid-tile>
@@ -82,16 +78,12 @@
     <mat-form-field id="timeSelect" appearance="fill">
       <mat-label>Časový limit</mat-label>
       <mat-select [(value)]="selectedTime">
-        <mat-option *ngFor="let time of times" [value]="time"
-          >{{ time }} minút</mat-option
-        >
+        <mat-option *ngFor="let time of times" [value]="time">{{ time }} minút</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
   <div class="section">
-    <button mat-raised-button color="primary" (click)="getData()">
-      Generovať
-    </button>
+    <button mat-raised-button color="primary" (click)="getData()">Generovať</button>
   </div>
 </div>

@@ -1,22 +1,22 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: "app-test-writing",
-  templateUrl: "./test-writing.component.html",
-  styleUrls: ["./test-writing.component.scss"],
+  selector: 'app-test-writing',
+  templateUrl: './test-writing.component.html',
+  styleUrls: ['./test-writing.component.scss'],
 })
 export class TestWritingComponent implements OnInit {
   data: any;
   currentExerciseIndex: number = 0;
   currentExercise: any;
-  userAnswer: string = "";
+  userAnswer: string = '';
   answerChecked: boolean = false;
-  answerMessage: string = "";
+  answerMessage: string = '';
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -36,10 +36,7 @@ export class TestWritingComponent implements OnInit {
   }
 
   nextExercise(): void {
-    if (
-      this.currentExerciseIndex < this.data.easy.length - 1 &&
-      this.data.easy.length > 1
-    ) {
+    if (this.currentExerciseIndex < this.data.easy.length - 1 && this.data.easy.length > 1) {
       this.currentExerciseIndex++;
       this.currentExercise = this.data.easy[this.currentExerciseIndex];
       this.resetAnswer();
@@ -53,18 +50,18 @@ export class TestWritingComponent implements OnInit {
 
       // Set answer checked status and message
       if (this.userAnswer === this.currentExercise.answer) {
-        this.answerMessage = "Correct!";
+        this.answerMessage = 'Correct!';
       } else {
-        this.answerMessage = "Incorrect. Try again.";
+        this.answerMessage = 'Incorrect. Try again.';
       }
       this.answerChecked = true;
     }
   }
 
   resetAnswer(): void {
-    this.userAnswer = "";
+    this.userAnswer = '';
     this.answerChecked = false;
-    this.answerMessage = "";
+    this.answerMessage = '';
   }
 
   jumpToExercise(index: number): void {

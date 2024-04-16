@@ -8,10 +8,9 @@ describe('MenuPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MenuPageComponent]
-    })
-    .compileComponents();
-    
+      declarations: [MenuPageComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(MenuPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

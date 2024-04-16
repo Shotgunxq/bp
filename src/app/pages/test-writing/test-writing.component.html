@@ -11,15 +11,13 @@
           *ngFor="let exercise of data.easy; let i = index"
           (click)="jumpToExercise(i)"
           [class.selected]="i === currentExerciseIndex"
-          [class.answered]="
-            exercise.userAnswer !== undefined && exercise.userAnswer !== ''
-          "
-        >
+          [class.answered]="exercise.userAnswer !== undefined && exercise.userAnswer !== ''">
           {{ i + 1 }}
         </button>
       </div>
       <p class="exerciseDesc">
-        Znenie úlohy:<br />
+        Znenie úlohy:
+        <br />
         {{ currentExercise.description }}
       </p>
       <!-- Input field for user's answer -->
@@ -28,19 +26,10 @@
         type="text"
         [(ngModel)]="userAnswer"
         placeholder="Enter your answer"
-        [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''"
-      />
+        [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
 
       <!-- Submit button to check the answer -->
-      <button
-        mat-flat-button
-        color="primary"
-        id="answerCheck"
-        (click)="checkAnswer()"
-        [disabled]="answerChecked"
-      >
-        Check Answer
-      </button>
+      <button mat-flat-button color="primary" id="answerCheck" (click)="checkAnswer()" [disabled]="answerChecked">Check Answer</button>
 
       <!-- Display whether the answer is correct or not -->
       <p *ngIf="answerChecked">{{ answerMessage }}</p>

@@ -11,6 +11,4 @@ import { MatDividerModule } from '@angular/material/divider';
   // standalone: true,
   // imports: [MatGridListModule, MatButtonModule ,MatIconModule, MatDividerModule],
 })
-export class MenuPageComponent {
-
-}
+export class MenuPageComponent {}
