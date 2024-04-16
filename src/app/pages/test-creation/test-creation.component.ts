@@ -2,6 +2,17 @@ import { Component } from "@angular/core";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
+import {
+  binomialProbabilityRandom,
+  BinomialResult,
+} from "../../services/binomialProbability";
+// const result: BinomialResult = binomialProbabilityRandom();
+// console.log(`Počet opakování: ${result.n}`);
+// console.log(`Počet úspěchů: ${result.k}`);
+// console.log(`Pravděpodobnost úspěchu: ${result.p}`);
+// console.log(
+//   `Pravděpodobnost získání přesně ${result.k} hlav při ${result.n} hodech mincí je ${result.probability}`,
+// );
 @Component({
   selector: "app-test-creation",
   templateUrl: "./test-creation.component.html",
