@@ -31,14 +31,6 @@ export class TestCreationComponent {
     private http: HttpClient,
   ) {}
 
-  // limitTimeInput(event: Event) {
-  //   const inputElement = event.target as HTMLInputElement;
-  //   const maxTime = "60:00"; // Maximum time allowed (60 minutes)
-  //   if (inputElement.value > maxTime) {
-  //     inputElement.value = maxTime;
-  //   }
-  // }
-
   validateTime(): boolean {
     return this.selectedTime >= 5 && this.selectedTime <= 60;
   }
