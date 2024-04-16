@@ -11,17 +11,23 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^17.0.0",
+    "@angular/cdk": "^17.3.2",
     "@angular/common": "^17.0.0",
     "@angular/compiler": "^17.0.0",
     "@angular/core": "^17.0.0",
     "@angular/forms": "^17.0.0",
+    "@angular/material": "^17.3.2",
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "ldapjs": "^3.0.7",
+    "pg": "^8.11.5",
+    "prettier": "^3.2.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
@@ -37,6 +43,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "node-sass": "^9.0.0",
     "typescript": "~5.2.2"
   }
 }

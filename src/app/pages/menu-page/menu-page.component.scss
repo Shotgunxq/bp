@@ -1,0 +1,45 @@
+// @import '~@angular/material/theming';
+
+// @include mat-core();
+// $theme-primary: mat-palette($mat-red);
+// $theme-accent: mat-palette($mat-yellow, A200, A100, A400);
+// $theme-warn: mat-palette($mat-red);
+// $theme: mat-light-theme($theme-primary, $theme-accent, $theme-warn);
+
+// @include angular-material-theme($theme);
+
+// mat-grid-tile{
+//     background-color: azure;
+// }
+
+#menu {
+  // max-width: 90%;
+  margin: 8% auto;
+}
+
+.custom-button {
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 35px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  width: 55%;
+}
+
+.button-text-content {
+  color: black;
+}
+
+.button-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+img {
+  margin-bottom: 10px; // Adjust spacing between image and text
+}

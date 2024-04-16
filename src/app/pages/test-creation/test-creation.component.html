@@ -1,0 +1,89 @@
+<div class="container">
+  <div class="section">
+    <h1 id="pocetuloh">Počet úloh celkovo</h1>
+    <input
+      id="totalExerciseCount"
+      matInput
+      type="number"
+      placeholder="Počet úloh"
+      (input)="preventNegativeValue($event)"
+      [ngClass]="{
+        'valid-input': validateTotalExerciseCount(),
+        'invalid-input': !validateTotalExerciseCount()
+      }" />
+  </div>
+
+  <div class="section">
+    <h1 id="typuloh">Typ úloh</h1>
+    <mat-grid-list cols="3" rowHeight="3:1">
+      <mat-grid-tile>
+        <div class="toggle-section">
+          <div class="toggle">
+            <span>Ľahké</span>
+            <mat-slide-toggle [(ngModel)]="isEasyEnabled"></mat-slide-toggle>
+          </div>
+          <div class="input">
+            <input
+              matInput
+              type="number"
+              placeholder="Počet úloh"
+              id="easyCount"
+              [disabled]="!isEasyEnabled"
+              (input)="preventNegativeValue($event)" />
+          </div>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="toggle-section">
+          <div class="toggle">
+            <span>Stredné</span>
+            <mat-slide-toggle [(ngModel)]="isMediumEnabled"></mat-slide-toggle>
+          </div>
+          <div class="input">
+            <input
+              matInput
+              type="number"
+              placeholder="Počet úloh"
+              id="mediumCount"
+              [disabled]="!isMediumEnabled"
+              (input)="preventNegativeValue($event)" />
+          </div>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="toggle-section">
+          <div class="toggle">
+            <span>Ťažké</span>
+            <mat-slide-toggle [(ngModel)]="isHardEnabled"></mat-slide-toggle>
+          </div>
+          <div class="input">
+            <input
+              matInput
+              type="number"
+              placeholder="Počet úloh"
+              id="hardCount"
+              [disabled]="!isHardEnabled"
+              (input)="preventNegativeValue($event)" />
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+  <!-- 
+  <div class="section">
+    <h1 id="casovylimit">Časový limit</h1>
+    <input matInput type="time" id="timeLimit" max="12:59" />
+  </div> -->
+  <div class="section">
+    <mat-form-field id="timeSelect" appearance="fill">
+      <mat-label>Časový limit</mat-label>
+      <mat-select [(value)]="selectedTime">
+        <mat-option *ngFor="let time of times" [value]="time">{{ time }} minút</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="section">
+    <button mat-raised-button color="primary" (click)="getData()">Generovať</button>
+  </div>
+</div>

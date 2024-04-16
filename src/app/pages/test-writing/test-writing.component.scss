@@ -1,0 +1,60 @@
+.exerciseModal {
+  background-color: white;
+  border-radius: 30px;
+  margin-top: 12.5%;
+  margin-left: auto;
+  margin-right: auto;
+  //   padding-top: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 90%;
+}
+
+.exerciseDesc {
+  background-color: lightgrey;
+  border-radius: 30px;
+  margin-top: 5%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  //   width: 90%;
+  height: 90%;
+}
+
+#answerCheck {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2%;
+}
+
+#exerciseNavButton {
+  width: 50px; /* Adjust the width and height to your preference */
+  height: 50px; /* Same as width to make it a perfect circle */
+  border-radius: 50%; /* Makes the button circular */
+  border: 2px solid transparent; /* Add transparent border to maintain button size */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease; /* Smooth transition for background color and border color */
+  margin-right: 20px;
+
+  &:hover {
+    background-color: #3498db9e; /* Change background color on hover */
+  }
+
+  &.selected {
+    background-color: #3498db; /* Change background color on hover */
+    border-color: #000; /* Change border color on hover */
+  }
+}
+#exerciseNavButton.answered {
+  background-color: yellow; /* Change background color to yellow for answered buttons */
+}
