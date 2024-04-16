@@ -11,7 +11,8 @@ export interface Exercise {
 export function binomialProbabilityRandom(): Exercise[] {
   // Generate multiple exercises based on binomial distribution
   const exercises: Exercise[] = [];
-  const numberOfExercises = 3; // You can adjust this number as needed
+  //TODO: Adjust the number of exercises as needed
+  const numberOfExercises = 1; // You can adjust this number as needed
 
   for (let i = 0; i < numberOfExercises; i++) {
     // Randomly generate values
@@ -60,6 +61,6 @@ function calculateProbability(n: number, k: number, p: number): number {
 function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
   console.log(`n=${n}, k=${k}, p=${p}`);
-  return `Aká je pravdepodobnosť získania presne ${k} hláv pri ${n} hodoch mincí ak pravdepodobnosť úspechu je ${p}? \n
-  Zaokrúhľte na 3 desatinné miesta.`;
+
+  return `Aká je pravdepodobnosť získania presne ${k} úspechov pri ${n} pokusoch experimentu s pravdepodobnosťou úspechu ${p}?\nZaokrúhlite na 3 desatinné miesta.`;
 }

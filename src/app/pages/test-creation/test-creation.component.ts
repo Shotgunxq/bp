@@ -64,7 +64,8 @@ export class TestCreationComponent {
     const mediumCount = mediumCountInput.value === '' ? 0 : parseInt(mediumCountInput.value, 10);
     const hardCount = hardCountInput.value === '' ? 0 : parseInt(hardCountInput.value, 10);
 
-    const queryParams = `?easy=${easyCount}&medium=${mediumCount}&hard=${hardCount}`;
+    //TODO: - Adjust the query parameters as needed
+    const queryParams = `?easy=${easyCount - 1}&medium=${mediumCount}&hard=${hardCount}`;
 
     this.http.get<any>('http://localhost:3000/test/api' + queryParams).subscribe(
       response => {
