@@ -6,13 +6,13 @@ import {
   binomialProbabilityRandom,
   BinomialResult,
 } from "../../services/binomialProbability";
-// const result: BinomialResult = binomialProbabilityRandom();
-// console.log(`Počet opakování: ${result.n}`);
-// console.log(`Počet úspěchů: ${result.k}`);
-// console.log(`Pravděpodobnost úspěchu: ${result.p}`);
-// console.log(
-//   `Pravděpodobnost získání přesně ${result.k} hlav při ${result.n} hodech mincí je ${result.probability}`,
-// );
+const result: BinomialResult = binomialProbabilityRandom();
+console.log(`Počet opakovaní: ${result.n}`);
+console.log(`Počet úspechov: ${result.k}`);
+console.log(`Pravdepodobnosť úspechu: ${result.p}`);
+console.log(
+  `Pravdepodobnosť získania presne ${result.k} hláv pri ${result.n} hodoch mincí je ${result.probability}`,
+);
 @Component({
   selector: "app-test-creation",
   templateUrl: "./test-creation.component.html",
