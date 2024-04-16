@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { binomialProbabilityRandom, BinomialResult } from '../../services/binomialProbability';
+import { Exercise, binomialProbabilityRandom } from '../../services/binomialProbability';
 // const result: BinomialResult = binomialProbabilityRandom();
 // console.log(`Počet opakovaní: ${result.n}`);
 // console.log(`Počet úspechov: ${result.k}`);
@@ -27,17 +27,17 @@ export class TestCreationComponent {
   mediumExercises: any[] = [];
   hardExercises: any[] = [];
 
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
+
   preventNegativeValue(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.value && parseInt(input.value, 10) < 0) {
       input.value = '0';
     }
   }
-
-  constructor(
-    private router: Router,
-    private http: HttpClient
-  ) {}
 
   validateTime(): boolean {
     return this.selectedTime >= 5 && this.selectedTime <= 60;
@@ -79,6 +79,16 @@ export class TestCreationComponent {
         this.easyExercises = response.easy;
         this.mediumExercises = response.medium;
         this.hardExercises = response.hard;
+
+        // Generate exercises using binomial probability
+        // const generatedExercises: Exercise[] = binomialProbabilityRandom();
+
+        // Combine generated exercises with fetched exercises
+        // this.easyExercises = this.easyExercises.concat(generatedExercises);
+        // console.log(this.easyExercises);
+        // this.mediumExercises.push(...generatedExercises.medium);
+        // this.hardExercises.push(...generatedExercises.hard);
+
         this.router.navigate(['/test-writing'], {
           state: { data: response },
         });

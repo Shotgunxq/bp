@@ -1,23 +1,36 @@
-// Define interface for binomial result
-export interface BinomialResult {
+// Define interface for exercise
+export interface Exercise {
   n: number;
   k: number;
   p: number;
   probability: number;
+  description: string;
 }
 
-// Function to calculate binomial probability with random values
-export function binomialProbabilityRandom(): BinomialResult {
-  // Randomly generate values
-  const n: number = Math.floor(Math.random() * 10) + 1;
-  const k: number = Math.floor(Math.random() * (n + 1));
-  const p: number = Math.round(Math.random() * 10000) / 10000;
+// Function to generate exercises with random values
+export function binomialProbabilityRandom(): Exercise[] {
+  // Generate multiple exercises based on binomial distribution
+  const exercises: Exercise[] = [];
+  const numberOfExercises = 3; // You can adjust this number as needed
 
-  // Calculate probability
-  const probability: number = calculateProbability(n, k, p);
+  for (let i = 0; i < numberOfExercises; i++) {
+    // Randomly generate values
+    const n: number = Math.floor(Math.random() * 10) + 1;
+    const k: number = Math.floor(Math.random() * (n + 1));
+    const p: number = Math.round(Math.random() * 10000) / 10000;
 
-  // Return result object
-  return { n, k, p, probability };
+    // Calculate probability
+    const probability: number = calculateProbability(n, k, p);
+
+    // Generate description
+    const description: string = generateDescription(n, k, p);
+
+    // Push exercise to exercises array
+    exercises.push({ n, k, p, probability, description });
+  }
+
+  // Return array of exercises
+  return exercises;
 }
 
 // Function to calculate binomial probability
@@ -37,9 +50,13 @@ function calculateProbability(n: number, k: number, p: number): number {
   }
 
   // Calculate probability
-  let probability: number =
-    combination(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+  let probability: number = combination(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
   // Round probability to 3 decimal places
   probability = Math.round(probability * 1000) / 1000;
   return probability;
+}
+
+// Function to generate description
+function generateDescription(n: number, k: number, p: number): string {
+  return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
 }

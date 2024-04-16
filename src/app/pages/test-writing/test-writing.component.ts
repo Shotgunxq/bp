@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Exercise, binomialProbabilityRandom } from '../../services/binomialProbability';
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
@@ -14,6 +14,10 @@ export class TestWritingComponent implements OnInit {
   answerChecked: boolean = false;
   answerMessage: string = '';
 
+  generatedExercises: Exercise[] = []; // Property to hold generated exercises
+  currentGeneratedExerciseIndex: number = 0;
+  currentGeneratedExercise: Exercise | undefined;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router
@@ -24,6 +28,12 @@ export class TestWritingComponent implements OnInit {
     this.data = history.state.data;
     if (this.data && this.data.easy && this.data.easy.length > 0) {
       this.currentExercise = this.data.easy[0];
+    }
+
+    // Generate exercises using binomial probability
+    this.generatedExercises = binomialProbabilityRandom();
+    if (this.generatedExercises.length > 0) {
+      this.currentGeneratedExercise = this.generatedExercises[0];
     }
   }
 
