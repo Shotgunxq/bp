@@ -2,14 +2,7 @@ import { Component } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { binomialProbabilityRandom, BinomialResult } from '../../services/binomialProbability';
-// const result: BinomialResult = binomialProbabilityRandom();
-// console.log(`Počet opakovaní: ${result.n}`);
-// console.log(`Počet úspechov: ${result.k}`);
-// console.log(`Pravdepodobnosť úspechu: ${result.p}`);
-// console.log(
-//   `Pravdepodobnosť získania presne ${result.k} hláv pri ${result.n} hodoch mincí je ${result.probability}`,
-// );
+
 @Component({
   selector: 'app-test-creation',
   templateUrl: './test-creation.component.html',
@@ -27,17 +20,17 @@ export class TestCreationComponent {
   mediumExercises: any[] = [];
   hardExercises: any[] = [];
 
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
+
   preventNegativeValue(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.value && parseInt(input.value, 10) < 0) {
       input.value = '0';
     }
   }
-
-  constructor(
-    private router: Router,
-    private http: HttpClient
-  ) {}
 
   validateTime(): boolean {
     return this.selectedTime >= 5 && this.selectedTime <= 60;
@@ -71,14 +64,15 @@ export class TestCreationComponent {
     const mediumCount = mediumCountInput.value === '' ? 0 : parseInt(mediumCountInput.value, 10);
     const hardCount = hardCountInput.value === '' ? 0 : parseInt(hardCountInput.value, 10);
 
-    const queryParams = `?easy=${easyCount}&medium=${mediumCount}&hard=${hardCount}`;
+    //TODO: - Adjust the query parameters as needed
+    const queryParams = `?easy=${easyCount - 1}&medium=${mediumCount}&hard=${hardCount}`;
 
     this.http.get<any>('http://localhost:3000/test/api' + queryParams).subscribe(
       response => {
-        console.log('Data:', response);
         this.easyExercises = response.easy;
         this.mediumExercises = response.medium;
         this.hardExercises = response.hard;
+
         this.router.navigate(['/test-writing'], {
           state: { data: response },
         });

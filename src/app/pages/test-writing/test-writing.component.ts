@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Exercise, binomialProbabilityRandom } from '../../services/binomialProbability';
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
@@ -22,9 +22,21 @@ export class TestWritingComponent implements OnInit {
   ngOnInit(): void {
     // this.data = this.route.snapshot.data["data"];
     this.data = history.state.data;
+
+    const generatedExercises: Exercise[] = binomialProbabilityRandom();
+    console.log('Generated exercises:', generatedExercises);
+
     if (this.data && this.data.easy && this.data.easy.length > 0) {
+      // Combine existing exercises with generated exercises using the spread operator
+      this.data.easy = [...this.data.easy, ...generatedExercises];
+      this.currentExercise = this.data.easy[0];
+    } else {
+      // If there are no fetched exercises, use only the generated exercises
+      this.data = { easy: generatedExercises };
       this.currentExercise = this.data.easy[0];
     }
+
+    console.log('Data writing concated:', this.data);
   }
 
   prevExercise(): void {
