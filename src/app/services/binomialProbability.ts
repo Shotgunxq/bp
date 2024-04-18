@@ -16,8 +16,8 @@ export function binomialProbabilityRandom(): Exercise[] {
 
   for (let i = 0; i < numberOfExercises; i++) {
     // Randomly generate values
-    const n: number = Math.floor(Math.random() * 10) + 1;
-    const k: number = Math.floor(Math.random() * (n + 1));
+    const n: number = Math.floor(Math.random() * 10) + 1 + 2;
+    const k: number = Math.floor(Math.random() * (n + 1)) + 2;
     const p: number = Math.round(Math.random() * 100) / 100; //zaokrúhlene na 2 desatinné miesta
 
     // Calculate probability
@@ -61,6 +61,6 @@ function calculateProbability(n: number, k: number, p: number): number {
 function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
   console.log(`n=${n}, k=${k}, p=${p}`);
-
+  //TODO: nech k a n ide od 2 //////// najviac 2 upsechy a najmenej dva uspechy
   return `Aká je pravdepodobnosť získania presne ${k} úspechov pri ${n} pokusoch experimentu s pravdepodobnosťou úspechu ${p}?\nZaokrúhlite na 3 desatinné miesta.`;
 }
