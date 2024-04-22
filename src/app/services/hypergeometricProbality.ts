@@ -1,5 +1,5 @@
 // Define interface for exercise
-export interface Exerciseq {
+export interface hypergeometricExercises {
   N: number;
   K: number;
   n: number;
@@ -9,9 +9,9 @@ export interface Exerciseq {
 }
 
 // Function to generate exercises with random values
-export function hypergeometricProbabilityRandom(): Exerciseq[] {
+export function hypergeometricProbabilityRandom(): hypergeometricExercises[] {
   // Generate multiple exercises based on hypergeometric distribution
-  const exercises: Exerciseq[] = [];
+  const exercises: hypergeometricExercises[] = [];
   const numberOfExercises = 1; // Adjust the number of exercises as needed
 
   for (let i = 0; i < numberOfExercises; i++) {

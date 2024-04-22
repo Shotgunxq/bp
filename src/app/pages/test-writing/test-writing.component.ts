@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Exercise, binomialProbabilityRandom } from '../../services/binomialProbability';
-import { Exerciseq, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
+import { binomialExercise, binomialProbabilityRandom } from '../../services/binomialProbability';
+import { hypergeometricExercises, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
+import { geometricExercise, geometricProbabilityRandom } from '../../services/geometricProbability';
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
@@ -24,21 +25,25 @@ export class TestWritingComponent implements OnInit {
     // this.data = this.route.snapshot.data["data"];
     this.data = history.state.data;
 
-    const generatedExercisesBinominal: Exercise[] = binomialProbabilityRandom();
-    const generatedExercisesHypergeometric: Exerciseq[] = hypergeometricProbabilityRandom();
+    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
+    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
+    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
 
-    console.log('Generated exercises:', generatedExercisesBinominal);
-    console.log('Generated exercises:', generatedExercisesHypergeometric);
+    console.log('Binominal exercises:', generatedExercisesBinominal);
+    console.log('Hypergeometric exercises:', generatedExercisesHypergeometric);
+    console.log('Geometric exercises:', generatedExercisesGeometric);
 
     if (this.data && this.data.easy && this.data.easy.length > 0) {
       // Combine existing exercises with generated exercises using the spread operator
       this.data.easy = [...this.data.easy, ...generatedExercisesBinominal];
       this.data.easy = [...this.data.easy, ...generatedExercisesHypergeometric];
+      this.data.easy = [...this.data.easy, ...generatedExercisesGeometric];
       this.currentExercise = this.data.easy[0];
     } else {
       // If there are no fetched exercises, use only the generated exercises
       this.data = { easy: generatedExercisesBinominal };
       this.data = { easy: generatedExercisesHypergeometric };
+      this.data = { easy: generatedExercisesGeometric };
       this.currentExercise = this.data.easy[0];
     }
 

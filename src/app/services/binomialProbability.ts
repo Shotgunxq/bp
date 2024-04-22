@@ -1,5 +1,5 @@
 // Define interface for exercise
-export interface Exercise {
+export interface binomialExercise {
   n: number;
   k: number;
   p: number;
@@ -8,9 +8,9 @@ export interface Exercise {
 }
 
 // Function to generate exercises with random values
-export function binomialProbabilityRandom(): Exercise[] {
+export function binomialProbabilityRandom(): binomialExercise[] {
   // Generate multiple exercises based on binomial distribution
-  const exercises: Exercise[] = [];
+  const exercises: binomialExercise[] = [];
   //TODO: Adjust the number of exercises as needed
   const numberOfExercises = 1; // You can adjust this number as needed
 
@@ -61,6 +61,5 @@ function calculateProbability(n: number, k: number, p: number): number {
 function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
   console.log(`n=${n}, k=${k}, p=${p}`);
-  //TODO: nech k a n ide od 2 //////// najviac 2 upsechy a najmenej dva uspechy
   return `Aká je pravdepodobnosť získania presne ${k} úspechov pri ${n} pokusoch experimentu s pravdepodobnosťou úspechu ${p}?\nZaokrúhlite na 3 desatinné miesta.`;
 }

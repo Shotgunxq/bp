@@ -65,7 +65,8 @@ export class TestCreationComponent {
     const hardCount = hardCountInput.value === '' ? 0 : parseInt(hardCountInput.value, 10);
 
     //TODO: - Adjust the query parameters as needed
-    const queryParams = `?easy=${easyCount - 2}&medium=${mediumCount}&hard=${hardCount}`;
+    //TODO generovanie uloh ne legyen kivonva az easycountbol hanem valamilyen szofisztikaltabb rendszert alkotni
+    const queryParams = `?easy=${easyCount - 3}&medium=${mediumCount}&hard=${hardCount}`;
 
     this.http.get<any>('http://localhost:3000/test/api' + queryParams).subscribe(
       response => {
