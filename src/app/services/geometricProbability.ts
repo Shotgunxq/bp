@@ -17,18 +17,19 @@ export function geometricProbabilityRandom(): geometricExercise[] {
   for (let i = 0; i < numberOfExercises; i++) {
     // Randomly generate values
     const p: number = Math.round(Math.random() * 100) / 100; // Random probability between 0 and 1
+    const k: number = Math.floor(Math.random() * 3) + 2; // Random integer between 2 and 4 for k
 
     // Generate description
-    const description: string = generateDescription(p);
+    const description: string = generateDescription(k, p);
 
     // Calculate the number of trials needed to achieve first success
     const numberOfTrials = geometricDistribution(p);
 
     // Calculate probability
-    const probability = geometricProbabilityMoreThanOrEqual(3, p);
+    const probability = geometricProbabilityMoreThanOrEqual(k, p);
 
     // Push exercise to exercises array
-    exercises.push({ n: numberOfTrials, k: 3, p, probability, description });
+    exercises.push({ n: numberOfTrials, k, p, probability, description });
   }
 
   // Return array of exercises
@@ -36,8 +37,8 @@ export function geometricProbabilityRandom(): geometricExercise[] {
 }
 
 // Function to generate description
-function generateDescription(p: number): string {
-  return `Aká je pravdepodobnosť potreby aspoň 3 pokusov na dosiahnutie prvého úspechu v experimente s pravdepodobnosťou úspechu ${p}?`;
+function generateDescription(k: number, p: number): string {
+  return `Aká je pravdepodobnosť potreby aspoň ${k} pokusov na dosiahnutie prvého úspechu v experimente s pravdepodobnosťou úspechu ${p}?`;
 }
 
 // Function to generate geometric distribution
