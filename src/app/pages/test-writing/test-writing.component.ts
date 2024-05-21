@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { binomialExercise, binomialProbabilityRandom } from '../../services/binomialProbability';
 import { hypergeometricExercises, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
 import { geometricExercise, geometricProbabilityRandom } from '../../services/geometricProbability';
+
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
@@ -22,7 +23,6 @@ export class TestWritingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.data = this.route.snapshot.data["data"];
     this.data = history.state.data;
 
     const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
@@ -35,15 +35,11 @@ export class TestWritingComponent implements OnInit {
 
     if (this.data && this.data.easy && this.data.easy.length > 0) {
       // Combine existing exercises with generated exercises using the spread operator
-      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal];
-      this.data.easy = [...this.data.easy, ...generatedExercisesHypergeometric];
-      this.data.easy = [...this.data.easy, ...generatedExercisesGeometric];
+      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
       this.currentExercise = this.data.easy[0];
     } else {
       // If there are no fetched exercises, use only the generated exercises
-      this.data = { easy: generatedExercisesBinominal };
-      this.data = { easy: generatedExercisesHypergeometric };
-      this.data = { easy: generatedExercisesGeometric };
+      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
       this.currentExercise = this.data.easy[0];
     }
 

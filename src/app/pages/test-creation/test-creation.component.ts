@@ -101,21 +101,27 @@ export class TestCreationComponent {
           console.error('No tasks to create a test.');
           return;
         }
+        console.log('Tasks ID:', tasks_id);
+        console.log('Response:', response);
 
-        // this.apiService.createTest(tasks_id, '00:30:00').subscribe(
-        //   testResponse => {
-        //     console.log('Test created:', testResponse);
-        //     this.router.navigate(['/test-writing'], {
-        //       state: { data: response },
-        //     });
-        //   },
-        //   error => {
-        //     console.error('Error creating test:', error);
-        //   }
-        // );
-        this.router.navigate(['/test-writing'], {
-          state: { data: response },
-        });
+        const cas_na_pisanie = '00:' + this.selectedTime + ':00';
+
+        console.log('Time:', cas_na_pisanie);
+        this.apiService.createTest(tasks_id, cas_na_pisanie).subscribe(
+          testResponse => {
+            console.log('Test created:', testResponse);
+            this.router.navigate(['/test-writing'], {
+              state: { data: response },
+            });
+          },
+          error => {
+            console.error('Error creating test:', error);
+          }
+        );
+
+        // this.router.navigate(['/test-writing'], {
+        //   state: { data: response },
+        // });
       },
       error => {
         console.error('Error fetching data:', error);

@@ -31,12 +31,14 @@ app.get('/test/api', async (req, res) => {
   }
 });
 
+// Backend endpoint to handle POST requests to create tests
 app.post('/tests', async (req, res) => {
   try {
-    const { cas_na_pisanie, tasks } = req.body;
+    const { tasks_id, cas_na_pisanie } = req.body;
 
-    if (!cas_na_pisanie || !tasks || !Array.isArray(tasks)) {
-      return res.status(400).send('Bad Request: cas_na_pisanie and tasks are required.');
+    // Check if required fields are provided and are of the correct type
+    if (!tasks_id || !cas_na_pisanie || !Array.isArray(tasks_id)) {
+      return res.status(400).send('Bad Request: tasks_id and cas_na_pisanie are required and tasks_id should be an array.');
     }
 
     // Insert the test
@@ -44,8 +46,8 @@ app.post('/tests', async (req, res) => {
     const test = testResult.rows[0];
 
     // Insert tasks
-    const taskPromises = tasks.map(task =>
-      db.query('INSERT INTO tasks (test_id, task_id) VALUES ($1, $2) RETURNING *', [test.test_id, task.task_id])
+    const taskPromises = tasks_id.map(task_id =>
+      db.query('INSERT INTO tasks (test_id, task_id) VALUES ($1, $2) RETURNING *', [test.test_id, task_id])
     );
 
     const taskResults = await Promise.all(taskPromises);
