@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ApiService } from '../../services/apiServices';
 
 @Component({
   selector: 'app-test-creation',
@@ -22,7 +23,8 @@ export class TestCreationComponent {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private apiService: ApiService
   ) {}
 
   preventNegativeValue(event: Event) {
@@ -56,6 +58,7 @@ export class TestCreationComponent {
       console.error('Total exercise count does not match the sum of easy, medium, and hard exercises.');
       return;
     }
+
     const easyCountInput = document.getElementById('easyCount') as HTMLInputElement;
     const mediumCountInput = document.getElementById('mediumCount') as HTMLInputElement;
     const hardCountInput = document.getElementById('hardCount') as HTMLInputElement;
@@ -64,16 +67,52 @@ export class TestCreationComponent {
     const mediumCount = mediumCountInput.value === '' ? 0 : parseInt(mediumCountInput.value, 10);
     const hardCount = hardCountInput.value === '' ? 0 : parseInt(hardCountInput.value, 10);
 
-    //TODO: - Adjust the query parameters as needed
-    //TODO generovanie uloh ne legyen kivonva az easycountbol hanem valamilyen szofisztikaltabb rendszert alkotni
-    const queryParams = `?easy=${easyCount - 3}&medium=${mediumCount}&hard=${hardCount}`;
+    const adjustedEasyCount = Math.max(0, easyCount - 3); // Ensure the count does not go below zero
+    // var queryParams = '';
 
-    this.http.get<any>('http://localhost:3000/test/api' + queryParams).subscribe(
+    // if (easyCount > 0) {
+    //   queryParams += `?easy=${adjustedEasyCount}`;
+    //   if (mediumCount > 0) {
+    //     queryParams += `&medium=${mediumCount}`;
+    //     if (hardCount > 0) {
+    //       queryParams += `&hard=${hardCount}`;
+    //     }
+    //   }
+    // } else {
+    //   console.error('No exercises selected.');
+    // }
+
+    const queryParams = `?easy=${adjustedEasyCount}&medium=${mediumCount}&hard=${hardCount}`;
+
+    this.apiService.getExercises(queryParams).subscribe(
       response => {
-        this.easyExercises = response.easy;
-        this.mediumExercises = response.medium;
-        this.hardExercises = response.hard;
+        this.easyExercises = response.easy || [];
+        this.mediumExercises = response.medium || [];
+        this.hardExercises = response.hard || [];
 
+        // Filter exercises and map to task IDs only if the corresponding count is greater than zero
+        const tasks_id = [
+          ...this.easyExercises.filter(() => easyCount > 0),
+          ...this.mediumExercises.filter(() => mediumCount > 0),
+          ...this.hardExercises.filter(() => hardCount > 0),
+        ].map(e => e.task_id);
+
+        if (tasks_id.length === 0) {
+          console.error('No tasks to create a test.');
+          return;
+        }
+
+        // this.apiService.createTest(tasks_id, '00:30:00').subscribe(
+        //   testResponse => {
+        //     console.log('Test created:', testResponse);
+        //     this.router.navigate(['/test-writing'], {
+        //       state: { data: response },
+        //     });
+        //   },
+        //   error => {
+        //     console.error('Error creating test:', error);
+        //   }
+        // );
         this.router.navigate(['/test-writing'], {
           state: { data: response },
         });
