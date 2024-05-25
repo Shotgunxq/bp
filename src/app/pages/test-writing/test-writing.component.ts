@@ -21,6 +21,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   timeLeft: number = 0; // in seconds
   timer: any;
   timerKey: string = 'test-writing-timer';
+  exercisesKey: string = 'test-writing-exercises';
 
   constructor(
     private route: ActivatedRoute,
@@ -39,25 +40,16 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
     }
 
-    this.startTimer();
-
-    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
-    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
-    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
-
-    console.log('Binominal exercises:', generatedExercisesBinominal);
-    console.log('Hypergeometric exercises:', generatedExercisesHypergeometric);
-    console.log('Geometric exercises:', generatedExercisesGeometric);
-
-    if (this.data && this.data.easy && this.data.easy.length > 0) {
-      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
+    // Retrieve exercises from localStorage if available
+    const savedExercises = localStorage.getItem(this.exercisesKey);
+    if (savedExercises) {
+      this.data = JSON.parse(savedExercises);
       this.currentExercise = this.data.easy[0];
     } else {
-      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
-      this.currentExercise = this.data.easy[0];
+      this.generateAndSaveExercises();
     }
 
-    console.log('Data writing concated:', this.data);
+    this.startTimer();
   }
 
   ngOnDestroy(): void {
@@ -93,6 +85,29 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  generateAndSaveExercises(): void {
+    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
+    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
+    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
+
+    console.log('Binominal exercises:', generatedExercisesBinominal);
+    console.log('Hypergeometric exercises:', generatedExercisesHypergeometric);
+    console.log('Geometric exercises:', generatedExercisesGeometric);
+
+    if (this.data && this.data.easy && this.data.easy.length > 0) {
+      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
+      this.currentExercise = this.data.easy[0];
+    } else {
+      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
+      this.currentExercise = this.data.easy[0];
+    }
+
+    // Save exercises to localStorage
+    localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
+
+    console.log('Data writing concated:', this.data);
   }
 
   prevExercise(): void {
