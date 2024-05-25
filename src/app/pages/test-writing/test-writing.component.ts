@@ -20,6 +20,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   timeLimit: string = '00:00:00'; // HH:MM:SS
   timeLeft: number = 0; // in seconds
   timer: any;
+  timerKey: string = 'test-writing-timer';
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +31,14 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.data = history.state.data;
     this.timeLimit = history.state.timeLimit; // time limit as string
 
-    this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
+    // Retrieve time left from localStorage if available
+    const savedTimeLeft = localStorage.getItem(this.timerKey);
+    if (savedTimeLeft) {
+      this.timeLeft = parseInt(savedTimeLeft, 10);
+    } else {
+      this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
+    }
+
     this.startTimer();
 
     const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
@@ -65,9 +73,11 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.timer = setInterval(() => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
+        localStorage.setItem(this.timerKey, this.timeLeft.toString()); // Save remaining time to localStorage
       } else {
         this.timeLeft = 0;
         this.stopTimer();
+        localStorage.removeItem(this.timerKey); // Remove timer from localStorage when time is up
         alert('Time is up!');
       }
     }, 1000);
