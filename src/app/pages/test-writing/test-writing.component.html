@@ -33,6 +33,10 @@
     </div>
   </div>
 
+  <div class="timer">Time left: {{ formatTime(timeLeft) }}</div>
+
+  <!-- Existing exercise display and controls -->
+
   <div *ngIf="!data">
     <p>No data available</p>
   </div>

@@ -1,4 +1,3 @@
-// Define interface for exercise
 export interface binomialExercise {
   n: number;
   k: number;
@@ -11,14 +10,14 @@ export interface binomialExercise {
 export function binomialProbabilityRandom(): binomialExercise[] {
   // Generate multiple exercises based on binomial distribution
   const exercises: binomialExercise[] = [];
-  //TODO: Adjust the number of exercises as needed
+  // Adjust the number of exercises as needed
   const numberOfExercises = 1; // You can adjust this number as needed
 
   for (let i = 0; i < numberOfExercises; i++) {
     // Randomly generate values
     const n: number = Math.floor(Math.random() * 10) + 1 + 2;
     const k: number = Math.floor(Math.random() * (n + 1)) + 2;
-    const p: number = Math.round(Math.random() * 100) / 100; //zaokrúhlene na 2 desatinné miesta
+    const p: number = Math.round(Math.random() * 100) / 100; // zaokrúhlene na 2 desatinné miesta
 
     // Calculate probability
     const probability: number = calculateProbability(n, k, p);
@@ -36,13 +35,13 @@ export function binomialProbabilityRandom(): binomialExercise[] {
 
 // Function to calculate binomial probability
 function calculateProbability(n: number, k: number, p: number): number {
-  // Function to calculate factorial
+  // Iterative factorial function to avoid deep recursion
   function factorial(num: number): number {
-    if (num === 0 || num === 1) {
-      return 1;
-    } else {
-      return num * factorial(num - 1);
+    let result = 1;
+    for (let i = 2; i <= num; i++) {
+      result *= i;
     }
+    return result;
   }
 
   // Function to calculate combination

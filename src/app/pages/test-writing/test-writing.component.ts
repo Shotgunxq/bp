@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { binomialExercise, binomialProbabilityRandom } from '../../services/binomialProbability';
 import { hypergeometricExercises, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
@@ -9,13 +9,17 @@ import { geometricExercise, geometricProbabilityRandom } from '../../services/ge
   templateUrl: './test-writing.component.html',
   styleUrls: ['./test-writing.component.scss'],
 })
-export class TestWritingComponent implements OnInit {
+export class TestWritingComponent implements OnInit, OnDestroy {
   data: any;
   currentExerciseIndex: number = 0;
   currentExercise: any;
   userAnswer: string = '';
   answerChecked: boolean = false;
   answerMessage: string = '';
+
+  timeLimit: string = '00:00:00'; // HH:MM:SS
+  timeLeft: number = 0; // in seconds
+  timer: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -24,6 +28,10 @@ export class TestWritingComponent implements OnInit {
 
   ngOnInit(): void {
     this.data = history.state.data;
+    this.timeLimit = history.state.timeLimit; // time limit as string
+
+    this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
+    this.startTimer();
 
     const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
     const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
@@ -34,16 +42,47 @@ export class TestWritingComponent implements OnInit {
     console.log('Geometric exercises:', generatedExercisesGeometric);
 
     if (this.data && this.data.easy && this.data.easy.length > 0) {
-      // Combine existing exercises with generated exercises using the spread operator
       this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
       this.currentExercise = this.data.easy[0];
     } else {
-      // If there are no fetched exercises, use only the generated exercises
       this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
       this.currentExercise = this.data.easy[0];
     }
 
     console.log('Data writing concated:', this.data);
+  }
+
+  ngOnDestroy(): void {
+    this.stopTimer();
+  }
+
+  convertTimeToSeconds(time: string): number {
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+
+  startTimer(): void {
+    this.timer = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.timeLeft = 0;
+        this.stopTimer();
+        alert('Time is up!');
+      }
+    }, 1000);
+  }
+
+  stopTimer(): void {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
+
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
 
   prevExercise(): void {
@@ -64,10 +103,8 @@ export class TestWritingComponent implements OnInit {
 
   checkAnswer(): void {
     if (this.currentExercise) {
-      // Save the user's answer to the current exercise
       this.currentExercise.userAnswer = this.userAnswer;
 
-      // Set answer checked status and message
       if (this.userAnswer === this.currentExercise.answer) {
         this.answerMessage = 'Correct!';
       } else {

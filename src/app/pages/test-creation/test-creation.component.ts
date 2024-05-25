@@ -67,20 +67,7 @@ export class TestCreationComponent {
     const mediumCount = mediumCountInput.value === '' ? 0 : parseInt(mediumCountInput.value, 10);
     const hardCount = hardCountInput.value === '' ? 0 : parseInt(hardCountInput.value, 10);
 
-    const adjustedEasyCount = Math.max(0, easyCount - 3); // Ensure the count does not go below zero
-    // var queryParams = '';
-
-    // if (easyCount > 0) {
-    //   queryParams += `?easy=${adjustedEasyCount}`;
-    //   if (mediumCount > 0) {
-    //     queryParams += `&medium=${mediumCount}`;
-    //     if (hardCount > 0) {
-    //       queryParams += `&hard=${hardCount}`;
-    //     }
-    //   }
-    // } else {
-    //   console.error('No exercises selected.');
-    // }
+    const adjustedEasyCount = Math.max(0, easyCount - 3);
 
     const queryParams = `?easy=${adjustedEasyCount}&medium=${mediumCount}&hard=${hardCount}`;
 
@@ -90,7 +77,6 @@ export class TestCreationComponent {
         this.mediumExercises = response.medium || [];
         this.hardExercises = response.hard || [];
 
-        // Filter exercises and map to task IDs only if the corresponding count is greater than zero
         const tasks_id = [
           ...this.easyExercises.filter(() => easyCount > 0),
           ...this.mediumExercises.filter(() => mediumCount > 0),
@@ -104,24 +90,20 @@ export class TestCreationComponent {
         console.log('Tasks ID:', tasks_id);
         console.log('Response:', response);
 
-        const cas_na_pisanie = '00:' + this.selectedTime + ':00';
+        const cas_na_pisanie = `00:${this.selectedTime.toString().padStart(2, '0')}:00`; // Format the time string
 
         console.log('Time:', cas_na_pisanie);
         this.apiService.createTest(tasks_id, cas_na_pisanie).subscribe(
           testResponse => {
             console.log('Test created:', testResponse);
             this.router.navigate(['/test-writing'], {
-              state: { data: response },
+              state: { data: response, timeLimit: cas_na_pisanie },
             });
           },
           error => {
             console.error('Error creating test:', error);
           }
         );
-
-        // this.router.navigate(['/test-writing'], {
-        //   state: { data: response },
-        // });
       },
       error => {
         console.error('Error fetching data:', error);
