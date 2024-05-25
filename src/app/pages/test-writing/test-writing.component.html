@@ -21,14 +21,19 @@
           <br />
           {{ currentExercise.description }}
         </p>
-        <input
-          matInput
-          type="text"
-          [(ngModel)]="userAnswer"
-          placeholder="Enter your answer"
-          [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
-        <button mat-flat-button color="primary" id="answerCheck" (click)="checkAnswer()" [disabled]="answerChecked">Check Answer</button>
-        <p *ngIf="answerChecked">{{ answerMessage }}</p>
+        <div class="answer-lock">
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="userAnswer"
+            placeholder="Enter your answer"
+            [disabled]="answerLocked"
+            [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
+          <button mat-flat-button color="primary" id="answerCheck" (click)="checkAnswer()">
+            {{ answerLocked ? 'Unlock Answer' : 'Lock Answer' }}
+          </button>
+          <p *ngIf="answerChecked">{{ answerMessage }}</p>
+        </div>
       </div>
       <div *ngIf="!currentExercise">
         <p>No exercises available</p>

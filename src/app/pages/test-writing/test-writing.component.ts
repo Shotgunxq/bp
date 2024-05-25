@@ -15,6 +15,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   currentExercise: any;
   userAnswer: string = '';
   answerChecked: boolean = false;
+  answerLocked: boolean = false;
   answerMessage: string = '';
 
   timeLimit: string = '00:00:00'; // HH:MM:SS
@@ -49,7 +50,16 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.generateAndSaveExercises();
     }
 
+    // Retrieve answers from localStorage if available
+    const savedAnswers = localStorage.getItem('answers');
+    if (savedAnswers) {
+      this.data.answers = JSON.parse(savedAnswers);
+    } else {
+      this.data.answers = {};
+    }
+
     this.startTimer();
+    this.loadCurrentExercise();
   }
 
   ngOnDestroy(): void {
@@ -110,10 +120,16 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     console.log('Data writing concated:', this.data);
   }
 
+  loadCurrentExercise(): void {
+    this.currentExercise = this.data.easy[this.currentExerciseIndex];
+    this.userAnswer = this.data.answers[this.currentExerciseIndex] || '';
+    this.answerLocked = !!this.data.answers[this.currentExerciseIndex];
+  }
+
   prevExercise(): void {
     if (this.currentExerciseIndex > 0) {
       this.currentExerciseIndex--;
-      this.currentExercise = this.data.easy[this.currentExerciseIndex];
+      this.loadCurrentExercise();
       this.resetAnswer();
     }
   }
@@ -121,26 +137,33 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   nextExercise(): void {
     if (this.currentExerciseIndex < this.data.easy.length - 1 && this.data.easy.length > 1) {
       this.currentExerciseIndex++;
-      this.currentExercise = this.data.easy[this.currentExerciseIndex];
+      this.loadCurrentExercise();
       this.resetAnswer();
     }
   }
 
   checkAnswer(): void {
     if (this.currentExercise) {
-      this.currentExercise.userAnswer = this.userAnswer;
-
-      if (this.userAnswer === this.currentExercise.answer) {
-        this.answerMessage = 'Correct!';
+      if (this.answerLocked) {
+        this.answerLocked = false;
+        this.answerMessage = 'Answer unlocked. You can change your answer.';
       } else {
-        this.answerMessage = 'Incorrect. Try again.';
+        this.answerLocked = true;
+        this.currentExercise.userAnswer = this.userAnswer;
+        this.data.answers[this.currentExerciseIndex] = this.userAnswer;
+        localStorage.setItem('answers', JSON.stringify(this.data.answers));
+
+        if (this.userAnswer === this.currentExercise.answer) {
+          this.answerMessage = 'Correct!';
+        } else {
+          this.answerMessage = 'Incorrect. Try again.';
+        }
       }
       this.answerChecked = true;
     }
   }
 
   resetAnswer(): void {
-    this.userAnswer = '';
     this.answerChecked = false;
     this.answerMessage = '';
   }
@@ -148,7 +171,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   jumpToExercise(index: number): void {
     if (index >= 0 && index < this.data.easy.length) {
       this.currentExerciseIndex = index;
-      this.currentExercise = this.data.easy[index];
+      this.loadCurrentExercise();
       this.resetAnswer();
     }
   }

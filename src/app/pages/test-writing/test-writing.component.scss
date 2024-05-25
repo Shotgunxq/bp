@@ -70,3 +70,10 @@
     -1px -1px 0 #000,
     1px -1px 0 #000;
 }
+
+.answer-lock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
