@@ -2,14 +2,8 @@ import { Component } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { binomialProbabilityRandom, BinomialResult } from '../../services/binomialProbability';
-// const result: BinomialResult = binomialProbabilityRandom();
-// console.log(`Počet opakovaní: ${result.n}`);
-// console.log(`Počet úspechov: ${result.k}`);
-// console.log(`Pravdepodobnosť úspechu: ${result.p}`);
-// console.log(
-//   `Pravdepodobnosť získania presne ${result.k} hláv pri ${result.n} hodoch mincí je ${result.probability}`,
-// );
+import { ApiService } from '../../services/apiServices';
+
 @Component({
   selector: 'app-test-creation',
   templateUrl: './test-creation.component.html',
@@ -27,17 +21,18 @@ export class TestCreationComponent {
   mediumExercises: any[] = [];
   hardExercises: any[] = [];
 
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private apiService: ApiService
+  ) {}
+
   preventNegativeValue(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.value && parseInt(input.value, 10) < 0) {
       input.value = '0';
     }
   }
-
-  constructor(
-    private router: Router,
-    private http: HttpClient
-  ) {}
 
   validateTime(): boolean {
     return this.selectedTime >= 5 && this.selectedTime <= 60;
@@ -63,6 +58,7 @@ export class TestCreationComponent {
       console.error('Total exercise count does not match the sum of easy, medium, and hard exercises.');
       return;
     }
+
     const easyCountInput = document.getElementById('easyCount') as HTMLInputElement;
     const mediumCountInput = document.getElementById('mediumCount') as HTMLInputElement;
     const hardCountInput = document.getElementById('hardCount') as HTMLInputElement;
@@ -71,17 +67,43 @@ export class TestCreationComponent {
     const mediumCount = mediumCountInput.value === '' ? 0 : parseInt(mediumCountInput.value, 10);
     const hardCount = hardCountInput.value === '' ? 0 : parseInt(hardCountInput.value, 10);
 
-    const queryParams = `?easy=${easyCount}&medium=${mediumCount}&hard=${hardCount}`;
+    const adjustedEasyCount = Math.max(0, easyCount - 3);
 
-    this.http.get<any>('http://localhost:3000/test/api' + queryParams).subscribe(
+    const queryParams = `?easy=${adjustedEasyCount}&medium=${mediumCount}&hard=${hardCount}`;
+
+    this.apiService.getExercises(queryParams).subscribe(
       response => {
-        console.log('Data:', response);
-        this.easyExercises = response.easy;
-        this.mediumExercises = response.medium;
-        this.hardExercises = response.hard;
-        this.router.navigate(['/test-writing'], {
-          state: { data: response },
-        });
+        this.easyExercises = response.easy || [];
+        this.mediumExercises = response.medium || [];
+        this.hardExercises = response.hard || [];
+
+        const tasks_id = [
+          ...this.easyExercises.filter(() => easyCount > 0),
+          ...this.mediumExercises.filter(() => mediumCount > 0),
+          ...this.hardExercises.filter(() => hardCount > 0),
+        ].map(e => e.task_id);
+
+        if (tasks_id.length === 0) {
+          console.error('No tasks to create a test.');
+          return;
+        }
+        console.log('Tasks ID:', tasks_id);
+        console.log('Response:', response);
+
+        const cas_na_pisanie = `00:${this.selectedTime.toString().padStart(2, '0')}:00`; // Format the time string
+
+        console.log('Time:', cas_na_pisanie);
+        this.apiService.createTest(tasks_id, cas_na_pisanie).subscribe(
+          testResponse => {
+            console.log('Test created:', testResponse);
+            this.router.navigate(['/test-writing'], {
+              state: { data: response, timeLimit: cas_na_pisanie },
+            });
+          },
+          error => {
+            console.error('Error creating test:', error);
+          }
+        );
       },
       error => {
         console.error('Error fetching data:', error);

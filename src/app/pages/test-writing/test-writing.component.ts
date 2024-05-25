@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { binomialExercise, binomialProbabilityRandom } from '../../services/binomialProbability';
+import { hypergeometricExercises, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
+import { geometricExercise, geometricProbabilityRandom } from '../../services/geometricProbability';
 
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
   styleUrls: ['./test-writing.component.scss'],
 })
-export class TestWritingComponent implements OnInit {
+export class TestWritingComponent implements OnInit, OnDestroy {
   data: any;
   currentExerciseIndex: number = 0;
   currentExercise: any;
@@ -14,17 +17,82 @@ export class TestWritingComponent implements OnInit {
   answerChecked: boolean = false;
   answerMessage: string = '';
 
+  timeLimit: string = '00:00:00'; // HH:MM:SS
+  timeLeft: number = 0; // in seconds
+  timer: any;
+  timerKey: string = 'test-writing-timer';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    // this.data = this.route.snapshot.data["data"];
     this.data = history.state.data;
+    this.timeLimit = history.state.timeLimit; // time limit as string
+
+    // Retrieve time left from localStorage if available
+    const savedTimeLeft = localStorage.getItem(this.timerKey);
+    if (savedTimeLeft) {
+      this.timeLeft = parseInt(savedTimeLeft, 10);
+    } else {
+      this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
+    }
+
+    this.startTimer();
+
+    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
+    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
+    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
+
+    console.log('Binominal exercises:', generatedExercisesBinominal);
+    console.log('Hypergeometric exercises:', generatedExercisesHypergeometric);
+    console.log('Geometric exercises:', generatedExercisesGeometric);
+
     if (this.data && this.data.easy && this.data.easy.length > 0) {
+      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
+      this.currentExercise = this.data.easy[0];
+    } else {
+      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
       this.currentExercise = this.data.easy[0];
     }
+
+    console.log('Data writing concated:', this.data);
+  }
+
+  ngOnDestroy(): void {
+    this.stopTimer();
+  }
+
+  convertTimeToSeconds(time: string): number {
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+
+  startTimer(): void {
+    this.timer = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+        localStorage.setItem(this.timerKey, this.timeLeft.toString()); // Save remaining time to localStorage
+      } else {
+        this.timeLeft = 0;
+        this.stopTimer();
+        localStorage.removeItem(this.timerKey); // Remove timer from localStorage when time is up
+        alert('Time is up!');
+      }
+    }, 1000);
+  }
+
+  stopTimer(): void {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
+
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
 
   prevExercise(): void {
@@ -45,10 +113,8 @@ export class TestWritingComponent implements OnInit {
 
   checkAnswer(): void {
     if (this.currentExercise) {
-      // Save the user's answer to the current exercise
       this.currentExercise.userAnswer = this.userAnswer;
 
-      // Set answer checked status and message
       if (this.userAnswer === this.currentExercise.answer) {
         this.answerMessage = 'Correct!';
       } else {

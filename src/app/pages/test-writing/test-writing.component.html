@@ -1,41 +1,38 @@
 <div class="container">
   <div *ngIf="data">
-    <!-- Display current exercise -->
-    <div class="exerciseModal" *ngIf="currentExercise">
-      <!-- <h2>Exercise {{ currentExerciseIndex + 1 }}</h2> -->
-
-      <!-- Display exercise navigation buttons -->
-      <div class="exercise-buttons" *ngIf="data && data.easy.length > 1">
-        <button
-          id="exerciseNavButton"
-          *ngFor="let exercise of data.easy; let i = index"
-          (click)="jumpToExercise(i)"
-          [class.selected]="i === currentExerciseIndex"
-          [class.answered]="exercise.userAnswer !== undefined && exercise.userAnswer !== ''">
-          {{ i + 1 }}
-        </button>
+    <!-- Display exercises fetched from the database -->
+    <div *ngIf="data.easy.length > 0">
+      <div class="exerciseModal" *ngIf="currentExercise">
+        <div class="exercise-buttons">
+          <button
+            id="exerciseNavButton"
+            *ngFor="let exercise of data.easy; let i = index"
+            (click)="jumpToExercise(i)"
+            [class.selected]="i === currentExerciseIndex"
+            [class.answered]="exercise.userAnswer !== undefined && exercise.userAnswer !== ''">
+            {{ i + 1 }}
+          </button>
+        </div>
+        <div class="timer-container">
+          <div class="timer">Time left: {{ formatTime(timeLeft) }}</div>
+        </div>
+        <p class="exerciseDesc">
+          Znenie úlohy:
+          <br />
+          {{ currentExercise.description }}
+        </p>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="userAnswer"
+          placeholder="Enter your answer"
+          [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
+        <button mat-flat-button color="primary" id="answerCheck" (click)="checkAnswer()" [disabled]="answerChecked">Check Answer</button>
+        <p *ngIf="answerChecked">{{ answerMessage }}</p>
       </div>
-      <p class="exerciseDesc">
-        Znenie úlohy:
-        <br />
-        {{ currentExercise.description }}
-      </p>
-      <!-- Input field for user's answer -->
-      <input
-        matInput
-        type="text"
-        [(ngModel)]="userAnswer"
-        placeholder="Enter your answer"
-        [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
-
-      <!-- Submit button to check the answer -->
-      <button mat-flat-button color="primary" id="answerCheck" (click)="checkAnswer()" [disabled]="answerChecked">Check Answer</button>
-
-      <!-- Display whether the answer is correct or not -->
-      <p *ngIf="answerChecked">{{ answerMessage }}</p>
-    </div>
-    <div *ngIf="!currentExercise">
-      <p>No exercises available</p>
+      <div *ngIf="!currentExercise">
+        <p>No exercises available</p>
+      </div>
     </div>
   </div>
 
