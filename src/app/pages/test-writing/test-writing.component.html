@@ -13,6 +13,9 @@
             {{ i + 1 }}
           </button>
         </div>
+        <div class="timer-container">
+          <div class="timer">Time left: {{ formatTime(timeLeft) }}</div>
+        </div>
         <p class="exerciseDesc">
           Znenie úlohy:
           <br />
@@ -32,10 +35,6 @@
       </div>
     </div>
   </div>
-
-  <div class="timer">Time left: {{ formatTime(timeLeft) }}</div>
-
-  <!-- Existing exercise display and controls -->
 
   <div *ngIf="!data">
     <p>No data available</p>
