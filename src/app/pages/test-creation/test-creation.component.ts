@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -9,7 +9,11 @@ import { ApiService } from '../../services/apiServices';
   templateUrl: './test-creation.component.html',
   styleUrl: './test-creation.component.scss',
 })
-export class TestCreationComponent {
+export class TestCreationComponent implements OnInit {
+  ngOnInit(): void {
+    localStorage.clear();
+  }
+
   times: number[] = [5, 10, 13, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
   selectedTime: number = 5; // Default selected time
 
