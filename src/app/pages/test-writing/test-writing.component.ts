@@ -1,8 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { binomialExercise, binomialProbabilityRandom } from '../../services/binomialProbability';
-import { hypergeometricExercises, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
-import { geometricExercise, geometricProbabilityRandom } from '../../services/geometricProbability';
 
 @Component({
   selector: 'app-test-writing',
@@ -10,9 +7,9 @@ import { geometricExercise, geometricProbabilityRandom } from '../../services/ge
   styleUrls: ['./test-writing.component.scss'],
 })
 export class TestWritingComponent implements OnInit, OnDestroy {
-  data: any;
+  data: any[] = [];
   currentExerciseIndex: number = 0;
-  currentExercise: any;
+  currentExercise: any = null;
   userAnswer: string = '';
   answerLocked: boolean = false;
   answerChecked: boolean = false;
@@ -30,42 +27,32 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.data = history.state.data;
-    this.timeLimit = history.state.timeLimit; // time limit as string
+    const stateData = history.state.data;
+    if (stateData && stateData.exercises) {
+      this.data = stateData.exercises;
+    } else {
+      this.data = [];
+    }
 
-    // Retrieve time left from localStorage if available
+    this.timeLimit = history.state.timeLimit;
     const savedTimeLeft = localStorage.getItem(this.timerKey);
     if (savedTimeLeft) {
       this.timeLeft = parseInt(savedTimeLeft, 10);
     } else {
       this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
     }
+
     const savedExercises = localStorage.getItem(this.exercisesKey);
     if (savedExercises) {
       this.data = JSON.parse(savedExercises);
-    } else {
-      this.initializeExercises();
+    }
+
+    if (this.data.length > 0) {
+      this.currentExercise = this.data[0];
     }
 
     this.startTimer();
-
-    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
-    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
-    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
-
-    console.log('Binominal exercises:', generatedExercisesBinominal);
-    console.log('Hypergeometric exercises:', generatedExercisesHypergeometric);
-    console.log('Geometric exercises:', generatedExercisesGeometric);
-
-    if (this.data && this.data.easy && this.data.easy.length > 0) {
-      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
-      this.currentExercise = this.data.easy[0];
-    } else {
-      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
-      this.currentExercise = this.data.easy[0];
-    }
-
-    console.log('Data writing concated:', this.data);
+    console.log('Data after initialization:', this.data);
   }
 
   ngOnDestroy(): void {
@@ -81,11 +68,11 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.timer = setInterval(() => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
-        localStorage.setItem(this.timerKey, this.timeLeft.toString()); // Save remaining time to localStorage
+        localStorage.setItem(this.timerKey, this.timeLeft.toString());
       } else {
         this.timeLeft = 0;
         this.stopTimer();
-        localStorage.removeItem(this.timerKey); // Remove timer from localStorage when time is up
+        localStorage.removeItem(this.timerKey);
         alert('Time is up!');
       }
     }, 1000);
@@ -106,15 +93,26 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   prevExercise(): void {
     if (this.currentExerciseIndex > 0) {
       this.currentExerciseIndex--;
-      this.currentExercise = this.data.easy[this.currentExerciseIndex];
+      this.currentExercise = this.data[this.currentExerciseIndex];
+      console.log('Current Exercise after prev:', this.currentExercise);
       this.resetAnswer();
     }
   }
 
   nextExercise(): void {
-    if (this.currentExerciseIndex < this.data.easy.length - 1 && this.data.easy.length > 1) {
+    if (this.currentExerciseIndex < this.data.length - 1) {
       this.currentExerciseIndex++;
-      this.currentExercise = this.data.easy[this.currentExerciseIndex];
+      this.currentExercise = this.data[this.currentExerciseIndex];
+      console.log('Current Exercise after next:', this.currentExercise);
+      this.resetAnswer();
+    }
+  }
+
+  jumpToExercise(index: number): void {
+    if (index >= 0 && index < this.data.length) {
+      this.currentExerciseIndex = index;
+      this.currentExercise = this.data[index];
+      console.log('Current Exercise after jump:', this.currentExercise);
       this.resetAnswer();
     }
   }
@@ -136,28 +134,5 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.userAnswer = '';
     this.answerChecked = false;
     this.answerMessage = '';
-  }
-
-  jumpToExercise(index: number): void {
-    if (index >= 0 && index < this.data.easy.length) {
-      this.currentExerciseIndex = index;
-      this.currentExercise = this.data.easy[index];
-      this.resetAnswer();
-    }
-  }
-
-  initializeExercises(): void {
-    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
-    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
-    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
-
-    if (this.data && this.data.easy && this.data.easy.length > 0) {
-      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
-    } else {
-      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
-    }
-
-    // Save the generated exercises to local storage
-    localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
   }
 }

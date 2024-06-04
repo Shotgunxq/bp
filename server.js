@@ -12,36 +12,29 @@ app.get('/test/api', async (req, res) => {
   try {
     const { easy, medium, hard } = req.query;
 
-    const easyQuery = db.query('SELECT * FROM exercises WHERE difficulty = $1 ORDER BY RANDOM() LIMIT $2', ['easy', easy]);
-    const mediumQuery = db.query('SELECT * FROM exercises WHERE difficulty = $1 ORDER BY RANDOM() LIMIT $2', ['medium', medium]);
-    const hardQuery = db.query('SELECT * FROM exercises WHERE difficulty = $1 ORDER BY RANDOM() LIMIT $2', ['hard', hard]);
+    const easyQuery = db.query('SELECT * FROM exercises WHERE difficulty = $1 ORDER BY RANDOM() LIMIT $2', ['easy', parseInt(easy, 10)]);
+    const mediumQuery = db.query('SELECT * FROM exercises WHERE difficulty = $1 ORDER BY RANDOM() LIMIT $2', ['medium', parseInt(medium, 10)]);
+    const hardQuery = db.query('SELECT * FROM exercises WHERE difficulty = $1 ORDER BY RANDOM() LIMIT $2', ['hard', parseInt(hard, 10)]);
 
     const [easyResult, mediumResult, hardResult] = await Promise.all([easyQuery, mediumQuery, hardQuery]);
 
-    const responseData = {
-      easy: easyResult.rows,
-      medium: mediumResult.rows,
-      hard: hardResult.rows,
-    };
+    const allExercises = [...easyResult.rows, ...mediumResult.rows, ...hardResult.rows];
 
-    res.json(responseData);
+    res.json({ exercises: allExercises });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Backend endpoint to handle POST requests to create tests
 app.post('/tests', async (req, res) => {
   try {
     const { exercises, cas_na_pisanie } = req.body;
 
-    // Check if required fields are provided and are of the correct type
-    if (!exercises || !cas_na_pisanie || !Array.isArray(exercises)) {
-      return res.status(400).send('Bad Request: exercises and cas_na_pisanie are required and exercises should be an array.');
-    }
+    // if (!exercises || !cas_na_pisanie || !Array.isArray(exercises)) {
+    //   return res.status(400).send('Bad Request: exercises and cas_na_pisanie are required and exercises should be an array.');
+    // }
 
-    // Insert the test
     const testResult = await db.query('INSERT INTO tests (exercises, cas_na_pisanie) VALUES ($1::jsonb, $2::time) RETURNING *', [
       JSON.stringify(exercises),
       cas_na_pisanie,
@@ -50,7 +43,7 @@ app.post('/tests', async (req, res) => {
 
     res.json(test);
   } catch (err) {
-    console.error('Aaaaaaa ', err);
+    console.error('Error in POST /tests:', err);
     res.status(500).send('Internal Server Error');
   }
 });

@@ -24,6 +24,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -52,6 +56,10 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
     NoopAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatStepperModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
