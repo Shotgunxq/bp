@@ -14,6 +14,9 @@ import { geometricExercise, geometricProbabilityRandom } from '../../services/ge
 })
 export class TestCreationComponent implements OnInit {
   generated: any[] = [];
+
+  easyRandomNumber = Math.floor(Math.random() * 3) + 1;
+
   ngOnInit(): void {
     localStorage.clear();
   }
@@ -75,14 +78,34 @@ export class TestCreationComponent implements OnInit {
     const mediumCount = mediumCountInput.value === '' ? 0 : parseInt(mediumCountInput.value, 10);
     const hardCount = hardCountInput.value === '' ? 0 : parseInt(hardCountInput.value, 10);
 
-    const adjustedEasyCount = Math.max(0, easyCount - 3);
+    const adjustedEasyCount = Math.max(0, easyCount - this.easyRandomNumber);
 
     const queryParams = `?easy=${adjustedEasyCount}&medium=${mediumCount}&hard=${hardCount}`;
 
+    const generatedBinominal = binomialProbabilityRandom();
+    const generatedHypergeometric = hypergeometricProbabilityRandom();
+    const generatedGeometric = geometricProbabilityRandom();
+
+    switch (this.easyRandomNumber) {
+      case 1:
+        this.generated = generatedBinominal;
+        break;
+      case 2:
+        this.generated = [...generatedBinominal, ...generatedHypergeometric];
+        break;
+      case 3:
+        this.generated = [...generatedBinominal, ...generatedHypergeometric, ...generatedGeometric];
+        break;
+    }
+
     this.apiService.getExercises(queryParams).subscribe(
       response => {
-        this.exercises = response;
-        console.log('Exercises:', this.exercises);
+        // Assign the response data directly to the exercises property
+        this.exercises = response.exercises;
+        // Merge the fetched and generated exercises
+        this.exercises = this.exercises.concat(this.generated);
+        console.log('Exercises fetched:', this.exercises);
+        console.log('Generated:', this.generated);
         if (this.exercises.length === 0) {
           console.error('No exercises to create a test.');
           return;
@@ -109,13 +132,13 @@ export class TestCreationComponent implements OnInit {
     );
   }
 
-  initializeExercises(): void {
-    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
-    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
-    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
+  // initializeExercises(): void {
+  //   const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
+  //   const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
+  //   const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
 
-    this.generated = [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
+  //   this.generated = [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
 
-    localStorage.setItem(this.exercisesKey, JSON.stringify(this.generated));
-  }
+  //   localStorage.setItem(this.exercisesKey, JSON.stringify(this.generated));
+  // }
 }

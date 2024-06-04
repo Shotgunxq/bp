@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,11 +29,13 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const stateData = history.state.data;
-    if (stateData && stateData.exercises) {
-      this.data = stateData.exercises;
-    } else {
-      this.data = [];
-    }
+    console.log(stateData);
+    this.data = stateData;
+    // if (stateData && stateData.exercises) {
+    //   this.data = stateData.exercises;
+    // } else {
+    //   this.data = [];
+    // }
 
     this.timeLimit = history.state.timeLimit;
     const savedTimeLeft = localStorage.getItem(this.timerKey);
