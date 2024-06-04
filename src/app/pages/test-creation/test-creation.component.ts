@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/apiServices';
@@ -7,13 +6,12 @@ import { ApiService } from '../../services/apiServices';
 @Component({
   selector: 'app-test-creation',
   templateUrl: './test-creation.component.html',
-  styleUrl: './test-creation.component.scss',
+  styleUrls: ['./test-creation.component.scss'],
 })
 export class TestCreationComponent implements OnInit {
   ngOnInit(): void {
     localStorage.clear();
   }
-
   times: number[] = [5, 10, 13, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
   selectedTime: number = 5; // Default selected time
 
@@ -81,23 +79,23 @@ export class TestCreationComponent implements OnInit {
         this.mediumExercises = response.medium || [];
         this.hardExercises = response.hard || [];
 
-        const tasks_id = [
+        const exercises = [
           ...this.easyExercises.filter(() => easyCount > 0),
           ...this.mediumExercises.filter(() => mediumCount > 0),
           ...this.hardExercises.filter(() => hardCount > 0),
-        ].map(e => e.task_id);
+        ];
 
-        if (tasks_id.length === 0) {
-          console.error('No tasks to create a test.');
+        if (exercises.length === 0) {
+          console.error('No exercises to create a test.');
           return;
         }
-        console.log('Tasks ID:', tasks_id);
+        console.log('Exercises:', exercises);
         console.log('Response:', response);
 
         const cas_na_pisanie = `00:${this.selectedTime.toString().padStart(2, '0')}:00`; // Format the time string
 
         console.log('Time:', cas_na_pisanie);
-        this.apiService.createTest(tasks_id, cas_na_pisanie).subscribe(
+        this.apiService.createTest(exercises, cas_na_pisanie).subscribe(
           testResponse => {
             console.log('Test created:', testResponse);
             this.router.navigate(['/test-writing'], {

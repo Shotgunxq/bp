@@ -14,8 +14,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   currentExerciseIndex: number = 0;
   currentExercise: any;
   userAnswer: string = '';
-  answerChecked: boolean = false;
   answerLocked: boolean = false;
+  answerChecked: boolean = false;
   answerMessage: string = '';
 
   timeLimit: string = '00:00:00'; // HH:MM:SS
@@ -40,26 +40,32 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     } else {
       this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
     }
-
-    // Retrieve exercises from localStorage if available
     const savedExercises = localStorage.getItem(this.exercisesKey);
     if (savedExercises) {
       this.data = JSON.parse(savedExercises);
-      this.currentExercise = this.data.easy[0];
     } else {
-      this.generateAndSaveExercises();
-    }
-
-    // Retrieve answers from localStorage if available
-    const savedAnswers = localStorage.getItem('answers');
-    if (savedAnswers) {
-      this.data.answers = JSON.parse(savedAnswers);
-    } else {
-      this.data.answers = {};
+      this.initializeExercises();
     }
 
     this.startTimer();
-    this.loadCurrentExercise();
+
+    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
+    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
+    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
+
+    console.log('Binominal exercises:', generatedExercisesBinominal);
+    console.log('Hypergeometric exercises:', generatedExercisesHypergeometric);
+    console.log('Geometric exercises:', generatedExercisesGeometric);
+
+    if (this.data && this.data.easy && this.data.easy.length > 0) {
+      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
+      this.currentExercise = this.data.easy[0];
+    } else {
+      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
+      this.currentExercise = this.data.easy[0];
+    }
+
+    console.log('Data writing concated:', this.data);
   }
 
   ngOnDestroy(): void {
@@ -97,39 +103,10 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
 
-  generateAndSaveExercises(): void {
-    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
-    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
-    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
-
-    console.log('Binominal exercises:', generatedExercisesBinominal);
-    console.log('Hypergeometric exercises:', generatedExercisesHypergeometric);
-    console.log('Geometric exercises:', generatedExercisesGeometric);
-
-    if (this.data && this.data.easy && this.data.easy.length > 0) {
-      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
-      this.currentExercise = this.data.easy[0];
-    } else {
-      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
-      this.currentExercise = this.data.easy[0];
-    }
-
-    // Save exercises to localStorage
-    localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
-
-    console.log('Data writing concated:', this.data);
-  }
-
-  loadCurrentExercise(): void {
-    this.currentExercise = this.data.easy[this.currentExerciseIndex];
-    this.userAnswer = this.data.answers[this.currentExerciseIndex] || '';
-    this.answerLocked = !!this.data.answers[this.currentExerciseIndex];
-  }
-
   prevExercise(): void {
     if (this.currentExerciseIndex > 0) {
       this.currentExerciseIndex--;
-      this.loadCurrentExercise();
+      this.currentExercise = this.data.easy[this.currentExerciseIndex];
       this.resetAnswer();
     }
   }
@@ -137,33 +114,26 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   nextExercise(): void {
     if (this.currentExerciseIndex < this.data.easy.length - 1 && this.data.easy.length > 1) {
       this.currentExerciseIndex++;
-      this.loadCurrentExercise();
+      this.currentExercise = this.data.easy[this.currentExerciseIndex];
       this.resetAnswer();
     }
   }
 
   checkAnswer(): void {
     if (this.currentExercise) {
-      if (this.answerLocked) {
-        this.answerLocked = false;
-        this.answerMessage = 'Answer unlocked. You can change your answer.';
-      } else {
-        this.answerLocked = true;
-        this.currentExercise.userAnswer = this.userAnswer;
-        this.data.answers[this.currentExerciseIndex] = this.userAnswer;
-        localStorage.setItem('answers', JSON.stringify(this.data.answers));
+      this.currentExercise.userAnswer = this.userAnswer;
 
-        if (this.userAnswer === this.currentExercise.answer) {
-          this.answerMessage = 'Correct!';
-        } else {
-          this.answerMessage = 'Incorrect. Try again.';
-        }
+      if (this.userAnswer === this.currentExercise.answer) {
+        this.answerMessage = 'Correct!';
+      } else {
+        this.answerMessage = 'Incorrect. Try again.';
       }
       this.answerChecked = true;
     }
   }
 
   resetAnswer(): void {
+    this.userAnswer = '';
     this.answerChecked = false;
     this.answerMessage = '';
   }
@@ -171,8 +141,23 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   jumpToExercise(index: number): void {
     if (index >= 0 && index < this.data.easy.length) {
       this.currentExerciseIndex = index;
-      this.loadCurrentExercise();
+      this.currentExercise = this.data.easy[index];
       this.resetAnswer();
     }
+  }
+
+  initializeExercises(): void {
+    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
+    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
+    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
+
+    if (this.data && this.data.easy && this.data.easy.length > 0) {
+      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
+    } else {
+      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
+    }
+
+    // Save the generated exercises to local storage
+    localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
   }
 }

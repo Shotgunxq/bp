@@ -34,30 +34,23 @@ app.get('/test/api', async (req, res) => {
 // Backend endpoint to handle POST requests to create tests
 app.post('/tests', async (req, res) => {
   try {
-    const { tasks_id, cas_na_pisanie } = req.body;
+    const { exercises, cas_na_pisanie } = req.body;
 
     // Check if required fields are provided and are of the correct type
-    if (!tasks_id || !cas_na_pisanie || !Array.isArray(tasks_id)) {
-      return res.status(400).send('Bad Request: tasks_id and cas_na_pisanie are required and tasks_id should be an array.');
+    if (!exercises || !cas_na_pisanie || !Array.isArray(exercises)) {
+      return res.status(400).send('Bad Request: exercises and cas_na_pisanie are required and exercises should be an array.');
     }
 
     // Insert the test
-    const testResult = await db.query('INSERT INTO tests (cas_na_pisanie) VALUES ($1) RETURNING *', [cas_na_pisanie]);
+    const testResult = await db.query('INSERT INTO tests (exercises, cas_na_pisanie) VALUES ($1::jsonb, $2::time) RETURNING *', [
+      JSON.stringify(exercises),
+      cas_na_pisanie,
+    ]);
     const test = testResult.rows[0];
 
-    // Insert tasks
-    const taskPromises = tasks_id.map(task_id =>
-      db.query('INSERT INTO tasks (test_id, task_id) VALUES ($1, $2) RETURNING *', [test.test_id, task_id])
-    );
-
-    const taskResults = await Promise.all(taskPromises);
-
-    res.json({
-      test,
-      tasks: taskResults.map(result => result.rows[0]),
-    });
+    res.json(test);
   } catch (err) {
-    console.error(err);
+    console.error('Aaaaaaa ', err);
     res.status(500).send('Internal Server Error');
   }
 });
