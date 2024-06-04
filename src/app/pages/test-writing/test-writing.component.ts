@@ -30,7 +30,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const stateData = history.state.data;
     console.log(stateData);
-    this.data = stateData;
+    this.data = stateData || [];
     // if (stateData && stateData.exercises) {
     //   this.data = stateData.exercises;
     // } else {
