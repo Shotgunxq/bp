@@ -5,6 +5,7 @@ export interface binomialExercise {
   probability: number;
   description: string;
   answer: number;
+  points: number;
 }
 
 // Function to generate exercises with random values
@@ -30,7 +31,7 @@ export function binomialProbabilityRandom(): binomialExercise[] {
     const answer: number = calculateAnswer(n, k, p);
 
     // Push exercise to exercises array
-    exercises.push({ n, k, p, probability, description, answer });
+    exercises.push({ n, k, p, probability, description, answer, points: 1 });
   }
 
   // Return array of exercises

@@ -6,6 +6,7 @@ export interface geometricExercise {
   probability: number;
   description: string;
   answer: number;
+  points: number;
 }
 
 // Function to generate exercises with random values
@@ -33,7 +34,7 @@ export function geometricProbabilityRandom(): geometricExercise[] {
     const answer = 1 - Math.pow(1 - p, k);
 
     // Push exercise to exercises array
-    exercises.push({ n: numberOfTrials, k, p, probability, description, answer });
+    exercises.push({ n: numberOfTrials, k, p, probability, description, answer, points: 1 });
   }
 
   // Return array of exercises

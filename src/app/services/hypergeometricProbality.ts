@@ -7,6 +7,7 @@ export interface hypergeometricExercises {
   probability: number;
   description: string;
   answer: number;
+  points: number;
 }
 
 // Function to generate exercises with random values
@@ -29,7 +30,7 @@ export function hypergeometricProbabilityRandom(): hypergeometricExercises[] {
     const answer = probability;
 
     // Push exercise to exercises array
-    exercises.push({ N, K, n, k, probability, description, answer });
+    exercises.push({ N, K, n, k, probability, description, answer, points: 1 });
   }
 
   // Return array of exercises

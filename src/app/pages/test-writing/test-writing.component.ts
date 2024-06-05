@@ -1,4 +1,3 @@
-import { state } from '@angular/animations';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -29,13 +28,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const stateData = history.state.data;
-    console.log(stateData);
     this.data = stateData || [];
-    // if (stateData && stateData.exercises) {
-    //   this.data = stateData.exercises;
-    // } else {
-    //   this.data = [];
-    // }
 
     this.timeLimit = history.state.timeLimit;
     const savedTimeLeft = localStorage.getItem(this.timerKey);
@@ -52,14 +45,15 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
     if (this.data.length > 0) {
       this.currentExercise = this.data[0];
+      this.loadUserAnswer();
     }
 
     this.startTimer();
-    console.log('Data after initialization:', this.data);
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
+    this.saveUserAnswers();
   }
 
   convertTimeToSeconds(time: string): number {
@@ -95,28 +89,28 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
   prevExercise(): void {
     if (this.currentExerciseIndex > 0) {
+      this.saveUserAnswers();
       this.currentExerciseIndex--;
       this.currentExercise = this.data[this.currentExerciseIndex];
-      console.log('Current Exercise after prev:', this.currentExercise);
-      this.resetAnswer();
+      this.loadUserAnswer();
     }
   }
 
   nextExercise(): void {
     if (this.currentExerciseIndex < this.data.length - 1) {
+      this.saveUserAnswers();
       this.currentExerciseIndex++;
       this.currentExercise = this.data[this.currentExerciseIndex];
-      console.log('Current Exercise after next:', this.currentExercise);
-      this.resetAnswer();
+      this.loadUserAnswer();
     }
   }
 
   jumpToExercise(index: number): void {
     if (index >= 0 && index < this.data.length) {
+      this.saveUserAnswers();
       this.currentExerciseIndex = index;
       this.currentExercise = this.data[index];
-      console.log('Current Exercise after jump:', this.currentExercise);
-      this.resetAnswer();
+      this.loadUserAnswer();
     }
   }
 
@@ -130,6 +124,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
         this.answerMessage = 'Incorrect. Try again.';
       }
       this.answerChecked = true;
+      this.saveUserAnswers();
     }
   }
 
@@ -137,5 +132,26 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.userAnswer = '';
     this.answerChecked = false;
     this.answerMessage = '';
+  }
+
+  saveUserAnswers(): void {
+    if (this.currentExercise) {
+      this.data[this.currentExerciseIndex].userAnswer = this.userAnswer;
+      localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
+    }
+  }
+
+  loadUserAnswer(): void {
+    if (this.currentExercise && this.currentExercise.userAnswer) {
+      this.userAnswer = this.currentExercise.userAnswer;
+    } else {
+      this.userAnswer = '';
+    }
+    this.answerChecked = false;
+    this.answerMessage = '';
+  }
+
+  toggleAnswerLock(): void {
+    this.answerLocked = !this.answerLocked;
   }
 }
