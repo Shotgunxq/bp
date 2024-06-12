@@ -43,7 +43,7 @@ export function geometricProbabilityRandom(): geometricExercise[] {
 
 // Function to generate description
 function generateDescription(k: number, p: number): string {
-  return `Aká je pravdepodobnosť potreby aspoň ${k} pokusov na dosiahnutie prvého úspechu v experimente s pravdepodobnosťou úspechu ${p}?`;
+  return `Aká je pravdepodobnosť potreby najviac ${k} pokusov na dosiahnutie prvého úspechu v experimente s pravdepodobnosťou úspechu ${p}?`;
 }
 
 // Function to generate geometric distribution

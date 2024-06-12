@@ -48,6 +48,48 @@ app.post('/tests', async (req, res) => {
   }
 });
 
+app.post('/submit', async (req, res) => {
+  const { user_id, test_id, points, timestamp } = req.body;
+
+  try {
+    const result = await db.query('INSERT INTO Test_Scores (user_id, test_id, points, timestamp) VALUES ($1, $2, $3, $4) RETURNING *', [
+      user_id,
+      test_id,
+      points,
+      timestamp,
+    ]);
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/test/:test_id', async (req, res) => {
+  const { test_id } = req.params;
+  console.log(`Received request for test_id: ${test_id}`);
+
+  try {
+    const testQuery = `
+      SELECT e.exercise_id, e.description, e.answer, e.difficulty, ts.points, ts.timestamp
+      FROM exercises e
+      JOIN test_scores ts ON e.exercise_id = ANY (
+        SELECT jsonb_array_elements_text(t.exercises->'exercise_id')::int
+        FROM tests t
+        WHERE t.test_id = $1
+      )
+      WHERE ts.test_id = $1
+    `;
+    const testResult = await db.query(testQuery, [test_id]);
+    console.log('Query executed successfully:', testResult.rows);
+    res.json(testResult.rows);
+  } catch (error) {
+    console.error('Error fetching test data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

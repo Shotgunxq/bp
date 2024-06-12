@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from '../../services/apiServices';
 
 @Component({
   selector: 'app-test-writing',
@@ -11,7 +12,6 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   currentExerciseIndex: number = 0;
   currentExercise: any = null;
   userAnswer: string = '';
-  answerLocked: boolean = false;
   answerChecked: boolean = false;
   answerMessage: string = '';
 
@@ -21,14 +21,23 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   timerKey: string = 'test-writing-timer';
   exercisesKey: string = 'test-writing-exercises';
 
+  userId: number = 1; // Replace with actual user ID from authentication
+  testId: number = 51; // Replace with actual test ID
+
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
     const stateData = history.state.data;
     this.data = stateData || [];
+
+    // Initialize each exercise with answerLocked property
+    this.data.forEach(exercise => {
+      exercise.answerLocked = exercise.answerLocked || false;
+    });
 
     this.timeLimit = history.state.timeLimit;
     const savedTimeLeft = localStorage.getItem(this.timerKey);
@@ -152,6 +161,37 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   }
 
   toggleAnswerLock(): void {
-    this.answerLocked = !this.answerLocked;
+    if (this.currentExercise) {
+      this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
+      this.saveUserAnswers();
+    }
+  }
+
+  submitTest(): void {
+    let totalPoints = 0;
+
+    // Retrieve the answers from local storage
+    const savedExercises = localStorage.getItem(this.exercisesKey);
+    if (savedExercises) {
+      this.data = JSON.parse(savedExercises);
+    }
+
+    // Check answers and calculate total points
+    for (const exercise of this.data) {
+      if (exercise.userAnswer === exercise.answer) {
+        totalPoints += exercise.points || 0;
+      }
+    }
+
+    // Post the results to the backend
+    this.apiService.submitTestScore(this.userId, this.testId, totalPoints).subscribe(
+      response => {
+        console.log('Test submitted successfully:', response);
+        // Navigate to the result page or show a success message
+      },
+      error => {
+        console.error('Error submitting test:', error);
+      }
+    );
   }
 }

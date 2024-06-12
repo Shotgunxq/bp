@@ -27,10 +27,10 @@
             type="text"
             [(ngModel)]="userAnswer"
             placeholder="Enter your answer"
-            [disabled]="answerLocked"
+            [disabled]="currentExercise.answerLocked"
             [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
           <button mat-flat-button color="primary" id="answerCheck" (click)="toggleAnswerLock()">
-            {{ answerLocked ? 'Unlock Answer' : 'Lock Answer' }}
+            {{ currentExercise.answerLocked ? 'Unlock Answer' : 'Lock Answer' }}
           </button>
           <p *ngIf="answerChecked">{{ answerMessage }}</p>
         </div>
@@ -39,7 +39,7 @@
         <p>No exercises available</p>
       </div>
       <div class="submit-but">
-        <button mat-flat-button color="Warning">Submit test</button>
+        <button mat-flat-button color="Warning" (click)="submitTest()">Submit test</button>
       </div>
     </div>
   </div>
