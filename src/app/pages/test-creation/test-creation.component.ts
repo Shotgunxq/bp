@@ -103,6 +103,7 @@ export class TestCreationComponent implements OnInit {
         // Assign the response data directly to the exercises property
         this.exercises = response.exercises;
         // Merge the fetched and generated exercises
+
         this.exercises = this.exercises.concat(this.generated);
         console.log('Exercises fetched:', this.exercises);
         console.log('Generated:', this.generated);

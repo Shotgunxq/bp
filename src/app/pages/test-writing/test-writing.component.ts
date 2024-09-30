@@ -22,7 +22,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   exercisesKey: string = 'test-writing-exercises';
 
   userId: number = 1; // Replace with actual user ID from authentication
-  testId: number = 51; // Replace with actual test ID
+  //TODO:
+  testId: number = 1; // Replace with actual test ID
 
   constructor(
     private route: ActivatedRoute,

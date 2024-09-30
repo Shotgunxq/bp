@@ -11,7 +11,8 @@ import { ApiService } from '../../services/apiServices';
 export class TestDoneComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['exercise_id', 'description', 'answer', 'difficulty', 'points', 'timestamp'];
   dataSource = new MatTableDataSource<any>(); // Update the type if possible
-  testId: number = 51; // You should get this value from route params or some other source
+  //TODO:
+  testId: number = 1; // You should get this value from route params or some other source
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 

@@ -44,7 +44,7 @@ app.post('/tests', async (req, res) => {
     res.json(test);
   } catch (err) {
     console.error('Error in POST /tests:', err);
-    res.status(500).send('Internal Server Error');
+    res.status(403).send('Bad Request');
   }
 });
 
@@ -52,7 +52,7 @@ app.post('/submit', async (req, res) => {
   const { user_id, test_id, points, timestamp } = req.body;
 
   try {
-    const result = await db.query('INSERT INTO Test_Scores (user_id, test_id, points, timestamp) VALUES ($1, $2, $3, $4) RETURNING *', [
+    const result = await db.query('INSERT INTO test_submissions (user_id, test_id, points, timestamp) VALUES ($1, $2, $3, $4) RETURNING *', [
       user_id,
       test_id,
       points,
@@ -61,8 +61,8 @@ app.post('/submit', async (req, res) => {
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('ERROR: ',err);
+    res.status(403).json({ error: 'Bad Request' });
   }
 });
 
