@@ -18,7 +18,21 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/tasks`, { test_id, task_id });
   }
 
-  createTest(tasks_id: number[], cas_na_pisanie: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/tests`, { tasks_id, cas_na_pisanie });
+  createTest(exercises: number[], cas_na_pisanie: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/tests`, { exercises, cas_na_pisanie });
+  }
+
+  submitTestScore(userId: number, testId: number, points: number): Observable<any> {
+    const body = {
+      user_id: userId,
+      test_id: testId,
+      points: points,
+      timestamp: new Date().toISOString(),
+    };
+    return this.http.post(`${this.baseUrl}/submit`, body);
+  }
+
+  fetchTestData(testId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/test/${testId}`);
   }
 }

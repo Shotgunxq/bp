@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { binomialExercise, binomialProbabilityRandom } from '../../services/binomialProbability';
-import { hypergeometricExercises, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
-import { geometricExercise, geometricProbabilityRandom } from '../../services/geometricProbability';
+import { ApiService } from '../../services/apiServices';
 
 @Component({
   selector: 'app-test-writing',
@@ -10,9 +8,9 @@ import { geometricExercise, geometricProbabilityRandom } from '../../services/ge
   styleUrls: ['./test-writing.component.scss'],
 })
 export class TestWritingComponent implements OnInit, OnDestroy {
-  data: any;
+  data: any[] = [];
   currentExerciseIndex: number = 0;
-  currentExercise: any;
+  currentExercise: any = null;
   userAnswer: string = '';
   answerChecked: boolean = false;
   answerMessage: string = '';
@@ -21,17 +19,28 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   timeLeft: number = 0; // in seconds
   timer: any;
   timerKey: string = 'test-writing-timer';
+  exercisesKey: string = 'test-writing-exercises';
+
+  userId: number = 1; // Replace with actual user ID from authentication
+  //TODO:
+  testId: number = 1; // Replace with actual test ID
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
-    this.data = history.state.data;
-    this.timeLimit = history.state.timeLimit; // time limit as string
+    const stateData = history.state.data;
+    this.data = stateData || [];
 
-    // Retrieve time left from localStorage if available
+    // Initialize each exercise with answerLocked property
+    this.data.forEach(exercise => {
+      exercise.answerLocked = exercise.answerLocked || false;
+    });
+
+    this.timeLimit = history.state.timeLimit;
     const savedTimeLeft = localStorage.getItem(this.timerKey);
     if (savedTimeLeft) {
       this.timeLeft = parseInt(savedTimeLeft, 10);
@@ -39,29 +48,22 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
     }
 
-    this.startTimer();
-
-    const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
-    const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
-    const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
-
-    console.log('Binominal exercises:', generatedExercisesBinominal);
-    console.log('Hypergeometric exercises:', generatedExercisesHypergeometric);
-    console.log('Geometric exercises:', generatedExercisesGeometric);
-
-    if (this.data && this.data.easy && this.data.easy.length > 0) {
-      this.data.easy = [...this.data.easy, ...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
-      this.currentExercise = this.data.easy[0];
-    } else {
-      this.data = { easy: [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric] };
-      this.currentExercise = this.data.easy[0];
+    const savedExercises = localStorage.getItem(this.exercisesKey);
+    if (savedExercises) {
+      this.data = JSON.parse(savedExercises);
     }
 
-    console.log('Data writing concated:', this.data);
+    if (this.data.length > 0) {
+      this.currentExercise = this.data[0];
+      this.loadUserAnswer();
+    }
+
+    this.startTimer();
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
+    this.saveUserAnswers();
   }
 
   convertTimeToSeconds(time: string): number {
@@ -73,11 +75,11 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.timer = setInterval(() => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
-        localStorage.setItem(this.timerKey, this.timeLeft.toString()); // Save remaining time to localStorage
+        localStorage.setItem(this.timerKey, this.timeLeft.toString());
       } else {
         this.timeLeft = 0;
         this.stopTimer();
-        localStorage.removeItem(this.timerKey); // Remove timer from localStorage when time is up
+        localStorage.removeItem(this.timerKey);
         alert('Time is up!');
       }
     }, 1000);
@@ -97,17 +99,28 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
   prevExercise(): void {
     if (this.currentExerciseIndex > 0) {
+      this.saveUserAnswers();
       this.currentExerciseIndex--;
-      this.currentExercise = this.data.easy[this.currentExerciseIndex];
-      this.resetAnswer();
+      this.currentExercise = this.data[this.currentExerciseIndex];
+      this.loadUserAnswer();
     }
   }
 
   nextExercise(): void {
-    if (this.currentExerciseIndex < this.data.easy.length - 1 && this.data.easy.length > 1) {
+    if (this.currentExerciseIndex < this.data.length - 1) {
+      this.saveUserAnswers();
       this.currentExerciseIndex++;
-      this.currentExercise = this.data.easy[this.currentExerciseIndex];
-      this.resetAnswer();
+      this.currentExercise = this.data[this.currentExerciseIndex];
+      this.loadUserAnswer();
+    }
+  }
+
+  jumpToExercise(index: number): void {
+    if (index >= 0 && index < this.data.length) {
+      this.saveUserAnswers();
+      this.currentExerciseIndex = index;
+      this.currentExercise = this.data[index];
+      this.loadUserAnswer();
     }
   }
 
@@ -121,6 +134,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
         this.answerMessage = 'Incorrect. Try again.';
       }
       this.answerChecked = true;
+      this.saveUserAnswers();
     }
   }
 
@@ -130,11 +144,55 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.answerMessage = '';
   }
 
-  jumpToExercise(index: number): void {
-    if (index >= 0 && index < this.data.easy.length) {
-      this.currentExerciseIndex = index;
-      this.currentExercise = this.data.easy[index];
-      this.resetAnswer();
+  saveUserAnswers(): void {
+    if (this.currentExercise) {
+      this.data[this.currentExerciseIndex].userAnswer = this.userAnswer;
+      localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
     }
+  }
+
+  loadUserAnswer(): void {
+    if (this.currentExercise && this.currentExercise.userAnswer) {
+      this.userAnswer = this.currentExercise.userAnswer;
+    } else {
+      this.userAnswer = '';
+    }
+    this.answerChecked = false;
+    this.answerMessage = '';
+  }
+
+  toggleAnswerLock(): void {
+    if (this.currentExercise) {
+      this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
+      this.saveUserAnswers();
+    }
+  }
+
+  submitTest(): void {
+    let totalPoints = 0;
+
+    // Retrieve the answers from local storage
+    const savedExercises = localStorage.getItem(this.exercisesKey);
+    if (savedExercises) {
+      this.data = JSON.parse(savedExercises);
+    }
+
+    // Check answers and calculate total points
+    for (const exercise of this.data) {
+      if (exercise.userAnswer === exercise.answer) {
+        totalPoints += exercise.points || 0;
+      }
+    }
+
+    // Post the results to the backend
+    this.apiService.submitTestScore(this.userId, this.testId, totalPoints).subscribe(
+      response => {
+        console.log('Test submitted successfully:', response);
+        // Navigate to the result page or show a success message
+      },
+      error => {
+        console.error('Error submitting test:', error);
+      }
+    );
   }
 }

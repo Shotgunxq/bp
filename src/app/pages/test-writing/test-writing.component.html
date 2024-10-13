@@ -1,12 +1,12 @@
 <div class="container">
-  <div *ngIf="data">
+  <div *ngIf="data && data.length > 0">
     <!-- Display exercises fetched from the database -->
-    <div *ngIf="data.easy.length > 0">
+    <div *ngIf="data.length > 0">
       <div class="exerciseModal" *ngIf="currentExercise">
         <div class="exercise-buttons">
           <button
             id="exerciseNavButton"
-            *ngFor="let exercise of data.easy; let i = index"
+            *ngFor="let exercise of data; let i = index"
             (click)="jumpToExercise(i)"
             [class.selected]="i === currentExerciseIndex"
             [class.answered]="exercise.userAnswer !== undefined && exercise.userAnswer !== ''">
@@ -21,22 +21,29 @@
           <br />
           {{ currentExercise.description }}
         </p>
-        <input
-          matInput
-          type="text"
-          [(ngModel)]="userAnswer"
-          placeholder="Enter your answer"
-          [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
-        <button mat-flat-button color="primary" id="answerCheck" (click)="checkAnswer()" [disabled]="answerChecked">Check Answer</button>
-        <p *ngIf="answerChecked">{{ answerMessage }}</p>
+        <div class="answer-lock">
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="userAnswer"
+            placeholder="Enter your answer"
+            [disabled]="currentExercise.answerLocked"
+            [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
+          <button mat-flat-button color="primary" id="answerCheck" (click)="toggleAnswerLock()">
+            {{ currentExercise.answerLocked ? 'Unlock Answer' : 'Lock Answer' }}
+          </button>
+          <p *ngIf="answerChecked">{{ answerMessage }}</p>
+        </div>
       </div>
       <div *ngIf="!currentExercise">
         <p>No exercises available</p>
       </div>
+      <div class="submit-but">
+        <button mat-flat-button color="Warning" (click)="submitTest()">Submit test</button>
+      </div>
     </div>
   </div>
-
-  <div *ngIf="!data">
+  <div *ngIf="!data || data.length === 0">
     <p>No data available</p>
   </div>
 </div>

@@ -4,6 +4,8 @@ export interface binomialExercise {
   p: number;
   probability: number;
   description: string;
+  answer: number;
+  points: number;
 }
 
 // Function to generate exercises with random values
@@ -25,12 +27,22 @@ export function binomialProbabilityRandom(): binomialExercise[] {
     // Generate description
     const description: string = generateDescription(n, k, p);
 
+    // Calculate answer
+    const answer: number = calculateAnswer(n, k, p);
+
     // Push exercise to exercises array
-    exercises.push({ n, k, p, probability, description });
+    exercises.push({ n, k, p, probability, description, answer, points: 1 });
   }
 
   // Return array of exercises
   return exercises;
+}
+
+// Function to calculate the answer
+function calculateAnswer(n: number, k: number, p: number): number {
+  // Calculate answer using the formula
+  const answer = calculateProbability(n, k, p);
+  return answer;
 }
 
 // Function to calculate binomial probability
@@ -59,6 +71,6 @@ function calculateProbability(n: number, k: number, p: number): number {
 // Function to generate description
 function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
-  console.log(`n=${n}, k=${k}, p=${p}`);
+  // console.log(`n=${n}, k=${k}, p=${p}`);
   return `Aká je pravdepodobnosť získania presne ${k} úspechov pri ${n} pokusoch experimentu s pravdepodobnosťou úspechu ${p}?\nZaokrúhlite na 3 desatinné miesta.`;
 }

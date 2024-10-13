@@ -70,3 +70,20 @@
     -1px -1px 0 #000,
     1px -1px 0 #000;
 }
+
+.answer-lock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-but {
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
