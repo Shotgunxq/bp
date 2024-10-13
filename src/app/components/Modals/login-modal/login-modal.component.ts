@@ -1,28 +1,36 @@
 import { Component } from '@angular/core';
-import { LdapService } from '../../../services/ldap.service';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';  // Import Router
 
 @Component({
   selector: 'app-login-modal',
   templateUrl: './login-modal.component.html',
-  styleUrl: './login-modal.component.scss'
+  styleUrls: ['./login-modal.component.scss'],
 })
 export class LoginModalComponent {
-  username: string = '';
-  password: string = '';
+  username: string = '';  // Bound to the username input
+  password: string = '';  // Bound to the password input
+  errorMessage: string = '';  // To show error messages if login fails
 
-  constructor(private ldapService: LdapService) {}
+  constructor(private http: HttpClient, private router: Router) {}  // Inject Router
 
-  authenticateUser() {
-    this.ldapService.authenticate(this.username, this.password)
-      .subscribe(
-        (response) => {
-          // Authentication successful, handle accordingly
-          console.log('Authentication successful', response);
-        },
-        (error) => {
-          // Authentication failed, handle accordingly
-          console.error('Authentication failed', error);
-        }
-      );
+  //TODO: include apiService
+
+  login() {
+    // Send login request to the server
+    const credentials = { username: this.username, password: this.password };
+
+    this.http.post('http://localhost:3000/login', credentials).subscribe(
+      (response) => {
+        console.log('Login successful:', response);
+        // Navigate to the menu page on successful login
+        this.router.navigate(['/menu']);
+      },
+      (error) => {
+        console.error('Login failed:', error);
+        // Show error message to the user
+        this.errorMessage = 'Invalid username or password. Please try again.';
+      }
+    );
   }
 }

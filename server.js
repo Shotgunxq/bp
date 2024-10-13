@@ -2,11 +2,54 @@ const express = require('express');
 const db = require('./db');
 const cors = require('cors');
 
+const bodyParser = require('body-parser');
+const { authenticate } = require('ldap-authentication');
+
 const app = express();
 const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json()); // Parse JSON bodies
+
+
+async function ldapAuth(username="xbodnarb", password="Buffedbence0123.") {
+  try {
+    let options = {
+      ldapOpts: {
+        url: 'ldap://ldap.stuba.sk', // External LDAP server
+      },
+      userDn: `uid=${username},ou=People,dc=stuba,dc=sk`, // This constructs the user DN
+      userPassword: password, // The password from the input
+      userSearchBase: 'ou=People,dc=stuba,dc=sk', // Base where users are located in the LDAP directory
+      usernameAttribute: 'uid',
+      username: username,
+    };
+
+    // Authenticate the user against the external LDAP server
+    let user = await authenticate(options);
+    
+    return user;
+  } catch (error) {
+    throw new Error('LDAP bind failed: ' + error.message);
+  }
+}
+
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Authenticate user
+    const user = await ldapAuth(username, password);
+    
+    // Send the user info back to the client
+    res.status(200).json(user); 
+  } catch (error) {
+    // Send authentication failure message
+    res.status(401).send('Authentication failed: ' + error.message);
+  }
+});
+
 
 app.get('/test/api', async (req, res) => {
   try {

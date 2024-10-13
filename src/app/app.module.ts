@@ -59,7 +59,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     ReactiveFormsModule,
     MatInputModule,
     MatFormFieldModule,
-    MatStepperModule,
+    MatStepperModule,  
   ],
   providers: [],
   bootstrap: [AppComponent],
