@@ -1,12 +1,54 @@
-.modal{
+.modal {
     display: block;
     margin-top: 12%;
-}
-
-#loginBtn{
+  }
+  
+  #loginBtn {
     margin-right: auto;
     margin-left: auto;
-}
-
-#passwordInput{
-}
+  }
+  
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .password-input {
+    padding-right: 2.5rem; /* Space for the icon */
+    border-radius: 0.375rem !important; /* Keep the input rounded */
+  }
+  
+  .input-group-append {
+    position: absolute;
+    right: 0.5rem; /* Adjust positioning inside the input */
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    z-index: 1;
+  }
+  
+  .visibility-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    border-radius: 50% !important; /* Ensures the button stays round */
+  }
+  
+  /* Fix border-radius conflict on input with button */
+  .password-input {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+  }
+  
+  .input-group-append .visibility-button {
+    margin-left: -2.5rem;
+    border-radius: 50% !important; /* Keeps the button rounded */
+  }
+  
+  .form-control:focus {
+    z-index: 0;
+  }
+  

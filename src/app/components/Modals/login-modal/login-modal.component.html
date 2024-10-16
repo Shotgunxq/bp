@@ -13,37 +13,33 @@
             placeholder="Username"
             aria-label="Username"
             [(ngModel)]="username" /> <!-- Bind username input -->
-            
-        
         </div>
+
         <div class="input-group mb-3">
           <input matInput [type]="hide() ? 'password' : 'text'"
-            type="password"
-            class="form-control"
+            class="form-control password-input"
             placeholder="Password"
             aria-label="Password"
             id="passwordInput"
             [(ngModel)]="password"
             required
-            
           />
-          
-          <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEvent($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide()"
-        >
-          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      
-
-          
-
-    
-
+          <span class="input-group-append">
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="clickEvent($event)"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide()"
+              tabindex="-1"
+              class="visibility-button"
+            >
+              <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </span>
         </div>
+        
+
       </div>
       <div class="modal-footer">
         <!-- Button to trigger login -->
