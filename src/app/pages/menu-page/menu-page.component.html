@@ -1,55 +1,10 @@
-<div id="menu">
-  <mat-grid-list cols="3" rowHeight="2:1">
-    <mat-grid-tile>
-      <button mat-button class="custom-button" routerLink="../test">
+<div id="menu" class="scrollable-container">
+  <mat-grid-list [cols]="gridCols" rowHeight="2:1">
+    <mat-grid-tile *ngFor="let tile of menuItems">
+      <button mat-button class="custom-button" [routerLink]="tile.link">
         <div class="button-content">
-          <img src="/assets/pictures/test_writing.png" class="img-fluid" height="100px" width="100px" />
-          <span class="button-text-content">Pisat test</span>
-        </div>
-      </button>
-    </mat-grid-tile>
-
-    <mat-grid-tile>
-      <button mat-button class="custom-button" routerLink="../done">
-        <div class="button-content">
-          <img src="/assets/pictures/done_tests.png" class="img-fluid" height="100px" width="100px" />
-          <span class="button-text-content">Napisane testy</span>
-        </div>
-      </button>
-    </mat-grid-tile>
-
-    <mat-grid-tile>
-      <button mat-button class="custom-button" routerLink="../stats">
-        <div class="button-content">
-          <img src="/assets/pictures/statistics.png" class="img-fluid" height="100px" width="100px" />
-          <span class="button-text-content">Statistika</span>
-        </div>
-      </button>
-    </mat-grid-tile>
-
-    <mat-grid-tile>
-      <button mat-button class="custom-button" routerLink="../export">
-        <div class="button-content">
-          <img src="/assets/pictures/export.png" class="img-fluid" height="100px" width="100px" />
-          <span class="button-text-content">Export</span>
-        </div>
-      </button>
-    </mat-grid-tile>
-
-    <mat-grid-tile>
-      <button mat-button class="custom-button" routerLink="../mats">
-        <div class="button-content">
-          <img src="/assets/pictures/materials.png" class="img-fluid" height="100px" width="100px" />
-          <span class="button-text-content">Materialy</span>
-        </div>
-      </button>
-    </mat-grid-tile>
-
-    <mat-grid-tile>
-      <button mat-button class="custom-button">
-        <div class="button-content">
-          <img src="/assets/pictures/settings.png" class="img-fluid" height="100px" width="100px" />
-          <span class="button-text-content">Nastavenia</span>
+          <img [src]="tile.imgSrc" class="img-fluid" height="100px" width="100px" />
+          <span class="button-text-content">{{tile.text}}</span>
         </div>
       </button>
     </mat-grid-tile>

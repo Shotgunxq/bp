@@ -43,3 +43,18 @@
 img {
   margin-bottom: 10px; // Adjust spacing between image and text
 }
+.scrollable-container {
+  max-height: 100vh; /* Use 100% of the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding-right: 10px; /* Add some padding to prevent overflow clipping */
+}
+
+.mat-grid-list {
+  width: 100%;
+  height: auto;
+}
+
+.custom-button {
+  width: 55%;
+  height: 70%;
+}
