@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/apiServices';
@@ -14,11 +14,25 @@ import { geometricExercise, geometricProbabilityRandom } from '../../services/ge
 })
 export class TestCreationComponent implements OnInit {
   generated: any[] = [];
-
+  gridCols: number = 3; // Default to 3 columns on larger screens
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.adjustGridCols(window.innerWidth);
+  }
   easyRandomNumber = Math.floor(Math.random() * 3) + 1;
 
   ngOnInit(): void {
     localStorage.clear();
+    this.adjustGridCols(window.innerWidth); // Adjust the grid on initial load
+
+  }
+  adjustGridCols(width: number) {
+    if (width >= 1150) {
+      this.gridCols = 3; // Large screens (desktop): 3 columns
+    } 
+     else {
+      this.gridCols = 1; // Small screens (mobile): 1 column
+    }
   }
   times: number[] = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
   selectedTime: number = 5; // Default selected time
