@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(bodyParser.json()); // Parse JSON bodies
 
 
-async function ldapAuth(username="xbodnarb", password="Buffedbence0123.") {
+async function ldapAuth(username, password) {
   try {
     let options = {
       ldapOpts: {
