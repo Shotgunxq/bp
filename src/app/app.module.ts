@@ -28,10 +28,13 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
-
+import { MatStepper } from '@angular/material/stepper';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { NavbarComponent } from './components/navbar/navbar.component';
 @NgModule({
   declarations: [
     AppComponent,
+    
     LoginModalComponent,
     MenuPageComponent,
     TestCreationComponent,
@@ -39,12 +42,15 @@ import { MatStepperModule } from '@angular/material/stepper';
     MaterialsPageComponent,
     TestDoneComponent,
     TestWritingComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
     MatGridListModule,
     MatIconModule,
     MatButtonModule,
+    MatToolbarModule,
+
     MatDividerModule,
     NgbModule,
     AppRoutingModule,

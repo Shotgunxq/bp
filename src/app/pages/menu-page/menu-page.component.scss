@@ -28,12 +28,28 @@
   align-items: center;
   height: auto;
   width: 55%;
+  transition: all 0.3s ease-in-out; /* Smooth transition for the hover effect */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Initial shadow */
+
+}
+.custom-button:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* On hover: deeper shadow */
+  transform: scale(1.05); /* Slightly "pop" the button by increasing size */
+}
+.button-text-content::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px; /* Adjust to place underline slightly below text */
+  width: 0;
+  height: 2px;
+  background-color: black;
+  transition: width 0.3s ease-in-out; /* Controls underline animation */
 }
 
-.button-text-content {
-  color: black;
+.custom-button:hover .button-text-content::after {
+  width: 100%; /* Expands underline to full width */
 }
-
 .button-content {
   display: flex;
   flex-direction: column;
@@ -41,7 +57,11 @@
 }
 
 img {
-  margin-bottom: 10px; // Adjust spacing between image and text
+  margin-bottom: 10px; /* Adjust spacing between image and text */
+  transition: transform 0.3s ease-in-out; /* Smooth image scaling */
+}
+img:hover {
+  transform: scale(1.1); /* Scale the image slightly on hover */
 }
 .scrollable-container {
   max-height: 100vh; /* Use 100% of the viewport height */

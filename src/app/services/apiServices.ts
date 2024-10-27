@@ -10,6 +10,10 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+  login(credentials: { username: string; password: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login`, credentials);
+  }
+
   getExercises(queryParams: any): Observable<any> {
     return this.http.get<any>(`${this.baseUrl + '/test/api' + queryParams}`);
   }

@@ -50,6 +50,14 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  try {
+    res.send('Hello World');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.get('/test/api', async (req, res) => {
   try {
@@ -66,7 +74,7 @@ app.get('/test/api', async (req, res) => {
     res.json({ exercises: allExercises });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(err);
   }
 });
 

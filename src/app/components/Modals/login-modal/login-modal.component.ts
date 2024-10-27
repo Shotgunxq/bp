@@ -27,18 +27,15 @@ export class LoginModalComponent {
   //TODO: include apiService
 
   login() {
-    // Send login request to the server
     const credentials = { username: this.username, password: this.password };
 
     this.http.post('http://localhost:3000/login', credentials).subscribe(
       (response) => {
         console.log('Login successful:', response);
-        // Navigate to the menu page on successful login
         this.router.navigate(['/menu']);
       },
       (error) => {
         console.error('Login failed:', error);
-        // Show error message to the user
         this.errorMessage = 'Invalid username or password. Please try again.';
       }
     );
