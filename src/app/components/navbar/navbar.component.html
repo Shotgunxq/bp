@@ -1,7 +1,7 @@
-<mat-toolbar>
-    <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
-    </button> -->
-    <span id="navbarText">Welcome ###NAME !</span>
-   
-  </mat-toolbar>
+<!-- src/app/components/navbar/navbar.component.html -->
+<mat-toolbar class="navbar">
+  <div class="typewriter">
+    <span>Welcome</span>
+    <span *ngIf="showTypewriter" class="username animate-typewriter">{{ username }}!</span>
+  </div>
+</mat-toolbar>

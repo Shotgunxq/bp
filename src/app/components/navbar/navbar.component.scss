@@ -1,6 +1,50 @@
-#navbarText{
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    margin: 0 auto;
+/* src/app/components/navbar/navbar.component.scss */
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  color: wheat;
+}
+
+.typewriter {
+  font-family: 'Courier New', monospace;
+  font-size: 24px;
+  white-space: nowrap;
+  color: black;
+  display: flex;
+  align-items: center;
+}
+
+.username {
+  margin-left: 8px;
+  color: black; // Custom color for the username
+  font-weight: bold;
+}
+
+/* Typewriter animation triggered on username display */
+.animate-typewriter {
+  overflow: hidden;
+  border-right: 3px solid rgba(0, 0, 0, 0.75); // Cursor effect
+  white-space: nowrap;
+  animation: typing 3s steps(30, end), blink 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
   }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: black;
+  }
+}
