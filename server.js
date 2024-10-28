@@ -123,23 +123,24 @@ app.get('/api/test/:test_id', async (req, res) => {
 
   try {
     const testQuery = `
-      SELECT e.exercise_id, e.description, e.answer, e.difficulty, ts.points, ts.timestamp
-      FROM exercises e
-      JOIN test_scores ts ON e.exercise_id = ANY (
-        SELECT jsonb_array_elements_text(t.exercises->'exercise_id')::int
-        FROM tests t
-        WHERE t.test_id = $1
-      )
-      WHERE ts.test_id = $1
+      SELECT *
+      FROM tests
+      WHERE test_id = $1
     `;
+
     const testResult = await db.query(testQuery, [test_id]);
     console.log('Query executed successfully:', testResult.rows);
-    res.json(testResult.rows);
+
+    // Send the entire row data to the client
+    res.json(testResult.rows[0]); // Send the first row as JSON
   } catch (error) {
     console.error('Error fetching test data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -1,11 +1,13 @@
 .container {
   max-width: 60%;
-  margin: auto;
-  margin-top: 4%;
+  
+  margin: 2% auto;
   padding: 20px;
   max-height: 80%;
   background-color: white;
   border-radius: 40px;
+  overflow-y: auto; /* Always allow vertical scrolling */
+
 }
 
 .section {
@@ -64,3 +66,19 @@ span {
   background-color : #f5f5f5;
   border-radius: 5px !important;
 }
+
+// .mat-grid-tile {
+//   height: auto !important; /* Prevent tiles from restricting height */
+// }
+
+// .mat-grid-list {
+//   width: 100%;
+//   height: auto; /* Allow grid to adjust to content height */
+// }
+
+// @media (max-width: 1150px) {
+//   .container {
+//     max-height: none; /* Remove max-height for small screens */
+//     min-height: 100vh; /* Ensure it takes the full viewport height */
+//   }
+// }

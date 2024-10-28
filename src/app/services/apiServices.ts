@@ -38,6 +38,6 @@ export class ApiService {
   }
 
   fetchTestData(testId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/test/${testId}`);
+    return this.http.get<any[]>(`${this.baseUrl}/api/test/${testId}`);
   }
 }
