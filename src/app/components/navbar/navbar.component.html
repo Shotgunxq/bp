@@ -1,7 +1,9 @@
-<!-- src/app/components/navbar/navbar.component.html -->
-<mat-toolbar class="navbar">
-  <div class="typewriter">
+<mat-toolbar [ngClass]="{ 'navbar': true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
+  <div class="typewriter" *ngIf="isMenuRoute">
     <span>Welcome</span>
     <span *ngIf="showTypewriter" class="username animate-typewriter">{{ username }}!</span>
+  </div>
+  <div class="other-content" *ngIf="!isMenuRoute">
+    <span>Other Page Content</span>
   </div>
 </mat-toolbar>
