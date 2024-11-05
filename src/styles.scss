@@ -29,8 +29,9 @@
 
 body {
     background-color: #1363C1;  // Change this color to your desired background color
-    overflow: hidden;
-    
+    // overflow: hidden;
+    overflow-y: auto; /* Allow vertical scrolling */
+
   }
 
   #zaklad{

@@ -31,6 +31,10 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +54,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-
+    MatExpansionModule,
     MatDividerModule,
     NgbModule,
     AppRoutingModule,
