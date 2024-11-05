@@ -62,7 +62,7 @@
     <p><strong>Variácie:</strong> Zvažujú usporiadané výbery, pričom môžu byť s opakovaním (napr. výber s možnosťou opakovaného výskytu prvkov) alebo bez opakovania. Variácie umožňujú detailnejšie modelovanie pri výpočtoch pravdepodobností. </p>
   </mat-expansion-panel>
 
-  <mat-expansion-panel>
+  <mat-expansion-panel >
     <mat-expansion-panel-header>
       <mat-panel-title>
         Podmienená pravdepodobnosť
@@ -71,9 +71,14 @@
         Podmienená pravdepodobnosť, Nezávislosť udalostí, Bayesova veta
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <p>Independence of events: \( P(A \cap B) = P(A)P(B) \)</p>
-
+  
+    <p [mathjax]="content"></p>
+    <p [mathjax]="content2"></p>
+    <p [mathjax]="content3"></p>
+    <p [mathjax]="content4"></p>
   </mat-expansion-panel>
 </mat-accordion>
 </div>
+<br>
+<br>
 

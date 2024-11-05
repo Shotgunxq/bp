@@ -1,7 +1,6 @@
 {
   "name": "bakalar",
   "version": "0.0.0",
-  
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -30,6 +29,7 @@
     "express-session": "^1.18.0",
     "ldap-authentication": "^3.2.4",
     "ldapjs": "^3.0.7",
+    "mathjax-angular": "^2.2.1",
     "passport": "^0.7.0",
     "passport-saml": "^3.2.4",
     "pg": "^8.11.5",

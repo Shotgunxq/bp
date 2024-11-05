@@ -33,6 +33,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 
+import { MathjaxModule } from "mathjax-angular";
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     NavbarComponent,
   ],
   imports: [
+    MathjaxModule.forRoot(),
     BrowserModule,
     MatGridListModule,
     MatIconModule,
