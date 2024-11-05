@@ -31,4 +31,7 @@ export class NavbarComponent implements OnInit {
       }
     });
   }
+    navigateToMenu() {
+    this.router.navigate(['/menu']);
+  }
 }

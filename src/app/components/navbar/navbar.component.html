@@ -1,9 +1,11 @@
 <mat-toolbar [ngClass]="{ 'navbar': true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
+  <div class="left-content" *ngIf="!isMenuRoute">
+    <mat-icon fontIcon="arrow_back" (click)="navigateToMenu()" class="back-arrow"></mat-icon>
+
+  </div>
+
   <div class="typewriter" *ngIf="isMenuRoute">
     <span>Welcome</span>
     <span *ngIf="showTypewriter" class="username animate-typewriter">{{ username }}!</span>
-  </div>
-  <div class="other-content" *ngIf="!isMenuRoute">
-    <span>Other Page Content</span>
   </div>
 </mat-toolbar>

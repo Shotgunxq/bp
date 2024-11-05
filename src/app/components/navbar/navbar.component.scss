@@ -5,7 +5,6 @@
   justify-content: center;
   align-items: center;
   height: 64px;
-  color: wheat;
 }
 
 .typewriter {
@@ -57,5 +56,17 @@
 }
 
 .navbar-other {
-  /* Styles for other routes */
-}
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  .left-content {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    
+    .back-arrow {
+      margin-right: 8px; // Adjust as needed for spacing
+    }
+  }}
