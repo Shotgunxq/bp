@@ -35,7 +35,10 @@ export class MaterialsPageComponent {content = "<strong>Podmienená pravdepodobn
       ],
       chart: {
         height: 350,
-        type: "bar"
+        type: "area",
+        toolbar: {
+          show: false
+        }
       },
       title: {
         text: "My First Angular Chart"
