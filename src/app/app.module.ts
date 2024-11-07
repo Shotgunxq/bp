@@ -35,7 +35,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 
 import { MathjaxModule } from "mathjax-angular";
 
-
+import { NgApexchartsModule } from "ng-apexcharts";
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,6 +51,7 @@ import { MathjaxModule } from "mathjax-angular";
   ],
   imports: [
     MathjaxModule.forRoot(),
+    
     BrowserModule,
     MatGridListModule,
     MatIconModule,
@@ -71,7 +72,8 @@ import { MathjaxModule } from "mathjax-angular";
     ReactiveFormsModule,
     MatInputModule,
     MatFormFieldModule,
-    MatStepperModule,  
+    MatStepperModule,
+    NgApexchartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

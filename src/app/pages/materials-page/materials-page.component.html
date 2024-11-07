@@ -77,6 +77,29 @@
     <p [mathjax]="content3"></p>
     <p [mathjax]="content4"></p>
   </mat-expansion-panel>
+
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+
+TEST   
+ </mat-panel-title>
+
+  </mat-expansion-panel-header>
+  <div style="text-align:center">
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+      [title]="chartOptions.title"
+    ></apx-chart>
+  </div>
+</mat-expansion-panel>
+
+
+
 </mat-accordion>
 </div>
 <br>
