@@ -80,10 +80,101 @@
 
 
 
+
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Náhodná premenná</mat-panel-title>
+      <mat-panel-description>Definícia náhodnej premennej, Typy náhodných premenných, Distribučná funkcia, Hustota pravdepodobnosti, Stredná hodnota, Rozptyl</mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <p> <strong>Definícia náhodnej premennej:</strong> Náhodná premenná 𝑋 je funkcia, ktorá každému výsledku pokusu priraďuje reálne číslo. Výsledok pokusu môže byť konečný, nespojitý alebo spojitý.</p>
+<p><strong>Typy náhodných premenných:</strong> <ul><li>Diskrétna náhodná premenná: nadobúda iba určité izolované hodnoty.</li><li>Spojitá náhodná premenná: nadobúda ľubovoľné hodnoty v určitom intervale.</li></ul><p>
+    <p [mathjax]="distribucnaFun"></p>
+    <p [mathjax]="hustotaPravde"></p>
+    <p [mathjax]="strednaHodnota"></p>
+    <p [mathjax]="rozptyl"></p>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>Charaktetistiky n.p.</mat-panel-title>
+    <mat-panel-description>Stredná hodnota, momenty, Rozptyl, Čebyšev </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p [mathjax]="strednaHodnota2"></p>
+  <p [mathjax]="momenty"></p>
+  <p [mathjax]="rozptyl2"></p>
+  <p [mathjax]="cebysevovaNerov"></p>
+  <p [mathjax]="koeficienty"></p>
+  <p [mathjax]="vlastnosti"></p>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>Modus, Median..</mat-panel-title>
+    <mat-panel-description> Modus, Median, Kvantily </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p [mathjax]="modus"></p>
+  <p [mathjax]="kvantily"></p>
+  <p [mathjax]="medHorDolKval"></p>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>Diskrétne rozdelenia</mat-panel-title>
+    <mat-panel-description> asd </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p [mathjax]="alterRozdel"></p>
+  <p [mathjax]="binomickeRozdel"></p>
+  <p [mathjax]="poisson"></p>
+  <p [mathjax]="geometrickeRozdelenie"></p>
+  <p [mathjax]="rovnomerneRozdelenie"></p>
+  <p [mathjax]="hypergeometrickeRozdelenie"></p>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>Limitné vety</mat-panel-title>
+    <mat-panel-description>  </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p [mathjax]="logNormalRozdelenie"></p>
+  <p [mathjax]="exponentialneRozdelenie"></p>
+  <p [mathjax]="limitneVety"></p>
+</mat-expansion-panel>
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>Popisná štatistika</mat-panel-title>
+    <mat-panel-description>  </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p [mathjax]="popisnaStatistika"></p>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>Vektor n.p., kovariancia a korelačný koeficient File</mat-panel-title>
+    <mat-panel-description>  </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p [mathjax]="narodnyVektor"></p>
+  <p [mathjax]="kovarianciaKorelacnyKoeficient"></p>
+</mat-expansion-panel>
+
+
+
+
+
+
+
+
+
 <mat-expansion-panel>
   <mat-expansion-panel-header>
     <mat-panel-title>
-
 TEST   
  </mat-panel-title>
 
