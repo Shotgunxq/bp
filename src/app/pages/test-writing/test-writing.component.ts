@@ -38,7 +38,12 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     // Initialize each exercise with answerLocked property
     this.data.forEach(exercise => {
       exercise.answerLocked = exercise.answerLocked || false;
+      if (typeof exercise.points === 'undefined') {
+        console.error('Missing points in exercise:', exercise);
+        exercise.points = 0; // Assign a default value, or handle as an error
+      }
     });
+    
 
     this.timeLimit = history.state.timeLimit;
     const savedTimeLeft = localStorage.getItem(this.timerKey);
@@ -147,9 +152,11 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   saveUserAnswers(): void {
     if (this.currentExercise) {
       this.data[this.currentExerciseIndex].userAnswer = this.userAnswer;
+      // Ensure all necessary fields, including 'points', are stored
       localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
     }
   }
+  
 
   loadUserAnswer(): void {
     if (this.currentExercise && this.currentExercise.userAnswer) {
@@ -170,29 +177,42 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
   submitTest(): void {
     let totalPoints = 0;
-
-    // Retrieve the answers from local storage
+  
     const savedExercises = localStorage.getItem(this.exercisesKey);
     if (savedExercises) {
       this.data = JSON.parse(savedExercises);
     }
-
-    // Check answers and calculate total points
+  
     for (const exercise of this.data) {
+      console.log('Exercise:', exercise); // Debug log
       if (exercise.userAnswer === exercise.answer) {
-        totalPoints += exercise.points || 0;
+        const exercisePoints = exercise.points || 0; // Fallback to 0 if points is missing
+        totalPoints += exercisePoints;
+        console.log(`Added ${exercisePoints} points for exercise`, exercise);
       }
     }
-
-    // Post the results to the backend
+  
+    // Log the payload before posting
+    const body = {
+      user_id: this.userId,
+      test_id: this.testId,
+      points: totalPoints,
+      timestamp: new Date().toISOString(),
+    };
+  
+    console.log('Submitting test score with body:', body);
+  
     this.apiService.submitTestScore(this.userId, this.testId, totalPoints).subscribe(
       response => {
         console.log('Test submitted successfully:', response);
-        // Navigate to the result page or show a success message
       },
       error => {
         console.error('Error submitting test:', error);
+        if (error.error) {
+          console.error('Error details:', error.error); // Log server-provided details
+        }
       }
     );
   }
+  
 }

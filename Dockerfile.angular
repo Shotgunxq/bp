@@ -1,32 +1,24 @@
 # Use an official Node.js runtime as a base image
 FROM node:20.11.1 as builder
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
+# Copy package files and install dependencies
 COPY package*.json ./
+RUN npm install --force
 
-# Install Angular CLI globally
-RUN npm install -g @angular/cli
-
-# Install application dependencies
-RUN npm install
-
-# Copy the entire application code to the container
+# Copy the application code and build
 COPY . .
-
-# Build the Angular app
-RUN ng build
+RUN npm install -g @angular/cli && ng build --configuration production
 
 # Use a smaller image for serving the Angular app
 FROM nginx:alpine
-
 # Copy the built Angular app to the nginx public directory
-COPY --from=builder ./app /usr/share/nginx/html
-# COPY --from=builder ./usr/src /usr/share/nginx/html
+COPY --from=builder /app/dist/browser /usr/share/nginx/html
 
-# COPY --from=builder /Users/bence/Documents/BP/bp /usr/share/nginx/html
-
-# Expose port 80 for the Angular app
+# Expose port 80
 EXPOSE 80
+
+# Default command
+CMD ["nginx", "-g", "daemon off;"]

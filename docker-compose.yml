@@ -3,17 +3,17 @@ services:
   angular-frontend:
     container_name: frontend
     build:
-      context: ./
-      dockerfile: Dockerfile.test
+      context: .
+      dockerfile: Dockerfile.angular
     ports:
-      - "80:4200"
+      - "80:80"
     depends_on:
       - node-backend
 
   node-backend:
     container_name: backend
     build:
-      context: ./
+      context: .
       dockerfile: Dockerfile.node
     ports:
       - "3000:3000"
@@ -31,4 +31,4 @@ services:
       - "5432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
-      - .scripts/db:/docker-entrypoint-initdb.d
+      - ./scripts/db:/docker-entrypoint-initdb.d
