@@ -172,7 +172,7 @@
 
 
 
-<mat-expansion-panel>
+<!-- <mat-expansion-panel>
   <mat-expansion-panel-header>
     <mat-panel-title>
       TEST
@@ -210,5 +210,53 @@
 </mat-accordion>
 </div>
 <br>
-<br>
+<br> -->
 
+<div>
+
+
+  <!-- Inputs for Binomial Distribution -->
+  <h3>Binomial Distribution Parameters</h3>
+  <label>
+    Trials (n):
+    <input type="number" [(ngModel)]="n" (input)="updateBinomialChart()" />
+  </label>
+  <label>
+    Probability (p):
+    <input type="number" step="0.01" [(ngModel)]="p" (input)="updateBinomialChart()" />
+  </label>
+</div>
+
+<!-- ApexCharts for Binomial Distribution -->
+<div>
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [title]="chartOptions.title"
+    [xaxis]="chartOptions.xaxis"
+    [yaxis]="chartOptions.yaxis"
+  ></apx-chart>
+</div>
+
+<!-- ApexCharts for Normal Distribution -->
+ <div>
+    <!-- Inputs for Normal Distribution -->
+    <h3>Normal Distribution Parameters</h3>
+    <label>
+      Mean (μ):
+      <input type="number" [(ngModel)]="mean" (input)="updateDensityChart()" />
+    </label>
+    <label>
+      Standard Deviation (σ):
+      <input type="number" [(ngModel)]="stdDev" (input)="updateDensityChart()" />
+    </label>
+ </div>
+<div>
+  <apx-chart
+    [series]="densityChartOptions.series"
+    [chart]="densityChartOptions.chart"
+    [title]="densityChartOptions.title"
+    [xaxis]="densityChartOptions.xaxis"
+    [yaxis]="densityChartOptions.yaxis"
+  ></apx-chart>
+</div>

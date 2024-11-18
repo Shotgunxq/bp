@@ -247,137 +247,126 @@ kovarianciaKorelacnyKoeficient: string = `
 </ul>`;
 
 
-public chartOptions: Partial<ChartOptions>;
-public densityChartOptions: Partial<ChartOptions>;
+public chartOptions!: Partial<ChartOptions>;
+public densityChartOptions!: Partial<ChartOptions>;
 
-  constructor() {
-    const n = 10; // počet pokusov
-    const p = 0.5; // pravdepodobnosť úspechu
-
-    // Funkcia na výpočet binomického koeficientu
-    function binomialCoefficient(n: number, k: number): number {
-      let coeff = 1;
-      for (let i = 0; i < k; i++) {
-        coeff *= (n - i) / (i + 1);
-      }
-      return coeff;
-    }
-
-    // Funkcia na výpočet hodnoty distribučnej funkcie F_X(k)
-    function cumulativeDistribution(k: number): number {
-      let sum = 0;
-      for (let i = 0; i <= k; i++) {
-        sum += binomialCoefficient(n, i) * Math.pow(p, i) * Math.pow(1 - p, n - i);
-      }
-      return sum;
-    }
-
-    // Generovanie dát pre distribučnú funkciu
-    const data = [];
-    for (let k = 0; k <= n; k++) {
-      data.push({ x: k, y: cumulativeDistribution(k) });
-    }
-
-    // Konfigurácia grafu ApexCharts
-    this.chartOptions = {
-      series: [
-        {
-          name: "F_X(k)",
-          data: data.map(point => point.y)
-        }
-      ],
-      chart: {
-        height: 350,
-        type: "line",
-        toolbar: {
-          show: false
-        }
-      },
-      title: {
-        text: "Distribučná Funkcia Binomického Rozdelenia",
-        align: "center"
-      },
-      xaxis: {
-        categories: data.map(point => point.x.toString()),
-        title: {
-          text: "k"
-        }
-      },
-      yaxis: {
-        title: {
-          text: "F_X(k)"
-        },
-        min: 0,
-        max: 1
-      }
-    };
+    // Initial parameters
+    public mean = 0;
+    public stdDev = 1;
+    public n = 10;
+    public p = 0.5;
   
-
-
-
-
-
-
-
-
-
-
-
-
-
+    constructor() {
+      this.updateBinomialChart();
+      this.updateDensityChart();
+    }
   
-    const mean = 0; // Stredná hodnota pre normálne rozdelenie
-    const stdDev = 1; // Smerodajná odchýlka pre normálne rozdelenie
-
-    // Funkcia na výpočet hustoty pre normálne rozdelenie
-    function normalDensity(x: number, mean: number, stdDev: number): number {
-      return (
-        (1 / (stdDev * Math.sqrt(2 * Math.PI))) *
-        Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2))
-      );
-    }
-
-    // Generovanie dát pre hustotu pravdepodobnosti
-    const densityData = [];
-    for (let x = -4; x <= 4; x += 0.1) { // Interval od -4 do 4 s krokom 0.1
-      const roundedX = x.toFixed(1); // Zaokrúhlenie na 1 desatinné miesto pre os x
-      const roundedY = normalDensity(x, mean, stdDev).toFixed(3); // Zaokrúhlenie na 3 desatinné miesta pre hustotu
-      densityData.push({ x: roundedX, y: parseFloat(roundedY) });
-    }
-
-    // Konfigurácia grafu ApexCharts
-    this.densityChartOptions = {
-      series: [
-        {
-          name: "f_X(x)",
-          data: densityData.map(point => point.y)
+    // Update the binomial distribution chart
+    updateBinomialChart() {
+      const data = [];
+      const binomialCoefficient = (n: number, k: number): number => {
+        let coeff = 1;
+        for (let i = 0; i < k; i++) {
+          coeff *= (n - i) / (i + 1);
         }
-      ],
-      chart: {
-        height: 350,
-        type: "area",
-        toolbar: {
-          show: false
+        return coeff;
+      };
+  
+      const cumulativeDistribution = (k: number): number => {
+        let sum = 0;
+        for (let i = 0; i <= k; i++) {
+          sum += binomialCoefficient(this.n, i) * Math.pow(this.p, i) * Math.pow(1 - this.p, this.n - i);
         }
-      },
-      title: {
-        text: "Funkcia Hustoty Pravdepodobnosti Normálneho Rozdelenia",
-        align: "center"
-      },
-      xaxis: {
-        categories: densityData.map(point => point.x),
-        title: {
-          text: "x"
-        }
-      },
-      yaxis: {
-        title: {
-          text: "f_X(x)"
-        },
-        min: 0
+        return parseFloat(sum.toFixed(2)); // Round to 2 decimal places
+      };
+  
+      for (let k = 0; k <= this.n; k++) {
+        data.push({ x: k, y: cumulativeDistribution(k) });
       }
-    };
-  }
+  
+      this.chartOptions = {
+        series: [
+          {
+            name: "F_X(k)",
+            data: data.map(point => point.y),
+          },
+        ],
+        chart: {
+          height: 350,
+          type: "line",
+          toolbar: {
+            show: false,
+          },
+        },
+        title: {
+          text: "Distribučná Funkcia Binomického Rozdelenia",
+          align: "center",
+        },
+        xaxis: {
+          categories: data.map(point => point.x.toString()),
+          title: {
+            text: "k",
+          },
+        },
+        yaxis: {
+          title: {
+            text: "F_X(k)",
+          },
+          min: 0,
+          max: 1,
+        },
+      };
+    }
+  
+    // Update the density chart for normal distribution
+    updateDensityChart() {
+      const densityData = [];
+      const normalDensity = (x: number, mean: number, stdDev: number): number => {
+        return (
+          (1 / (stdDev * Math.sqrt(2 * Math.PI))) *
+          Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2))
+        );
+      };
+  
+      for (let x = -4; x <= 4; x += 0.1) {
+        const roundedX = x.toFixed(1);
+        const roundedY = normalDensity(x, this.mean, this.stdDev).toFixed(3);
+        densityData.push({ x: roundedX, y: parseFloat(roundedY) });
+      }
+  
+      this.densityChartOptions = {
+        series: [
+          {
+            name: "f_X(x)",
+            data: densityData.map(point => point.y),
+          },
+        ],
+        chart: {
+          height: 350,
+          type: "area",
+          toolbar: {
+            show: false,
+          },
+        },
+        title: {
+          text: "Funkcia Hustoty Pravdepodobnosti Normálneho Rozdelenia",
+          align: "center",
+        },
+        xaxis: {
+          categories: densityData.map(point => point.x),
+          title: {
+            text: "x",
+          },
+        },
+        yaxis: {
+          title: {
+            text: "f_X(x)",
+          },
+          min: 0,
+        },
+      };
+    }
+  
 }
 
 
