@@ -31,6 +31,7 @@ export class MenuPageComponent {
   // Adjust the number of columns based on screen width
   ngOnInit() {
     this.adjustGridColumns(window.innerWidth);
+    localStorage.clear();
   }
 
   adjustGridColumns(width: number) {

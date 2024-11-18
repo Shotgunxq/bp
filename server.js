@@ -48,22 +48,79 @@ app.get('/', (req, res) => {
 });
 
 // Fetch random exercises by difficulty
+// app.get('/test/api', async (req, res) => {
+//   try {
+//     const { easy, medium, hard } = req.query;
+
+//     const easyQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['easy', parseInt(easy, 10)]);
+//     const mediumQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['medium', parseInt(medium, 10)]);
+//     const hardQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['hard', parseInt(hard, 10)]);
+
+//     const [easyResult, mediumResult, hardResult] = await Promise.all([easyQuery, mediumQuery, hardQuery]);
+
+//     const allExercises = [...easyResult.rows, ...mediumResult.rows, ...hardResult.rows];
+
+//     res.json({ exercises: allExercises });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send(err);
+//   }
+// });
+
+app.get('/themes', async (req, res) => {
+  try {
+    const themesQuery = 'SELECT theme_id, theme_name FROM themes';
+    const themesResult = await db.query(themesQuery);
+
+    res.json(themesResult.rows);
+  } catch (err) {
+    console.error('Error fetching themes:', err);
+    res.status(500).json({ error: 'Failed to fetch themes' });
+  }
+});
+
 app.get('/test/api', async (req, res) => {
   try {
-    const { easy, medium, hard } = req.query;
+    const { easy, medium, hard, themes } = req.query;
 
-    const easyQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['easy', parseInt(easy, 10)]);
-    const mediumQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['medium', parseInt(medium, 10)]);
-    const hardQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['hard', parseInt(hard, 10)]);
+    const easyCount = parseInt(easy, 10) || 0;
+    const mediumCount = parseInt(medium, 10) || 0;
+    const hardCount = parseInt(hard, 10) || 0;
+
+    // Parse the selected themes (comma-separated)
+    const themeIds = themes ? themes.split(',').map((id) => parseInt(id, 10)) : [];
+
+    const whereClause = themeIds.length > 0
+      ? 'AND theme_id = ANY($3::int[])'
+      : '';
+
+    const easyQuery = db.query(
+      `SELECT * FROM exercises WHERE difficulty_level = $1 ${whereClause} ORDER BY RANDOM() LIMIT $2`,
+      themeIds.length > 0 ? ['easy', easyCount, themeIds] : ['easy', easyCount]
+    );
+
+    const mediumQuery = db.query(
+      `SELECT * FROM exercises WHERE difficulty_level = $1 ${whereClause} ORDER BY RANDOM() LIMIT $2`,
+      themeIds.length > 0 ? ['medium', mediumCount, themeIds] : ['medium', mediumCount]
+    );
+
+    const hardQuery = db.query(
+      `SELECT * FROM exercises WHERE difficulty_level = $1 ${whereClause} ORDER BY RANDOM() LIMIT $2`,
+      themeIds.length > 0 ? ['hard', hardCount, themeIds] : ['hard', hardCount]
+    );
 
     const [easyResult, mediumResult, hardResult] = await Promise.all([easyQuery, mediumQuery, hardQuery]);
 
     const allExercises = [...easyResult.rows, ...mediumResult.rows, ...hardResult.rows];
 
+    if (allExercises.length === 0) {
+      return res.status(404).json({ error: 'No exercises found for the selected themes and difficulty levels.' });
+    }
+
     res.json({ exercises: allExercises });
   } catch (err) {
-    console.error(err);
-    res.status(500).send(err);
+    console.error('Error in /test/api:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

@@ -15,6 +15,10 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/login`, credentials);
   }
 
+  getThemes() {
+    console.log('Fetching themes...'); // Debug log
+    return this.http.get<{ theme_id: number; theme_name: string }[]>( this.baseUrl +'/themes');
+  }
   getExercises(queryParams: any): Observable<any> {
     return this.http.get<any>(`${this.baseUrl + '/test/api' + queryParams}`);
   }

@@ -32,6 +32,7 @@ import { MatStepper } from '@angular/material/stepper';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatCheckboxModule }from '@angular/material/checkbox';
 
 import { MathjaxModule } from "mathjax-angular";
 
@@ -51,7 +52,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
   ],
   imports: [
     MathjaxModule.forRoot(),
-    
+    MatCheckboxModule,
     BrowserModule,
     MatGridListModule,
     MatIconModule,

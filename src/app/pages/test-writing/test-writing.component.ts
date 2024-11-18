@@ -22,7 +22,6 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   exercisesKey: string = 'test-writing-exercises';
 
   userId: number = 1; // Replace with actual user ID from authentication
-  //TODO:
   testId: number = 1; // Replace with actual test ID
 
   constructor(
@@ -35,32 +34,30 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     const stateData = history.state.data;
     this.data = stateData || [];
 
-    // Initialize each exercise with answerLocked property
-    this.data.forEach(exercise => {
-      exercise.answerLocked = exercise.answerLocked || false;
-      if (typeof exercise.points === 'undefined') {
-        console.error('Missing points in exercise:', exercise);
-        exercise.points = 0; // Assign a default value, or handle as an error
-      }
-    });
-    
-
-    this.timeLimit = history.state.timeLimit;
+    this.timeLimit = history.state.timeLimit || '00:30:00'; // Default time limit
     const savedTimeLeft = localStorage.getItem(this.timerKey);
+
     if (savedTimeLeft) {
       this.timeLeft = parseInt(savedTimeLeft, 10);
     } else {
       this.timeLeft = this.convertTimeToSeconds(this.timeLimit);
     }
 
-    const savedExercises = localStorage.getItem(this.exercisesKey);
-    if (savedExercises) {
-      this.data = JSON.parse(savedExercises);
-    }
-
     if (this.data.length > 0) {
+      this.data.forEach((exercise) => {
+        exercise.answerLocked = exercise.answerLocked || false;
+        exercise.points = exercise.points || 0; // Default points if missing
+      });
+
+      const savedExercises = localStorage.getItem(this.exercisesKey);
+      if (savedExercises) {
+        this.data = JSON.parse(savedExercises);
+      }
+
       this.currentExercise = this.data[0];
       this.loadUserAnswer();
+    } else {
+      console.warn('No exercises available to initialize.');
     }
 
     this.startTimer();
@@ -85,7 +82,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
         this.timeLeft = 0;
         this.stopTimer();
         localStorage.removeItem(this.timerKey);
-        alert('Time is up!');
+        alert('Time is up! The test has been cleared.');
+        this.resetTestState();
       }
     }, 1000);
   }
@@ -93,6 +91,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   stopTimer(): void {
     if (this.timer) {
       clearInterval(this.timer);
+      this.timer = null;
     }
   }
 
@@ -100,6 +99,37 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  resetTestState(): void {
+    this.stopTimer();
+    this.data = [];
+    this.currentExerciseIndex = 0;
+    this.currentExercise = null;
+    this.userAnswer = '';
+    this.answerChecked = false;
+    this.answerMessage = '';
+    this.timeLeft = 0;
+
+    localStorage.removeItem(this.timerKey);
+    localStorage.removeItem(this.exercisesKey);
+  }
+
+  saveUserAnswers(): void {
+    if (this.currentExercise) {
+      this.data[this.currentExerciseIndex].userAnswer = this.userAnswer;
+      localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
+    }
+  }
+
+  loadUserAnswer(): void {
+    if (this.currentExercise && this.currentExercise.userAnswer) {
+      this.userAnswer = this.currentExercise.userAnswer;
+    } else {
+      this.userAnswer = '';
+    }
+    this.answerChecked = false;
+    this.answerMessage = '';
   }
 
   prevExercise(): void {
@@ -129,11 +159,18 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleAnswerLock(): void {
+    if (this.currentExercise) {
+      this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
+      this.saveUserAnswers();
+    }
+  }
+
   checkAnswer(): void {
     if (this.currentExercise) {
       this.currentExercise.userAnswer = this.userAnswer;
 
-      if (this.userAnswer === this.currentExercise.answer) {
+      if (this.userAnswer.trim() === this.currentExercise.answer.trim()) {
         this.answerMessage = 'Correct!';
       } else {
         this.answerMessage = 'Incorrect. Try again.';
@@ -143,76 +180,33 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     }
   }
 
-  resetAnswer(): void {
-    this.userAnswer = '';
-    this.answerChecked = false;
-    this.answerMessage = '';
-  }
-
-  saveUserAnswers(): void {
-    if (this.currentExercise) {
-      this.data[this.currentExerciseIndex].userAnswer = this.userAnswer;
-      // Ensure all necessary fields, including 'points', are stored
-      localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
-    }
-  }
-  
-
-  loadUserAnswer(): void {
-    if (this.currentExercise && this.currentExercise.userAnswer) {
-      this.userAnswer = this.currentExercise.userAnswer;
-    } else {
-      this.userAnswer = '';
-    }
-    this.answerChecked = false;
-    this.answerMessage = '';
-  }
-
-  toggleAnswerLock(): void {
-    if (this.currentExercise) {
-      this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
-      this.saveUserAnswers();
-    }
-  }
-
   submitTest(): void {
     let totalPoints = 0;
-  
-    const savedExercises = localStorage.getItem(this.exercisesKey);
-    if (savedExercises) {
-      this.data = JSON.parse(savedExercises);
-    }
-  
-    for (const exercise of this.data) {
-      console.log('Exercise:', exercise); // Debug log
+
+    this.data.forEach((exercise) => {
       if (exercise.userAnswer === exercise.answer) {
-        const exercisePoints = exercise.points || 0; // Fallback to 0 if points is missing
-        totalPoints += exercisePoints;
-        console.log(`Added ${exercisePoints} points for exercise`, exercise);
+        totalPoints += exercise.points || 0; // Add points for correct answers
       }
-    }
-  
-    // Log the payload before posting
+    });
+
     const body = {
       user_id: this.userId,
       test_id: this.testId,
       points: totalPoints,
       timestamp: new Date().toISOString(),
     };
-  
+
     console.log('Submitting test score with body:', body);
-  
+
     this.apiService.submitTestScore(this.userId, this.testId, totalPoints).subscribe(
-      response => {
+      (response) => {
         console.log('Test submitted successfully:', response);
+        this.resetTestState();
+        this.router.navigate(['/result'], { state: { points: totalPoints } });
       },
-      error => {
+      (error) => {
         console.error('Error submitting test:', error);
-        if (error.error) {
-          console.error('Error details:', error.error); // Log server-provided details
-        }
       }
     );
   }
-  
 }

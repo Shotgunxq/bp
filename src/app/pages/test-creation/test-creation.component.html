@@ -25,14 +25,14 @@
           </div>
           <div class="input">
             <input
-            class="input_area"
-              matInput
-              type="number"
-              placeholder="Počet úloh"
-              id="easyCount"
-              [disabled]="!isEasyEnabled"
-              (input)="preventNegativeValue($event)"
-            />
+            matInput
+            type="number"
+            [(ngModel)]="easyCount"
+            placeholder="Počet úloh"
+            id="easyCount"
+            [disabled]="!isEasyEnabled"
+            (input)="preventNegativeValue($event)"
+          />
           </div>
         </div>
       </mat-grid-tile>
@@ -45,15 +45,14 @@
           </div>
           <div class="input">
             <input
-            class="input_area"
-
-              matInput
-              type="number"
-              placeholder="Počet úloh"
-              id="mediumCount"
-              [disabled]="!isMediumEnabled"
-              (input)="preventNegativeValue($event)"
-            />
+            matInput
+            type="number"
+            [(ngModel)]="mediumCount"
+            placeholder="Počet úloh"
+            id="mediumCount"
+            [disabled]="!isMediumEnabled"
+            (input)="preventNegativeValue($event)"
+          />
           </div>
         </div>
       </mat-grid-tile>
@@ -66,10 +65,9 @@
           </div>
           <div class="input">
             <input
-            class="input_area"
-
               matInput
               type="number"
+              [(ngModel)]="hardCount"
               placeholder="Počet úloh"
               id="hardCount"
               [disabled]="!isHardEnabled"
@@ -80,6 +78,17 @@
       </mat-grid-tile>
     </mat-grid-list>
   </div>
+
+  <div class="section">
+    <h1>Výber tém</h1>
+    <mat-checkbox
+      *ngFor="let theme of themes"
+      [(ngModel)]="theme.selected"
+    >
+      {{ theme.theme_name }}
+    </mat-checkbox>
+  </div>
+  
 
   <div class="section">
     <mat-form-field id="timeSelect" appearance="fill">
