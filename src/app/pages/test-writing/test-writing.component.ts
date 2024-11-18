@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
 import { ApiService } from '../../services/apiServices';
 
 @Component({
@@ -27,7 +28,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private snackBar: MatSnackBar // Inject MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -82,7 +84,9 @@ export class TestWritingComponent implements OnInit, OnDestroy {
         this.timeLeft = 0;
         this.stopTimer();
         localStorage.removeItem(this.timerKey);
-        alert('Time is up! The test has been cleared.');
+        this.snackBar.open('Time is up! The test has been cleared.', 'Close', {
+          duration: 5000,
+        });
         this.resetTestState();
       }
     }, 1000);
@@ -201,11 +205,22 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.apiService.submitTestScore(this.userId, this.testId, totalPoints).subscribe(
       (response) => {
         console.log('Test submitted successfully:', response);
+
+        // Show success notification
+        this.snackBar.open('Test submitted successfully!', 'Close', {
+          duration: 7000,
+        });
+
         this.resetTestState();
-        this.router.navigate(['/result'], { state: { points: totalPoints } });
+        this.router.navigate(['/test'], { state: { points: totalPoints } });
       },
       (error) => {
         console.error('Error submitting test:', error);
+
+        // Show error notification
+        this.snackBar.open('Failed to submit the test. Please try again.', 'Close', {
+          duration: 7000,
+        });
       }
     );
   }
