@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
-import ApexCharts from 'apexcharts'
-import {
-  ChartComponent,
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexYAxis,
-  ApexTitleSubtitle
-} from "ng-apexcharts";
+import ApexCharts from 'apexcharts';
+import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexTitleSubtitle, ApexAnnotations } from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -15,24 +8,26 @@ export type ChartOptions = {
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
   title: ApexTitleSubtitle;
+  annotations?: ApexAnnotations;
+  // regions?: ApexAnnotations;
 };
 @Component({
   selector: 'app-materials-page',
   templateUrl: './materials-page.component.html',
   styleUrl: './materials-page.component.scss',
 })
-export class MaterialsPageComponent {content = "<strong>Podmienená pravdepodobnosť:</strong> Vyjadruje pravdepodobnosť udalosti $A$ za predpokladu, že nastala udalosť $B$, vypočítaná ako $P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}, \\quad \\text{ak } P(B) > 0$";
+export class MaterialsPageComponent {
+  content =
+    '<strong>Podmienená pravdepodobnosť:</strong> Vyjadruje pravdepodobnosť udalosti $A$ za predpokladu, že nastala udalosť $B$, vypočítaná ako $P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}, \\quad \\text{ak } P(B) > 0$';
   content2: string = `<strong>Veta o úplnej pravdepodobnosti:</strong> Používa sa na výpočet pravdepodobnosti udalosti $B$ s využitím rozkladu na množiny $A_i$, kde $P(B) = \sum_{i} P(A_i) \\cdot P(B \mid A_i)$`;
   content3: string = `<strong>Veta Bayesovej pravdepodobnosti:</strong> Používa sa na výpočet pravdepodobnosti udalosti $A_k$ za predpokladu, že nastala udalosť $B$, vypočítaná ako $P(A_k \\mid B) = \\frac{P(B \\mid A_k) \\cdot P(A_k)}{\\sum_{i} P(B \\mid A_i) \\cdot P(A_i)}$`;
   content4: string = `<strong>Nezávislosť náhodných udalostí:</strong> Dve udalosti $A$ a $B$ sú nezávislé, ak $P(A \\cap B) = P(A) \\cdot P(B)$, t.j., výskyt jednej nemá vplyv na výskyt druhej.`;
-  
-  
+
   distribucnaFun: string = `<strong>Distribučná funkcia $F_X(x)$ :</strong> Určuje pravdepodobnosť, že náhodná premenná nadobudne hodnotu menšiu alebo rovnú 𝑥: $F_X(x) = P(X \\leq x)$`;
-  hustotaPravde:string = `<strong>Hustota pravdepodobnosti</strong> (pre spojitú premennú) <strong>$f_X(x)$</strong>: Derivácia distribučnej funkcie. Určuje pravdepodobnosť, že náhodná premenná padne do určitého intervalu.`;
-  strednaHodnota:string = `<strong>Stredná hodnota $E(X)$:</strong> Očakávaná hodnota náhodnej premennej:<ul><li>Pre diskrétnu premennú: $E(X) = \\sum x_i \\cdot p(x_i)$</li><li>Pre spojitú premennú: $E(X) = \\int_{-\\infty}^{\\infty} x \\cdot f_X(x) \, dx$</li></ul>`;
-  rozptyl: string = `<strong>Rozptyl $Var(X)$:</strong> Miera rozptylu okolo strednej hodnoty: $\\operatorname{Var}(X) = E[(X - E(X))^2]$`
-  
-  
+  hustotaPravde: string = `<strong>Hustota pravdepodobnosti</strong> (pre spojitú premennú) <strong>$f_X(x)$</strong>: Derivácia distribučnej funkcie. Určuje pravdepodobnosť, že náhodná premenná padne do určitého intervalu.`;
+  strednaHodnota: string = `<strong>Stredná hodnota $E(X)$:</strong> Očakávaná hodnota náhodnej premennej:<ul><li>Pre diskrétnu premennú: $E(X) = \\sum x_i \\cdot p(x_i)$</li><li>Pre spojitú premennú: $E(X) = \\int_{-\\infty}^{\\infty} x \\cdot f_X(x) \, dx$</li></ul>`;
+  rozptyl: string = `<strong>Rozptyl $Var(X)$:</strong> Miera rozptylu okolo strednej hodnoty: $\\operatorname{Var}(X) = E[(X - E(X))^2]$`;
+
   strednaHodnota2: string = `<strong>Stredná hodnota: </strong> <ul>
   <li>Pre diskrétnu náhodnú premennú $X$ s pravdepodobnostným rozdelením $ {(x_i, p_i); i= 1,2, ...}: $ $E(X) = \\sum_{i} x_i p_i$</li>
   <li>Pre spojitú náhodnú premennú $X$ s hustotou $f_X(t):$ $E(X) = \\int_{-\\infty}^{\\infty} t \cdot f_X(t) \, dt$</li>
@@ -43,7 +38,7 @@ export class MaterialsPageComponent {content = "<strong>Podmienená pravdepodobn
   <li>Centrálne momenty $k$-tého rádu: $\\mu_k = E((X - E(X))^k)$</li>
   </ul>`;
   rozptyl2: string = `<strong>Rozptyl</strong> (disperzia) a smerodajná odchýlka: $D(X) = E((X - E(X))^2)$ $\\sqrt{D(X)}$ je smerodajná odchýlka.`;
-  cebysevovaNerov: string =`<strong>Čebyševova nerovnosť:</strong> $P\\left( \\left| X - E(X) \\right| > \\lambda \\cdot \\sqrt{D(X)} \\right) \\leq \\frac{1}{\\lambda^2} \\quad \\text{pre } \\lambda > 0$`;
+  cebysevovaNerov: string = `<strong>Čebyševova nerovnosť:</strong> $P\\left( \\left| X - E(X) \\right| > \\lambda \\cdot \\sqrt{D(X)} \\right) \\leq \\frac{1}{\\lambda^2} \\quad \\text{pre } \\lambda > 0$`;
   koeficienty: string = `<strong>Koeficienty:</strong> 
   <ul>
   <li> Šikmosť: $\\alpha_3 = \\frac{\\mu_3}{\\sigma^3}$ </li>
@@ -56,14 +51,12 @@ export class MaterialsPageComponent {content = "<strong>Podmienená pravdepodobn
   <li>Rozptyl: $D(X) = E(X^2) - (E(X))^2$</li>
   </ul>`;
 
-
-
   modus: string = `<strong>Modus:</strong> <ul>
   <li>Definícia pre diskrétnu náhodnú premennú: Modus je hodnota $x_Mo$ s maximálnou pravdepodobnosťou: $P(X = x_{\\text{Mo}}) = \\max(p_1, p_2, \\dots)$</li>
   <li>Definícia pre spojitú náhodnú premennú: Módus je hodnota $x_Mo$ pre ktorú platí $f_X(x_{\\text{Mo}}) = \\max_x f_X(x)$, kde $f_X$ je hustota pravdepodobnosti.</li>
   </ul>`;
 
-  kvantily:string = `<strong>Kvantily:</strong> Definícia p-kvantilu: Kvantyl $x_p$ je hodnota, pre ktorú platí: $P(X < x_p) \\leq p \\quad \\text{a} \\quad P(X > x_p) \\leq 1 - p$`;
+  kvantily: string = `<strong>Kvantily:</strong> Definícia p-kvantilu: Kvantyl $x_p$ je hodnota, pre ktorú platí: $P(X < x_p) \\leq p \\quad \\text{a} \\quad P(X > x_p) \\leq 1 - p$`;
 
   medHorDolKval: string = `<strong>Medián, horný a dolný kvantil: </strong> 
   <ul>
@@ -72,14 +65,12 @@ export class MaterialsPageComponent {content = "<strong>Podmienená pravdepodobn
   <li>Horný kvartil $x_0.75$ je 75. percentil, označuje sa $x_U$</li>
   <ul>`;
 
-
-  alterRozdel: string =`<strong>Alternatívne rozdelenie: </strong> 
+  alterRozdel: string = `<strong>Alternatívne rozdelenie: </strong> 
   <ul>
   <li><strong>Definícia: </strong> Pre dve možnosti (napr. úspech alebo neúspech) s pravdepodobnosťou $p$  pre úspech: $P(A) = p, \\quad P(X = x_1) = p, \\quad P(X = x_2) = 1 - p.$</li>
   <li><strong>Očakávaná hodnota: </strong> $E(X) = x_1 p + x_2 (1 - p) = p$.</li>
   <li><strong>Rozptyl: </strong> $D(X) = (x_1 - x_2)^2 p(1 - p) = p(1 - p)$.</li>
   </ul>`;
-
 
   binomickeRozdel: string = `<strong>Binomické rozdelenie: </strong>
   <ul>
@@ -87,7 +78,6 @@ export class MaterialsPageComponent {content = "<strong>Podmienená pravdepodobn
   <li><strong>Očakávaná hodnota: </strong>$E(X) = np.$</li>
   <li><strong>Rozptyl: </strong>$D(X) = np(1 - p).$</li>
   </ul>`;
-
 
   poisson: string = `<strong>Poissonovo rozdelenie: </strong>
   <ul>
@@ -104,7 +94,7 @@ export class MaterialsPageComponent {content = "<strong>Podmienená pravdepodobn
   <li><strong>Rozptyl: </strong> $D(X) = \\frac{1 - p}{p^2}.$</li>
   </ul>`;
 
-  rovnomerneRozdelenie: string =`<strong>Rovnomerné rozdelenie: </strong>
+  rovnomerneRozdelenie: string = `<strong>Rovnomerné rozdelenie: </strong>
   <ul>
   <li><strong>Definícia: </strong> Pre rovnomerne distribuovanú náhodnú premennú $X \\in {x_1,x_2,...x_n}$, s pravdepodobnosťou: $P(X = x_i) = \\frac{1}{n}, \\quad \\text{pre všetky } i.$</li>
   <li><strong>Očakávaná hodnota: </strong>$E(X) = \\frac{1}{n} \\sum_{i=1}^{n} x_i.$</li>
@@ -131,7 +121,7 @@ export class MaterialsPageComponent {content = "<strong>Podmienená pravdepodobn
   $E(X) = e^{\\mu + \\frac{\\sigma^2}{2}}, \quad D(X) = (e^{\\sigma^2} - 1)e^{2\\mu + \\sigma^2}.$</li>
 </ul>`;
 
-exponentialneRozdelenie: string = `
+  exponentialneRozdelenie: string = `
 <strong>Exponenciálne rozdelenie: </strong>
 <ul>
   <li><strong>Definícia: </strong> Ak $X$ má exponenciálne rozdelenie s parametrom $\\lambda > 0$, potom funkcia hustoty je:
@@ -148,7 +138,7 @@ exponentialneRozdelenie: string = `
   $D(X) = \\frac{1}{\\lambda^2}.$</li>
 </ul>`;
 
-limitneVety: string = `
+  limitneVety: string = `
 <strong>Limitné vety: </strong>
 <ul>
   <li><strong>Definícia: </strong> Nech $(\\Omega, S, P)$ je pravdepodobnostný priestor. Postupnosť náhodných premenných $X_1, X_2, \\dots$ konverguje podľa pravdepodobnosti k číslu $c \\in \\mathbb{R}$ (označujeme $X_n \\xrightarrow{P} c$), ak pre všetky $\\varepsilon > 0$:
@@ -161,8 +151,7 @@ limitneVety: string = `
   $Y_n = \\frac{X_n - \\mu}{\\sqrt{n} \\sigma} \\xrightarrow{L} X,$ kde $X \\sim N(0,1)$. </li>
 </ul>`;
 
-
-popisnaStatistika: string = `
+  popisnaStatistika: string = `
 <ul>
   <li><strong>Definícia: </strong> Štatistika je disciplína zaoberajúca sa analýzou údajov ovplyvnených náhodnými chybami alebo náhodnými javmi.</li>
   <li><strong>Dáta: </strong> Štatistické údaje sa rozdeľujú na kvantitatívne a kvalitatívne dáta.</li>
@@ -190,10 +179,7 @@ popisnaStatistika: string = `
 </ul>
 `;
 
-
-
-
-narodnyVektor: string = `
+  narodnyVektor: string = `
 <strong>Náhodný vektor a združené rozdelenie pravdepodobnosti: </strong>
 <ul>
   <li><strong>Združená pravdepodobnosť: </strong> Pre náhodné premenné $X$ a $Y$ je združená distribučná funkcia definovaná ako:
@@ -219,7 +205,7 @@ narodnyVektor: string = `
     $ E(Z) = \\int \\int_{R \\times R} g(t, s) f_{X,Y}(t, s) dt ds. $</li>
 </ul>`;
 
-kovarianciaKorelacnyKoeficient: string = `
+  kovarianciaKorelacnyKoeficient: string = `
 <strong>Kovariancia a korelačný koeficient: </strong>
 <ul>
   <li><strong>Kovariancia:</strong> Kovariancia medzi náhodnými premennými $X$ a $Y$ je definovaná ako:
@@ -246,127 +232,154 @@ kovarianciaKorelacnyKoeficient: string = `
   </li>
 </ul>`;
 
+  public chartOptions!: Partial<ChartOptions>;
+  public densityChartOptions!: Partial<ChartOptions>;
 
-public chartOptions!: Partial<ChartOptions>;
-public densityChartOptions!: Partial<ChartOptions>;
+  // Initial parameters
+  public mean = 0;
+  public stdDev = 1;
+  public n = 10;
+  public p = 0.5;
+  highlightX = 10;
 
-    // Initial parameters
-    public mean = 0;
-    public stdDev = 1;
-    public n = 10;
-    public p = 0.5;
-  
-    constructor() {
-      this.updateBinomialChart();
-      this.updateDensityChart();
-    }
-  
-    // Update the binomial distribution chart
-    updateBinomialChart() {
-      const data = [];
-      const binomialCoefficient = (n: number, k: number): number => {
-        let coeff = 1;
-        for (let i = 0; i < k; i++) {
-          coeff *= (n - i) / (i + 1);
-        }
-        return coeff;
-      };
-  
-      const cumulativeDistribution = (k: number): number => {
-        let sum = 0;
-        for (let i = 0; i <= k; i++) {
-          sum += binomialCoefficient(this.n, i) * Math.pow(this.p, i) * Math.pow(1 - this.p, this.n - i);
-        }
-        return parseFloat(sum.toFixed(2)); // Round to 2 decimal places
-      };
-  
-      for (let k = 0; k <= this.n; k++) {
-        data.push({ x: k, y: cumulativeDistribution(k) });
+  constructor() {
+    this.updateBinomialChart();
+    this.updateDensityChart();
+  }
+
+  // Update the binomial distribution chart
+  updateBinomialChart() {
+    const data = [];
+    const binomialCoefficient = (n: number, k: number): number => {
+      let coeff = 1;
+      for (let i = 0; i < k; i++) {
+        coeff *= (n - i) / (i + 1);
       }
-  
-      this.chartOptions = {
-        series: [
+      return coeff;
+    };
+
+    const cumulativeDistribution = (k: number): number => {
+      let sum = 0;
+      for (let i = 0; i <= k; i++) {
+        sum += binomialCoefficient(this.n, i) * Math.pow(this.p, i) * Math.pow(1 - this.p, this.n - i);
+      }
+      return parseFloat(sum.toFixed(2)); // Round to 2 decimal places
+    };
+
+    for (let k = 0; k <= this.n; k++) {
+      data.push({ x: k, y: cumulativeDistribution(k) });
+    }
+
+    this.chartOptions = {
+      series: [
+        {
+          name: 'F_X(k)',
+          data: data.map(point => point.y),
+        },
+      ],
+      chart: {
+        height: 350,
+        type: 'line',
+        toolbar: {
+          show: false,
+        },
+      },
+      title: {
+        text: 'Distribučná Funkcia Binomického Rozdelenia',
+        align: 'center',
+      },
+      xaxis: {
+        categories: data.map(point => point.x.toString()),
+        title: {
+          text: 'k',
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'F_X(k)',
+        },
+        min: 0,
+        max: 1,
+      },
+    };
+  }
+
+  // Update the density chart for normal distribution
+  updateDensityChart() {
+    const densityData = [];
+    const normalDensity = (x: number, mean: number, stdDev: number): number => {
+      return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
+    };
+
+    // Generate data for the density function
+    for (let x = -3; x <= 3; x += 0.2) {
+      const roundedX = parseFloat(x.toFixed(1)); // Round x for cleaner labels
+      const roundedY = parseFloat(normalDensity(x, this.mean, this.stdDev).toFixed(2)); // Round y to 3 decimals
+      densityData.push({ x: roundedX, y: roundedY });
+    }
+
+    const highlightX = this.highlightX; // Use the dynamic highlight value
+
+    // Update chart options
+    this.densityChartOptions = {
+      series: [
+        {
+          name: 'f_X(x)',
+          data: densityData.map(point => point.y), // Use density values for the chart
+        },
+      ],
+      chart: {
+        height: 350,
+        type: 'area',
+        toolbar: {
+          show: false,
+        },
+      },
+      title: {
+        text: 'Funkcia Hustoty Pravdepodobnosti Normálneho Rozdelenia',
+        align: 'center',
+      },
+      xaxis: {
+        categories: densityData.map(point => point.x.toString()), // Use rounded x values as categories
+        title: {
+          text: 'x',
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'f_X(x)',
+        },
+        min: 0,
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          fontSize: '12px', // Increase font size
+          colors: ['#304758'], // Improve contrast
+        },
+        formatter: (val: number) => val.toFixed(2), // Round to 2 decimals
+      },
+      annotations: {
+        xaxis: [
           {
-            name: "F_X(k)",
-            data: data.map(point => point.y),
+            x: highlightX,
+            borderColor: '#FF4560',
+            strokeDashArray: 10,
+            label: {
+              text: `P(x <= ${highlightX})`,
+              style: {
+                background: '#FF4560',
+                color: '#fff',
+              },
+            },
+          },
+          {
+            x: -4, // Start of the shaded area
+            x2: highlightX, // End of the shaded area
+            fillColor: 'rgba(255, 69, 96, 0.2)', // Light red fill
           },
         ],
-        chart: {
-          height: 350,
-          type: "line",
-          toolbar: {
-            show: false,
-          },
-        },
-        title: {
-          text: "Distribučná Funkcia Binomického Rozdelenia",
-          align: "center",
-        },
-        xaxis: {
-          categories: data.map(point => point.x.toString()),
-          title: {
-            text: "k",
-          },
-        },
-        yaxis: {
-          title: {
-            text: "F_X(k)",
-          },
-          min: 0,
-          max: 1,
-        },
-      };
-    }
-  
-    // Update the density chart for normal distribution
-    updateDensityChart() {
-      const densityData = [];
-      const normalDensity = (x: number, mean: number, stdDev: number): number => {
-        return (
-          (1 / (stdDev * Math.sqrt(2 * Math.PI))) *
-          Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2))
-        );
-      };
-  
-      for (let x = -4; x <= 4; x += 0.1) {
-        const roundedX = x.toFixed(1);
-        const roundedY = normalDensity(x, this.mean, this.stdDev).toFixed(3);
-        densityData.push({ x: roundedX, y: parseFloat(roundedY) });
-      }
-  
-      this.densityChartOptions = {
-        series: [
-          {
-            name: "f_X(x)",
-            data: densityData.map(point => point.y),
-          },
-        ],
-        chart: {
-          height: 350,
-          type: "area",
-          toolbar: {
-            show: false,
-          },
-        },
-        title: {
-          text: "Funkcia Hustoty Pravdepodobnosti Normálneho Rozdelenia",
-          align: "center",
-        },
-        xaxis: {
-          categories: densityData.map(point => point.x),
-          title: {
-            text: "x",
-          },
-        },
-        yaxis: {
-          title: {
-            text: "f_X(x)",
-          },
-          min: 0,
-        },
-      };
-    }
-  
+      },
+    } as Partial<ChartOptions>;
+  }
 }
-
-
