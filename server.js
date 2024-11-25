@@ -9,7 +9,17 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+const session = require('express-session');
+
 app.use(bodyParser.json());
+app.use(
+  session({
+    secret: '1', // Replace with a strong secret in production
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }, // Set to `true` if using HTTPS
+  })
+);
 
 // LDAP authentication function
 async function ldapAuth(username, password) {
@@ -36,7 +46,30 @@ app.post('/login', async (req, res) => {
 
   try {
     const user = await ldapAuth(username, password);
-    res.status(200).json(user);
+    const processedUser = {
+      userId: user.uisId, // Map uisId to userId
+      employeeType: user.employeeType,
+      givenName: user.givenName,
+      lastName: user.sn, // Map sn to lastName
+      email: user.mailLocalAddress[1],
+    };
+
+    try {
+      const existingUser = await db.findUserById(processedUser.userId);
+      console.log('Existing user:', existingUser);
+      console.log('Processed user AIS ID:', processedUser.userId);
+      if (!existingUser) {
+        console.log('User not found in database, inserting new user...');
+        await db.insertUser(processedUser);
+      }
+    } catch (dbError) {
+      console.error('Database operation failed:', dbError.message);
+    }
+
+    res.status(200).json(processedUser); // Send processed user data
+    console.log('User authenticated:', processedUser);
+    // console.log('LDAP user data:', user);
+    // res.status(200).json(user);
   } catch (error) {
     res.status(401).send('Authentication failed: ' + error.message);
   }
@@ -69,6 +102,7 @@ app.get('/', (req, res) => {
 
 app.get('/themes', async (req, res) => {
   try {
+    // const themesQuery = 'SELECT theme_id, theme_name FROM themes WHERE theme_id != 0';
     const themesQuery = 'SELECT theme_id, theme_name FROM themes';
     const themesResult = await db.query(themesQuery);
 
@@ -88,11 +122,9 @@ app.get('/test/api', async (req, res) => {
     const hardCount = parseInt(hard, 10) || 0;
 
     // Parse the selected themes (comma-separated)
-    const themeIds = themes ? themes.split(',').map((id) => parseInt(id, 10)) : [];
+    const themeIds = themes ? themes.split(',').map(id => parseInt(id, 10)) : [];
 
-    const whereClause = themeIds.length > 0
-      ? 'AND theme_id = ANY($3::int[])'
-      : '';
+    const whereClause = themeIds.length > 0 ? 'AND theme_id = ANY($3::int[])' : '';
 
     const easyQuery = db.query(
       `SELECT * FROM exercises WHERE difficulty_level = $1 ${whereClause} ORDER BY RANDOM() LIMIT $2`,
@@ -150,25 +182,24 @@ app.post('/submit', async (req, res) => {
   if (!user_id) {
     return res.status(400).json({ error: 'Missing required field: user_id is required.' });
   }
-  
+
   if (!test_id) {
     return res.status(400).json({ error: 'Missing required field: test_id is required.' });
   }
   if (typeof points !== 'number') {
     return res.status(400).json({ error: 'Invalid points value' });
   }
-  
+
   if (points === undefined || points === null) {
     return res.status(400).json({ error: 'Missing required field: points is required.' });
   }
   if (typeof points !== 'number') {
-  return res.status(400).json({ error: 'Invalid points value' });
-}
+    return res.status(400).json({ error: 'Invalid points value' });
+  }
 
   if (!timestamp) {
     return res.status(400).json({ error: 'Missing required field: timestamp is required.' });
   }
-  
 
   try {
     const userCheck = await db.query('SELECT 1 FROM users WHERE user_id = $1', [user_id]);
@@ -187,7 +218,6 @@ app.post('/submit', async (req, res) => {
     res.status(403).json({ error: 'Bad Request' });
   }
 });
-
 
 // Retrieve a specific test
 app.get('/api/test/:test_id', async (req, res) => {

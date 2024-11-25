@@ -1,11 +1,17 @@
-<mat-toolbar [ngClass]="{ 'navbar': true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
+<mat-toolbar [ngClass]="{ navbar: true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
+  <!-- Back button for non-menu routes -->
   <div class="left-content" *ngIf="!isMenuRoute">
     <mat-icon fontIcon="arrow_back" (click)="navigateToMenu()" class="back-arrow"></mat-icon>
-
   </div>
 
+  <!-- Typewriter effect for menu route -->
   <div class="typewriter" *ngIf="isMenuRoute">
     <span>Welcome</span>
-    <span *ngIf="showTypewriter" class="username animate-typewriter">{{ username }}!</span>
+
+    <!-- Display the username if it exists and showTypewriter is true -->
+    <span *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
+
+    <!-- Logout button -->
+    <button mat-button (click)="logout()">Logout</button>
   </div>
 </mat-toolbar>
