@@ -13,147 +13,141 @@ import { geometricExercise, geometricProbabilityRandom } from '../../services/ge
   styleUrls: ['./test-creation.component.scss'],
 })
 export class TestCreationComponent implements OnInit {
-  generated: any[] = [];
-  gridCols: number = 3; // Default to 3 columns on larger screens
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.adjustGridCols(window.innerWidth);
-  }
-  easyRandomNumber = Math.floor(Math.random() * 3) + 1;
-
-  ngOnInit(): void {
-    localStorage.clear();
-    this.adjustGridCols(window.innerWidth); // Adjust the grid on initial load
-
-  }
-  adjustGridCols(width: number) {
-    if (width >= 1150) {
-      this.gridCols = 3; // Large screens (desktop): 3 columns
-    } 
-     else {
-      this.gridCols = 1; // Small screens (mobile): 1 column
-    }
-  }
+  gridCols: number = 3;
   times: number[] = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
-  selectedTime: number = 5; // Default selected time
+  selectedTime: number = 5;
 
   isEasyEnabled: boolean = false;
   isMediumEnabled: boolean = false;
   isHardEnabled: boolean = false;
 
+  easyCount: number = 0;
+  mediumCount: number = 0;
+  hardCount: number = 0;
+
+  themes: { theme_id: number; theme_name: string; selected: boolean }[] = [];
   exercises: any[] = [];
 
-  exercisesKey: string = 'test-writing-exercises';
+  constructor(private router: Router, private http: HttpClient, private apiService: ApiService) {}
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private apiService: ApiService
-  ) {}
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.adjustGridCols(window.innerWidth);
+  }
 
-  preventNegativeValue(event: Event) {
+  ngOnInit(): void {
+    this.adjustGridCols(window.innerWidth);
+    this.fetchThemes();
+    localStorage.clear();
+  }
+
+  adjustGridCols(width: number) {
+    this.gridCols = width >= 1150 ? 3 : 1;
+  }
+
+  fetchThemes(): void {
+    this.apiService.getThemes().subscribe(
+      (response) => {
+        this.themes = response.map((theme: any) => ({
+          ...theme,
+          selected: false,
+        }));
+      },
+      (error) => console.error('Error fetching themes:', error)
+    );
+  }
+
+  preventNegativeValue(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.value && parseInt(input.value, 10) < 0) {
       input.value = '0';
     }
   }
 
-  validateTime(): boolean {
-    return this.selectedTime >= 5 && this.selectedTime <= 60;
-  }
-
   validateTotalExerciseCount(): boolean {
-    const totalExerciseInput = document.getElementById('totalExerciseCount') as HTMLInputElement;
-    const easyCountInput = document.getElementById('easyCount') as HTMLInputElement;
-    const mediumCountInput = document.getElementById('mediumCount') as HTMLInputElement;
-    const hardCountInput = document.getElementById('hardCount') as HTMLInputElement;
-
-    const totalExerciseCount = parseInt(totalExerciseInput.value.trim(), 10) || 0;
-    const easyCount = parseInt(easyCountInput.value.trim(), 10) || 0;
-    const mediumCount = parseInt(mediumCountInput.value.trim(), 10) || 0;
-    const hardCount = parseInt(hardCountInput.value.trim(), 10) || 0;
-
-    return totalExerciseCount === easyCount + mediumCount + hardCount;
+    const total = this.easyCount + this.mediumCount + this.hardCount;
+    return total > 0;
   }
 
-  getData() {
-    localStorage.clear();
-    console.log('Getting data ', this.validateTotalExerciseCount());
+  getSelectedThemeIds(): number[] {
+    return this.themes.filter((theme) => theme.selected).map((theme) => theme.theme_id);
+  }
+
+  async getData(): Promise<void> {
     if (!this.validateTotalExerciseCount()) {
-      console.error('Total exercise count does not match the sum of easy, medium, and hard exercises.');
+      alert('Please specify a valid total exercise count.');
       return;
     }
 
-    const easyCountInput = document.getElementById('easyCount') as HTMLInputElement;
-    const mediumCountInput = document.getElementById('mediumCount') as HTMLInputElement;
-    const hardCountInput = document.getElementById('hardCount') as HTMLInputElement;
+    const selectedThemes = this.getSelectedThemeIds();
 
-    const easyCount = easyCountInput.value === '' ? 0 : parseInt(easyCountInput.value, 10);
-    const mediumCount = mediumCountInput.value === '' ? 0 : parseInt(mediumCountInput.value, 10);
-    const hardCount = hardCountInput.value === '' ? 0 : parseInt(hardCountInput.value, 10);
+    // Generate exercises
+    const generatedEasy = binomialProbabilityRandom();
+    const generatedMedium = hypergeometricProbabilityRandom();
+    const generatedHard = geometricProbabilityRandom();
 
-    const adjustedEasyCount = Math.max(0, easyCount - this.easyRandomNumber);
-
-    const queryParams = `?easy=${adjustedEasyCount}&medium=${mediumCount}&hard=${hardCount}`;
-
-    const generatedBinominal = binomialProbabilityRandom();
-    const generatedHypergeometric = hypergeometricProbabilityRandom();
-    const generatedGeometric = geometricProbabilityRandom();
-
-    switch (this.easyRandomNumber) {
-      case 1:
-        this.generated = generatedBinominal;
-        break;
-      case 2:
-        this.generated = [...generatedBinominal, ...generatedHypergeometric];
-        break;
-      case 3:
-        this.generated = [...generatedBinominal, ...generatedHypergeometric, ...generatedGeometric];
-        break;
-    }
+    const queryParams = `?easy=${this.easyCount}&medium=${this.mediumCount}&hard=${this.hardCount}&themes=${selectedThemes.join(',')}`;
 
     this.apiService.getExercises(queryParams).subscribe(
-      response => {
-        // Assign the response data directly to the exercises property
-        this.exercises = response.exercises;
-        // Merge the fetched and generated exercises
+      (response) => {
+        // Mix fetched and generated exercises
+        const easy = this.mixExercises(response.exercises.filter((e: any) => e.difficulty_level === 'easy'), generatedEasy, this.easyCount);
+        const medium = this.mixExercises(response.exercises.filter((e: any) => e.difficulty_level === 'medium'), generatedMedium, this.mediumCount);
+        const hard = this.mixExercises(response.exercises.filter((e: any) => e.difficulty_level === 'hard'), generatedHard, this.hardCount);
 
-        this.exercises = this.exercises.concat(this.generated);
-        console.log('Exercises fetched:', this.exercises);
-        console.log('Generated:', this.generated);
+        // Combine all difficulty levels
+        this.exercises = [...easy, ...medium, ...hard];
+
         if (this.exercises.length === 0) {
-          console.error('No exercises to create a test.');
+          alert('No exercises found to create a test.');
           return;
         }
 
-        const cas_na_pisanie = `00:${this.selectedTime.toString().padStart(2, '0')}:00`;
-
-        console.log('Time:', cas_na_pisanie);
-        this.apiService.createTest(this.exercises, cas_na_pisanie).subscribe(
-          testResponse => {
-            console.log('Test created:', testResponse);
+        const writingTime = `00:${this.selectedTime.toString().padStart(2, '0')}:00`;
+        this.apiService.createTest(this.exercises, writingTime).subscribe(
+          (testResponse) => {
             this.router.navigate(['/test-writing'], {
-              state: { data: this.exercises, timeLimit: cas_na_pisanie },
+              state: { data: this.exercises, timeLimit: writingTime },
             });
           },
-          error => {
-            console.error('Error creating test:', error);
-          }
+          (error) => console.error('Error creating test:', error)
         );
       },
-      error => {
-        console.error('Error fetching data:', error);
-      }
+      (error) => console.error('Error fetching exercises:', error)
     );
   }
 
-  // initializeExercises(): void {
-  //   const generatedExercisesBinominal: binomialExercise[] = binomialProbabilityRandom();
-  //   const generatedExercisesHypergeometric: hypergeometricExercises[] = hypergeometricProbabilityRandom();
-  //   const generatedExercisesGeometric: geometricExercise[] = geometricProbabilityRandom();
+  mixExercises(fetched: any[], generated: any[], count: number): any[] {
+    // Determine how many exercises to use from each source
+    let fetchedCount = Math.min(fetched.length, Math.ceil(count / 2)); // Round up for fetched
+    let generatedCount = count - fetchedCount; // Remainder for generated
+  
+    // Adjust if generated doesn't have enough exercises
+    if (generatedCount > generated.length) {
+      fetchedCount += generatedCount - generated.length;
+      generatedCount = generated.length;
+    }
+  
+    // Adjust if fetched doesn't have enough exercises
+    if (fetchedCount > fetched.length) {
+      generatedCount += fetchedCount - fetched.length;
+      fetchedCount = fetched.length;
+    }
+  
+    // Select the required number of exercises
+    const selectedFetched = fetched.slice(0, fetchedCount);
+    const selectedGenerated = generated.slice(0, generatedCount);
+  
+    // Combine and shuffle the exercises
+    return this.shuffleArray([...selectedFetched, ...selectedGenerated]);
+  }
+  
 
-  //   this.generated = [...generatedExercisesBinominal, ...generatedExercisesHypergeometric, ...generatedExercisesGeometric];
-
-  //   localStorage.setItem(this.exercisesKey, JSON.stringify(this.generated));
-  // }
+  shuffleArray(array: any[]): any[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
 }

@@ -1,40 +1,28 @@
 <div class="container">
   <div class="mat-elevation-z8" id="table">
     <table mat-table [dataSource]="dataSource">
-      <!-- Exercise ID Column -->
-      <ng-container matColumnDef="exercise_id">
-        <th mat-header-cell *matHeaderCellDef>Exercise ID</th>
-        <td mat-cell *matCellDef="let element">{{ element.exercise_id }}</td>
+      <!-- Test ID Column -->
+      <ng-container matColumnDef="test_id">
+        <th mat-header-cell *matHeaderCellDef> Test ID </th>
+        <td mat-cell *matCellDef="let element"> {{ element.test_id }} </td>
       </ng-container>
 
-      <!-- Description Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+      <!-- Exercises Column -->
+      <ng-container matColumnDef="exercises">
+        <th mat-header-cell *matHeaderCellDef> Exercises </th>
+        <td mat-cell *matCellDef="let element"> {{ element.exercises | json }} </td>
       </ng-container>
 
-      <!-- Answer Column -->
-      <ng-container matColumnDef="answer">
-        <th mat-header-cell *matHeaderCellDef>Answer</th>
-        <td mat-cell *matCellDef="let element">{{ element.answer }}</td>
+      <!-- Cas_na_pisanie Column -->
+      <ng-container matColumnDef="cas_na_pisanie">
+        <th mat-header-cell *matHeaderCellDef> Cas na Pisanie </th>
+        <td mat-cell *matCellDef="let element"> {{ element.cas_na_pisanie }} </td>
       </ng-container>
 
-      <!-- Difficulty Column -->
-      <ng-container matColumnDef="difficulty">
-        <th mat-header-cell *matHeaderCellDef>Difficulty</th>
-        <td mat-cell *matCellDef="let element">{{ element.difficulty }}</td>
-      </ng-container>
-
-      <!-- Points Column -->
-      <ng-container matColumnDef="points">
-        <th mat-header-cell *matHeaderCellDef>Points</th>
-        <td mat-cell *matCellDef="let element">{{ element.points }}</td>
-      </ng-container>
-
-      <!-- Timestamp Column -->
-      <ng-container matColumnDef="timestamp">
-        <th mat-header-cell *matHeaderCellDef>Timestamp</th>
-        <td mat-cell *matCellDef="let element">{{ element.timestamp }}</td>
+      <!-- Created_at Column -->
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef> Created At </th>
+        <td mat-cell *matCellDef="let element"> {{ element.created_at }} </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

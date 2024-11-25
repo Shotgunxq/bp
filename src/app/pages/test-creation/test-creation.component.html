@@ -10,8 +10,14 @@
       [ngClass]="{
         'valid-input': validateTotalExerciseCount(),
         'invalid-input': !validateTotalExerciseCount()
-      }"
-    />
+      }" />
+  </div>
+
+  <div class="section">
+    <h1>Výber tém</h1>
+    <mat-checkbox *ngFor="let theme of themes" [(ngModel)]="theme.selected">
+      {{ theme.theme_name }}
+    </mat-checkbox>
   </div>
 
   <div class="section">
@@ -25,14 +31,13 @@
           </div>
           <div class="input">
             <input
-            class="input_area"
               matInput
               type="number"
+              [(ngModel)]="easyCount"
               placeholder="Počet úloh"
               id="easyCount"
               [disabled]="!isEasyEnabled"
-              (input)="preventNegativeValue($event)"
-            />
+              (input)="preventNegativeValue($event)" />
           </div>
         </div>
       </mat-grid-tile>
@@ -45,15 +50,13 @@
           </div>
           <div class="input">
             <input
-            class="input_area"
-
               matInput
               type="number"
+              [(ngModel)]="mediumCount"
               placeholder="Počet úloh"
               id="mediumCount"
               [disabled]="!isMediumEnabled"
-              (input)="preventNegativeValue($event)"
-            />
+              (input)="preventNegativeValue($event)" />
           </div>
         </div>
       </mat-grid-tile>
@@ -66,15 +69,13 @@
           </div>
           <div class="input">
             <input
-            class="input_area"
-
               matInput
               type="number"
+              [(ngModel)]="hardCount"
               placeholder="Počet úloh"
               id="hardCount"
               [disabled]="!isHardEnabled"
-              (input)="preventNegativeValue($event)"
-            />
+              (input)="preventNegativeValue($event)" />
           </div>
         </div>
       </mat-grid-tile>
@@ -88,9 +89,7 @@
         <mat-option *ngFor="let time of times" [value]="time">{{ time }} minút</mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
-
-  <div class="section">
+    <br />
     <button mat-raised-button color="primary" (click)="getData()">Generovať</button>
   </div>
 </div>

@@ -9,9 +9,10 @@ WORKDIR $WORK_DIR
 COPY --chown=1001:0 package*.json /app/
 
 # Install Angular CLI globally
+RUN npm install -g npm@10.9.0
 RUN npm install -g @angular/cli
 
-RUN npm ci
+RUN npm i --force
 
 #copy all the files and create a build
 COPY --chown=1001:0 . .

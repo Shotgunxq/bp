@@ -9,12 +9,12 @@ import { ApiService } from '../../services/apiServices';
   styleUrls: ['./test-done.component.scss'],
 })
 export class TestDoneComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['exercise_id', 'description', 'answer', 'difficulty', 'points', 'timestamp'];
-  dataSource = new MatTableDataSource<any>(); // Update the type if possible
-  //TODO:
-  testId: number = 1; // You should get this value from route params or some other source
+  displayedColumns: string[] = ['test_id', 'exercises', 'cas_na_pisanie', 'created_at']; // Adjust columns as needed
+  dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  testId: number = 1; // Retrieve dynamically as needed
 
   constructor(private apiService: ApiService) {}
 
@@ -28,8 +28,8 @@ export class TestDoneComponent implements OnInit, AfterViewInit {
 
   fetchDataFromDatabase() {
     this.apiService.fetchTestData(this.testId).subscribe(
-      (data: any[]) => {
-        this.dataSource.data = data;
+      (data: any) => {
+        this.dataSource.data = [data]; // Set data as an array of one item
       },
       error => {
         console.error('Error fetching data:', error);

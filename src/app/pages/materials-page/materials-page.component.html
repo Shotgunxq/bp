@@ -1,3 +1,6 @@
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+
 <div class="section">
   <h1>Prednášky</h1>
   <a href="https://elearn.elf.stuba.sk/moodle/mod/resource/view.php?id=25362">Úvod do teórie pravdepodobnosti</a>
@@ -31,4 +34,236 @@
   <a href="https://www.youtube.com/watch?v=kHcSUvN2xWk">Momenty</a>
   <br />
   <a href="https://www.youtube.com/watch?v=Db3pNB85eP0">Modus</a>
+</div>
+
+<div class="section">
+  <h1>Poznamky</h1>
+  <mat-accordion multi>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Úvod do teórie pravdepodobnosti</mat-panel-title>
+        <mat-panel-description>
+          Náhodné udalosti, Pravdepodobnosť, Kombinatorická pravdepodobnosť, Permutácie a kombinácie a variácie
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>
+        <strong>Náhodné udalosti:</strong>
+        Sú popísané množinami. Istá udalosť zahŕňa všetky možné výsledky, zatiaľ čo nemožná udalosť je prázdna. Kombináciou a prienikom viacerých
+        udalostí môžeme definovať nové udalosti.
+      </p>
+      <br />
+      <p>
+        <strong>Pravdepodobnosť:</strong>
+        Zavádza funkciu, ktorá každému výsledku priraďuje hodnotu medzi 0 a 1, pričom pravdepodobnosť istého výsledku je 1. Základom je
+        pravdepodobnostný priestor, ktorý definuje vzťahy medzi možnými udalosťami.
+      </p>
+      <br />
+      <p>
+        <strong>Kombinatorická pravdepodobnosť:</strong>
+        Využíva permutácie, kombinácie a variácie na výpočet pravdepodobností pre rôzne výbery prvkov z množiny, pričom sa zohľadňuje poradie a
+        opakovanie prvkov.
+      </p>
+      <br />
+      <p>
+        <strong>Permutácie a kombinácie:</strong>
+        Permutácie počítajú usporiadané výbery bez opakovania, zatiaľ čo kombinácie sa zameriavajú na neusporiadané výbery. Kombinačné čísla nám
+        pomáhajú určiť počet možných výberov z daného množstva prvkov.
+      </p>
+      <br />
+      <p>
+        <strong>Variácie:</strong>
+        Zvažujú usporiadané výbery, pričom môžu byť s opakovaním (napr. výber s možnosťou opakovaného výskytu prvkov) alebo bez opakovania. Variácie
+        umožňujú detailnejšie modelovanie pri výpočtoch pravdepodobností.
+      </p>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Podmienená pravdepodobnosť</mat-panel-title>
+        <mat-panel-description>Podmienená pravdepodobnosť, Nezávislosť udalostí, Bayesova veta</mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <p [mathjax]="content"></p>
+      <p [mathjax]="content2"></p>
+      <p [mathjax]="content3"></p>
+      <p [mathjax]="content4"></p>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Náhodná premenná</mat-panel-title>
+        <mat-panel-description>
+          Definícia náhodnej premennej, Typy náhodných premenných, Distribučná funkcia, Hustota pravdepodobnosti, Stredná hodnota, Rozptyl
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <p>
+        <strong>Definícia náhodnej premennej:</strong>
+        Náhodná premenná 𝑋 je funkcia, ktorá každému výsledku pokusu priraďuje reálne číslo. Výsledok pokusu môže byť konečný, nespojitý alebo
+        spojitý.
+      </p>
+      <p><strong>Typy náhodných premenných:</strong></p>
+      <ul>
+        <li>Diskrétna náhodná premenná: nadobúda iba určité izolované hodnoty.</li>
+        <li>Spojitá náhodná premenná: nadobúda ľubovoľné hodnoty v určitom intervale.</li>
+      </ul>
+      <p></p>
+      <p [mathjax]="distribucnaFun"></p>
+      <p [mathjax]="hustotaPravde"></p>
+      <p [mathjax]="strednaHodnota"></p>
+      <p [mathjax]="rozptyl"></p>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Charaktetistiky n.p.</mat-panel-title>
+        <mat-panel-description>Stredná hodnota, momenty, Rozptyl, Čebyšev</mat-panel-description>
+      </mat-expansion-panel-header>
+      <p [mathjax]="strednaHodnota2"></p>
+      <p [mathjax]="momenty"></p>
+      <p [mathjax]="rozptyl2"></p>
+      <p [mathjax]="cebysevovaNerov"></p>
+      <p [mathjax]="koeficienty"></p>
+      <p [mathjax]="vlastnosti"></p>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Modus, Median..</mat-panel-title>
+        <mat-panel-description>Modus, Median, Kvantily</mat-panel-description>
+      </mat-expansion-panel-header>
+      <p [mathjax]="modus"></p>
+      <p [mathjax]="kvantily"></p>
+      <p [mathjax]="medHorDolKval"></p>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Diskrétne rozdelenia</mat-panel-title>
+        <mat-panel-description>Alternatívne, Binomické, Poissonovo, Geometrické, Rovnomerné a Hypergeometrické rozdelenie</mat-panel-description>
+      </mat-expansion-panel-header>
+      <p [mathjax]="alterRozdel"></p>
+      <p [mathjax]="binomickeRozdel"></p>
+      <p [mathjax]="poisson"></p>
+      <p [mathjax]="geometrickeRozdelenie"></p>
+      <p [mathjax]="rovnomerneRozdelenie"></p>
+      <p [mathjax]="hypergeometrickeRozdelenie"></p>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Limitné vety</mat-panel-title>
+        <mat-panel-description>Log-normálne a Exponenciálne rozdelenie, Limitné vety</mat-panel-description>
+      </mat-expansion-panel-header>
+      <p [mathjax]="logNormalRozdelenie"></p>
+      <p [mathjax]="exponentialneRozdelenie"></p>
+      <p [mathjax]="limitneVety"></p>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Popisná štatistika</mat-panel-title>
+        <mat-panel-description>Kvalitatívne a Kvantitatívne dáta, Relatívna frekvencia</mat-panel-description>
+      </mat-expansion-panel-header>
+      <p [mathjax]="popisnaStatistika"></p>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Vektor n.p., kovariancia a korelačný koeficient File</mat-panel-title>
+        <mat-panel-description>Náhodný vektor a združené rozdelenie pravdepodobnosti, Kovariancia a korelačný koeficient</mat-panel-description>
+      </mat-expansion-panel-header>
+      <p [mathjax]="narodnyVektor"></p>
+      <p [mathjax]="kovarianciaKorelacnyKoeficient"></p>
+    </mat-expansion-panel>
+
+    <!-- <mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      TEST
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div style="text-align:center">
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+      [yaxis]="chartOptions.yaxis"
+      [title]="chartOptions.title"
+    ></apx-chart>
+  </div>
+</mat-expansion-panel>
+
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Funkcia Hustoty Pravdepodobnosti
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div style="text-align:center">
+    <apx-chart
+      [series]="densityChartOptions.series"
+      [chart]="densityChartOptions.chart"
+      [xaxis]="densityChartOptions.xaxis"
+      [yaxis]="densityChartOptions.yaxis"
+      [title]="densityChartOptions.title"
+    ></apx-chart>
+  </div>
+</mat-expansion-panel>
+
+</mat-accordion>
+</div>
+<br>
+<br> -->
+
+    <div>
+      <!-- Inputs for Binomial Distribution -->
+      <h3>Binomial Distribution Parameters</h3>
+      <label>
+        Trials (n):
+        <input type="number" [(ngModel)]="n" (input)="updateBinomialChart()" />
+      </label>
+      <label>
+        Probability (p):
+        <input type="number" step="0.01" [(ngModel)]="p" (input)="updateBinomialChart()" />
+      </label>
+    </div>
+
+    <!-- ApexCharts for Binomial Distribution -->
+    <div>
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [title]="chartOptions.title"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"></apx-chart>
+    </div>
+
+    <!-- ApexCharts for Normal Distribution -->
+    <div>
+      <!-- Inputs for Normal Distribution -->
+      <h3>Normal Distribution Parameters</h3>
+      <label>
+        Mean (μ):
+        <input type="number" [(ngModel)]="mean" (input)="updateDensityChart()" />
+      </label>
+      <label>
+        Standard Deviation (σ):
+        <input type="number" [(ngModel)]="stdDev" (input)="updateDensityChart()" />
+      </label>
+      <label>
+        Highlight Up To:
+        <input type="number" [(ngModel)]="highlightX" (input)="updateDensityChart()" />
+      </label>
+    </div>
+    <div>
+      <apx-chart
+        [series]="densityChartOptions.series"
+        [chart]="densityChartOptions.chart"
+        [xaxis]="densityChartOptions.xaxis"
+        [yaxis]="densityChartOptions.yaxis"
+        [annotations]="densityChartOptions.annotations"></apx-chart>
+    </div>
+  </mat-accordion>
 </div>

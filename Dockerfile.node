@@ -1,20 +1,18 @@
 # Use an official Node.js runtime as a base image
 FROM node:20.11.1
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
+# Copy package files and install dependencies
 COPY package*.json ./
-
-# Install application dependencies
-RUN npm install
-
-# Copy the rest of the application code to the container
+RUN npm install -g npm@10.9.0
+RUN npm install --force
+# Copy the rest of the application code
 COPY . .
 
 # Expose port 3000 for the Node.js app
 EXPOSE 3000
 
-# Define the command to run your Node.js app
+# Default command
 CMD ["node", "server.js"]

@@ -31,6 +31,13 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatCheckboxModule }from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { MathjaxModule } from "mathjax-angular";
+
+import { NgApexchartsModule } from "ng-apexcharts";
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,12 +52,15 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     NavbarComponent,
   ],
   imports: [
+    MathjaxModule.forRoot(),
+    MatSnackBarModule,
+    MatCheckboxModule,
     BrowserModule,
     MatGridListModule,
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-
+    MatExpansionModule,
     MatDividerModule,
     NgbModule,
     AppRoutingModule,
@@ -65,7 +75,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     ReactiveFormsModule,
     MatInputModule,
     MatFormFieldModule,
-    MatStepperModule,  
+    MatStepperModule,
+    NgApexchartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
