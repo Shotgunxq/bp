@@ -38,6 +38,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MathjaxModule } from 'mathjax-angular';
 
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { DensityComponent } from './components/graphs/density/density.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,6 +51,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     TestDoneComponent,
     TestWritingComponent,
     NavbarComponent,
+    DensityComponent,
   ],
   imports: [
     MathjaxModule.forRoot(),
