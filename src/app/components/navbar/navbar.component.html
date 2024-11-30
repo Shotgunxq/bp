@@ -6,12 +6,15 @@
 
   <!-- Typewriter effect for menu route -->
   <div class="typewriter" *ngIf="isMenuRoute">
-    <span>Welcome</span>
+    <div class="typewriter-wrapper">
+      <span>Welcome</span>
+      <span *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
+    </div>
+  </div>
 
-    <!-- Display the username if it exists and showTypewriter is true -->
-    <span *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
-
-    <!-- Logout button -->
-    <button mat-button (click)="logout()">Logout</button>
+  <!-- Holder aligned to the right -->
+  <div class="holder">
+    <button id="logout" mat-button (click)="logout()">Logout</button>
+    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" />
   </div>
 </mat-toolbar>

@@ -29,19 +29,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatStepper } from '@angular/material/stepper';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatCheckboxModule }from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MathjaxModule } from 'mathjax-angular';
 
-import { MathjaxModule } from "mathjax-angular";
-
-import { NgApexchartsModule } from "ng-apexcharts";
+import { NgApexchartsModule } from 'ng-apexcharts';
 @NgModule({
   declarations: [
     AppComponent,
-    
+
     LoginModalComponent,
     MenuPageComponent,
     TestCreationComponent,
@@ -63,6 +63,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
     MatExpansionModule,
     MatDividerModule,
     NgbModule,
+    MatSidenavModule,
     AppRoutingModule,
     FormsModule, // Add FormsModule to imports
     HttpClientModule, // Add HttpClientModule to imports

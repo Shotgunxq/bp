@@ -13,8 +13,8 @@
 // }
 
 #menu {
-  // max-width: 90%;
-  margin: 5% auto;
+  max-width: 90%;
+  margin: auto;
 }
 
 .custom-button {
@@ -30,7 +30,6 @@
   width: 55%;
   transition: all 0.3s ease-in-out; /* Smooth transition for the hover effect */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Initial shadow */
-
 }
 .custom-button:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* On hover: deeper shadow */

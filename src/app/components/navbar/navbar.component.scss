@@ -2,18 +2,21 @@
 
 .navbar {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: center; /* Vertically center items */
+  justify-content: space-between; /* Distribute space between items */
   height: 64px;
+  padding: 0 16px; /* Optional: Add padding for spacing */
 }
 
 .typewriter {
+  flex: 1; /* Allow this section to grow and take space */
+  display: flex;
+  justify-content: center; /* Center the text horizontally */
+  align-items: center; /* Center the text vertically */
   font-family: 'Courier New', monospace;
   font-size: 24px;
   white-space: nowrap;
   color: black;
-  display: flex;
-  align-items: center;
 }
 
 .username {
@@ -27,7 +30,9 @@
   overflow: hidden;
   border-right: 3px solid rgba(0, 0, 0, 0.75); // Cursor effect
   white-space: nowrap;
-  animation: typing 3s steps(30, end), blink 0.75s step-end infinite;
+  animation:
+    typing 3s steps(30, end),
+    blink 0.75s step-end infinite;
 }
 
 @keyframes typing {
@@ -40,19 +45,13 @@
 }
 
 @keyframes blink {
-  from, to {
+  from,
+  to {
     border-color: transparent;
   }
   50% {
     border-color: black;
   }
-}
-.navbar {
-  /* Default navbar styles */
-}
-
-.navbar-menu {
-  /* Styles specific to the /menu route */
 }
 
 .navbar-other {
@@ -60,13 +59,37 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
+
   .left-content {
     display: flex;
     align-items: center;
     cursor: pointer;
-    
+
     .back-arrow {
       margin-right: 8px; // Adjust as needed for spacing
     }
-  }}
+  }
+}
+.settings-icon {
+  margin-left: auto; /* Push settings icon to the far right */
+  display: flex;
+  align-items: center;
+}
+
+.settings-image {
+  width: 24px; /* Set the size of the icon */
+  height: 24px;
+  cursor: pointer;
+  margin-right: 16px; /* Add some space to the right */
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1); /* Slightly enlarge the icon on hover */
+  }
+}
+
+.holder {
+  margin-left: auto; /* Push holder to the far right */
+  display: flex;
+  align-items: center; /* Vertically center the contents */
+}
