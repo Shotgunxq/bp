@@ -1,6 +1,16 @@
 import { Component } from '@angular/core';
 import ApexCharts from 'apexcharts';
-import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexTitleSubtitle, ApexAnnotations } from 'ng-apexcharts';
+import {
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexYAxis,
+  ApexTitleSubtitle,
+  ApexAnnotations,
+  ApexMarkers,
+  ApexDataLabels,
+} from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -9,6 +19,8 @@ export type ChartOptions = {
   yaxis: ApexYAxis;
   title: ApexTitleSubtitle;
   annotations?: ApexAnnotations;
+  markers: ApexMarkers; // Add this line
+  dataLabels: ApexDataLabels; // Add this line
   // regions?: ApexAnnotations;
 };
 @Component({
@@ -234,13 +246,16 @@ export class MaterialsPageComponent {
 
   public chartOptions!: Partial<ChartOptions>;
   public densityChartOptions!: Partial<ChartOptions>;
+  public showMarkers = true; // Default state for markers
+  public showHighlight = true; // Default state for highlight
+  public showDataLabels = true; // Toggle for data labels (values)
 
   // Initial parameters
   public mean = 0;
   public stdDev = 1;
   public n = 10;
   public p = 0.5;
-  highlightX = 10;
+  highlightX = -4;
 
   constructor() {
     this.updateBinomialChart();
@@ -304,28 +319,55 @@ export class MaterialsPageComponent {
     };
   }
 
+  toggleHighlight() {
+    this.updateDensityChart(); // Rebuild the chart with or without highlight
+  }
+
+  toggleMarkers() {
+    this.densityChartOptions.markers = {
+      size: this.showMarkers ? 5 : 0, // Show points if enabled, otherwise hide
+    };
+  }
+
   // Update the density chart for normal distribution
+  toggleDataLabels() {
+    this.densityChartOptions.dataLabels = {
+      enabled: this.showDataLabels,
+    };
+  }
+
   updateDensityChart() {
     const densityData = [];
     const normalDensity = (x: number, mean: number, stdDev: number): number => {
       return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
     };
 
-    // Generate data for the density function
-    for (let x = -3; x <= 3; x += 0.2) {
-      const roundedX = parseFloat(x.toFixed(1)); // Round x for cleaner labels
-      const roundedY = parseFloat(normalDensity(x, this.mean, this.stdDev).toFixed(2)); // Round y to 3 decimals
-      densityData.push({ x: roundedX, y: roundedY });
+    const threshold = 0.0001;
+    const step = 0.1;
+
+    let x = this.mean;
+    while (true) {
+      const density = normalDensity(x, this.mean, this.stdDev);
+      if (density < threshold) break;
+      densityData.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(density.toFixed(4)) });
+      x += step;
     }
 
-    const highlightX = this.highlightX; // Use the dynamic highlight value
+    x = this.mean - step;
+    while (true) {
+      const density = normalDensity(x, this.mean, this.stdDev);
+      if (density < threshold) break;
+      densityData.unshift({ x: parseFloat(x.toFixed(2)), y: parseFloat(density.toFixed(4)) });
+      x -= step;
+    }
 
-    // Update chart options
+    const roundedHighlightX = parseFloat(this.highlightX.toFixed(1));
+
     this.densityChartOptions = {
       series: [
         {
           name: 'f_X(x)',
-          data: densityData.map(point => point.y), // Use density values for the chart
+          data: densityData,
         },
       ],
       chart: {
@@ -335,12 +377,19 @@ export class MaterialsPageComponent {
           show: false,
         },
       },
-      title: {
-        text: 'Funkcia Hustoty Pravdepodobnosti Normálneho Rozdelenia',
-        align: 'center',
+      dataLabels: {
+        enabled: this.showDataLabels, // Control data label visibility
+        style: {
+          fontSize: '12px',
+          colors: ['#304758'],
+        },
+        formatter: (val: number) => val.toFixed(2), // Format data labels
+      },
+      markers: {
+        size: this.showMarkers ? 5 : 0,
       },
       xaxis: {
-        categories: densityData.map(point => point.x.toString()), // Use rounded x values as categories
+        type: 'numeric',
         title: {
           text: 'x',
         },
@@ -351,35 +400,29 @@ export class MaterialsPageComponent {
         },
         min: 0,
       },
-      dataLabels: {
-        enabled: true,
-        style: {
-          fontSize: '12px', // Increase font size
-          colors: ['#304758'], // Improve contrast
-        },
-        formatter: (val: number) => val.toFixed(2), // Round to 2 decimals
-      },
       annotations: {
-        xaxis: [
-          {
-            x: highlightX,
-            borderColor: '#FF4560',
-            strokeDashArray: 10,
-            label: {
-              text: `P(x <= ${highlightX})`,
-              style: {
-                background: '#FF4560',
-                color: '#fff',
+        xaxis: this.showHighlight
+          ? [
+              {
+                x: roundedHighlightX,
+                borderColor: '#FF4560',
+                strokeDashArray: 10,
+                label: {
+                  text: `P(x <= ${roundedHighlightX})`,
+                  style: {
+                    background: '#FF4560',
+                    color: '#fff',
+                  },
+                },
               },
-            },
-          },
-          {
-            x: -4, // Start of the shaded area
-            x2: highlightX, // End of the shaded area
-            fillColor: 'rgba(255, 69, 96, 0.2)', // Light red fill
-          },
-        ],
+              {
+                x: densityData[0].x,
+                x2: roundedHighlightX,
+                fillColor: 'rgba(255, 69, 96, 0.2)',
+              },
+            ]
+          : [],
       },
-    } as Partial<ChartOptions>;
+    };
   }
 }

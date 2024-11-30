@@ -258,28 +258,48 @@
 
     <!-- ApexCharts for Normal Distribution -->
     <div>
-      <!-- Inputs for Normal Distribution -->
       <h3>Normal Distribution Parameters</h3>
       <label>
         Mean (μ):
-        <input type="number" [(ngModel)]="mean" (input)="updateDensityChart()" />
+        <input type="number" [(ngModel)]="mean" (input)="updateDensityChart()" step="0.1" />
       </label>
       <label>
         Standard Deviation (σ):
-        <input type="number" [(ngModel)]="stdDev" (input)="updateDensityChart()" />
+        <input type="number" [(ngModel)]="stdDev" (input)="updateDensityChart()" step="0.1" />
       </label>
       <label>
         Highlight Up To:
-        <input type="number" step="10" [(ngModel)]="highlightX" (input)="updateDensityChart()" />
+        <input type="number" [(ngModel)]="highlightX" (input)="updateDensityChart()" step="0.1" />
+      </label>
+      <label>
+        <input type="checkbox" [(ngModel)]="showHighlight" (change)="toggleHighlight()" />
+        Show Highlight
       </label>
     </div>
+
+    <div>
+      <label>
+        <input type="checkbox" [(ngModel)]="showMarkers" (change)="toggleMarkers()" />
+        Show Points on Graph
+      </label>
+    </div>
+
+    <div>
+      <label>
+        <input type="checkbox" [(ngModel)]="showDataLabels" (change)="toggleDataLabels()" />
+        Show Values on Graph
+      </label>
+    </div>
+
     <div>
       <apx-chart
         [series]="densityChartOptions.series"
         [chart]="densityChartOptions.chart"
         [xaxis]="densityChartOptions.xaxis"
         [yaxis]="densityChartOptions.yaxis"
-        [annotations]="densityChartOptions.annotations"></apx-chart>
+        [annotations]="densityChartOptions.annotations"
+        [dataLabels]="densityChartOptions.dataLabels"
+        [markers]="densityChartOptions.markers"></apx-chart>
     </div>
   </mat-accordion>
 </div>
