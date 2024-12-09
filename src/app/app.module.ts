@@ -40,6 +40,7 @@ import { MathjaxModule } from 'mathjax-angular';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DensityComponent } from './components/graphs/density/density.component';
 import { DistributionComponent } from './components/graphs/distribution/distribution.component';
+import { PoissonComponent } from './components/graphs/poisson/poisson.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,6 +55,7 @@ import { DistributionComponent } from './components/graphs/distribution/distribu
     NavbarComponent,
     DensityComponent,
     DistributionComponent,
+    PoissonComponent,
   ],
   imports: [
     MathjaxModule.forRoot(),

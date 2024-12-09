@@ -193,70 +193,7 @@
       </p>
     </mat-expansion-panel>
 
-    <!-- <mat-expansion-panel>
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      TEST
-    </mat-panel-title>
-  </mat-expansion-panel-header>
-  <div style="text-align:center">
-    <apx-chart
-      [series]="chartOptions.series"
-      [chart]="chartOptions.chart"
-      [xaxis]="chartOptions.xaxis"
-      [yaxis]="chartOptions.yaxis"
-      [title]="chartOptions.title"
-    ></apx-chart>
-  </div>
-</mat-expansion-panel>
-
-
-<mat-expansion-panel>
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      Funkcia Hustoty Pravdepodobnosti
-    </mat-panel-title>
-  </mat-expansion-panel-header>
-  <div style="text-align:center">
-    <apx-chart
-      [series]="densityChartOptions.series"
-      [chart]="densityChartOptions.chart"
-      [xaxis]="densityChartOptions.xaxis"
-      [yaxis]="densityChartOptions.yaxis"
-      [title]="densityChartOptions.title"
-    ></apx-chart>
-  </div>
-</mat-expansion-panel>
-
-</mat-accordion>
-</div>
-<br>
-<br> -->
-
-    <div>
-      <!-- Inputs for Binomial Distribution -->
-      <h3>Binomial Distribution Parameters</h3>
-      <label>
-        Trials (n):
-        <input type="number" [(ngModel)]="n" (input)="updateBinomialChart()" />
-      </label>
-      <label>
-        Probability (p):
-        <input type="number" step="0.01" [(ngModel)]="p" (input)="updateBinomialChart()" />
-      </label>
-    </div>
-
-    <!-- ApexCharts for Binomial Distribution -->
-    <div>
-      <apx-chart
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [title]="chartOptions.title"
-        [xaxis]="chartOptions.xaxis"
-        [yaxis]="chartOptions.yaxis"></apx-chart>
-    </div>
-
-    <!-- ApexCharts for Normal Distribution -->
+    <graph-distribution></graph-distribution>
     <graph-density></graph-density>
   </mat-accordion>
 </div>

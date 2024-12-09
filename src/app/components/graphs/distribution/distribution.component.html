@@ -1,0 +1,22 @@
+<div>
+  <!-- Inputs for Binomial Distribution -->
+  <h3>Binomial Distribution Parameters</h3>
+  <label>
+    Trials (n):
+    <input type="number" [(ngModel)]="n" (input)="updateBinomialChart()" />
+  </label>
+  <label>
+    Probability (p):
+    <input type="number" step="0.01" [(ngModel)]="p" (input)="updateBinomialChart()" />
+  </label>
+</div>
+
+<!-- ApexCharts for Binomial Distribution -->
+<div>
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [title]="chartOptions.title"
+    [xaxis]="chartOptions.xaxis"
+    [yaxis]="chartOptions.yaxis"></apx-chart>
+</div>
