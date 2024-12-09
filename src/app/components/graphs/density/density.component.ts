@@ -18,19 +18,17 @@ export type ChartOptions = {
   yaxis: ApexYAxis;
   title: ApexTitleSubtitle;
   annotations?: ApexAnnotations;
-  markers: ApexMarkers; // Add this line
   dataLabels: ApexDataLabels; // Add this line
   // regions?: ApexAnnotations;
 };
 @Component({
-  selector: 'app-density',
+  selector: 'graph-density',
   templateUrl: './density.component.html',
   styleUrl: './density.component.scss',
 })
 export class DensityComponent {
   public chartOptions!: Partial<ChartOptions>;
   public densityChartOptions!: Partial<ChartOptions>;
-  public showMarkers = true; // Default state for markers
   public showHighlight = true; // Default state for highlight
   public showDataLabels = true; // Toggle for data labels (values)
 
@@ -45,12 +43,6 @@ export class DensityComponent {
   }
   toggleHighlight() {
     this.updateDensityChart(); // Rebuild the chart with or without highlight
-  }
-
-  toggleMarkers() {
-    this.densityChartOptions.markers = {
-      size: this.showMarkers ? 5 : 0, // Show points if enabled, otherwise hide
-    };
   }
 
   // Update the density chart for normal distribution
@@ -109,9 +101,7 @@ export class DensityComponent {
         },
         formatter: (val: number) => val.toFixed(2), // Format data labels
       },
-      markers: {
-        size: this.showMarkers ? 5 : 0,
-      },
+
       xaxis: {
         type: 'numeric',
         title: {

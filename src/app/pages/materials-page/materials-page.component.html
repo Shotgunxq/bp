@@ -257,50 +257,6 @@
     </div>
 
     <!-- ApexCharts for Normal Distribution -->
-    <div>
-      <h3>Normal Distribution Parameters</h3>
-      <label>
-        Mean (μ):
-        <input type="number" [(ngModel)]="mean" (input)="updateDensityChart()" step="0.1" />
-      </label>
-      <label>
-        Standard Deviation (σ):
-        <input type="number" [(ngModel)]="stdDev" (input)="updateDensityChart()" step="0.1" />
-      </label>
-      <label>
-        Highlight Up To:
-        <input type="number" [(ngModel)]="highlightX" (input)="updateDensityChart()" step="0.1" />
-      </label>
-      <label>
-        <input type="checkbox" [(ngModel)]="showHighlight" (change)="toggleHighlight()" />
-        Show Highlight
-      </label>
-    </div>
-
-    <div>
-      <label>
-        <input type="checkbox" [(ngModel)]="showMarkers" (change)="toggleMarkers()" />
-        Show Points on Graph
-      </label>
-    </div>
-
-    <div>
-      <label>
-        <input type="checkbox" [(ngModel)]="showDataLabels" (change)="toggleDataLabels()" />
-        Show Values on Graph
-      </label>
-    </div>
-
-    <div>
-      <apx-chart
-        [series]="densityChartOptions.series"
-        [chart]="densityChartOptions.chart"
-        [xaxis]="densityChartOptions.xaxis"
-        [yaxis]="densityChartOptions.yaxis"
-        [annotations]="densityChartOptions.annotations"
-        [dataLabels]="densityChartOptions.dataLabels"
-        [markers]="densityChartOptions.markers"></apx-chart>
-    </div>
+    <graph-density></graph-density>
   </mat-accordion>
 </div>
-<app-density></app-density>
