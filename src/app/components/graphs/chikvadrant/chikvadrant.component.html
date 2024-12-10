@@ -1,0 +1,20 @@
+<div>
+  <h3>Chi-Squared Distribution</h3>
+  <label>
+    Degrees of Freedom (n):
+    <input type="number" [(ngModel)]="degreesOfFreedom" (input)="updateChiChart()" min="1" />
+  </label>
+  <label>
+    <input type="checkbox" [(ngModel)]="showMarkers" (change)="updateChiChart()" />
+    Show Markers
+  </label>
+</div>
+
+<div>
+  <apx-chart
+    [series]="chiChartOptions.series"
+    [chart]="chiChartOptions.chart"
+    [xaxis]="chiChartOptions.xaxis"
+    [yaxis]="chiChartOptions.yaxis"
+    [markers]="chiChartOptions.markers"></apx-chart>
+</div>

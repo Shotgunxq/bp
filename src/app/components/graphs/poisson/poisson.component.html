@@ -1,1 +1,33 @@
-<p>poisson works!</p>
+<div>
+  <h3>Poisson Distribution Parameters</h3>
+  <label>
+    Lambda (λ):
+    <input type="number" [(ngModel)]="lambda" (input)="updatePoissonChart()" step="0.1" min="0.1" />
+  </label>
+  <label>
+    Highlight Value:
+    <input type="number" [(ngModel)]="highlightX" (input)="updatePoissonChart()" step="1" min="0" />
+  </label>
+  <div>
+    <label>
+      <input type="checkbox" [(ngModel)]="showHighlight" (change)="updatePoissonChart()" />
+      Show Highlight
+    </label>
+    <br />
+    <label>
+      <input type="checkbox" [(ngModel)]="showMarkers" (change)="updatePoissonChart()" />
+      Show Markers
+    </label>
+  </div>
+</div>
+
+<div>
+  <apx-chart
+    [series]="poissonChartOptions.series"
+    [chart]="poissonChartOptions.chart"
+    [xaxis]="poissonChartOptions.xaxis"
+    [yaxis]="poissonChartOptions.yaxis"
+    [annotations]="poissonChartOptions.annotations"
+    [dataLabels]="poissonChartOptions.dataLabels"
+    [markers]="poissonChartOptions.markers"></apx-chart>
+</div>

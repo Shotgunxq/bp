@@ -41,10 +41,11 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { DensityComponent } from './components/graphs/density/density.component';
 import { DistributionComponent } from './components/graphs/distribution/distribution.component';
 import { PoissonComponent } from './components/graphs/poisson/poisson.component';
+import { StudentovoComponent } from './components/graphs/studentovo/studentovo.component';
+import { ChikvadrantComponent } from './components/graphs/chikvadrant/chikvadrant.component';
 @NgModule({
   declarations: [
     AppComponent,
-
     LoginModalComponent,
     MenuPageComponent,
     TestCreationComponent,
@@ -56,6 +57,8 @@ import { PoissonComponent } from './components/graphs/poisson/poisson.component'
     DensityComponent,
     DistributionComponent,
     PoissonComponent,
+    StudentovoComponent,
+    ChikvadrantComponent,
   ],
   imports: [
     MathjaxModule.forRoot(),

@@ -1,0 +1,20 @@
+<div>
+  <h3>Student's t-Distribution</h3>
+  <label>
+    Degrees of Freedom (n):
+    <input type="number" [(ngModel)]="degreesOfFreedom" (input)="updateTChart()" min="1" />
+  </label>
+  <label>
+    <input type="checkbox" [(ngModel)]="showMarkers" (change)="updateTChart()" />
+    Show Markers
+  </label>
+</div>
+
+<div>
+  <apx-chart
+    [series]="tChartOptions.series"
+    [chart]="tChartOptions.chart"
+    [xaxis]="tChartOptions.xaxis"
+    [yaxis]="tChartOptions.yaxis"
+    [markers]="tChartOptions.markers"></apx-chart>
+</div>
