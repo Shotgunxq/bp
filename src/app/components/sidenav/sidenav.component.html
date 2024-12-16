@@ -1,0 +1,4 @@
+<div class="sidenav" [@slideMenu]="isOpen ? 'open' : 'closed'">
+  <button mat-button (click)="toggleSidenav()">Close</button>
+  <ng-content></ng-content>
+</div>
