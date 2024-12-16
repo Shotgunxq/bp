@@ -1,8 +1,4 @@
 <mat-toolbar [ngClass]="{ navbar: true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
-  <!-- <button mat-icon-button (click)="toggleSidenav.emit()">
-    <mat-icon>menu</mat-icon>
-  </button> -->
-
   <div class="typewriter" *ngIf="isMenuRoute">
     <div class="typewriter-wrapper">
       <span>Welcome</span>
@@ -14,6 +10,6 @@
     <button id="logout" mat-button (click)="logout()">Logout</button>
 
     <!-- Settings button triggers sidenav -->
-    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" (click)="toggleSidenav.emit()" />
+    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" (click)="toggleSidenav()" />
   </div>
 </mat-toolbar>

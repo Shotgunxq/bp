@@ -1,18 +1,18 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { navbarService } from '../../services/navbarService';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ApiService } from '../../services/apiServices';
+import { navbarService } from '../../services/navbarService';
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
-  @Output() toggleSidenav = new EventEmitter<void>();
+export class NavbarComponent {
+  @Output() sidenavToggled = new EventEmitter<void>();
 
   username: string | null = '';
-  showTypewriter = false;
   isMenuRoute = false;
 
   constructor(
@@ -24,30 +24,28 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     const user = this.apiService.getUserFromStorage();
     if (user) {
-      this.username = `${user.givenName}`;
-      console.log('User found in storage:', this.username);
-      this.navbarService.setUsername(this.username);
+      this.username = user.givenName;
+      this.navbarService.setUsername(this.username || '');
     }
 
-    // Watch for route changes
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
+    this.router.events.pipe(filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.isMenuRoute = event.urlAfterRedirects === '/menu';
     });
 
-    // Listen for username changes dynamically
     this.navbarService.currentUsername$.subscribe(name => {
       if (name) {
         this.username = name;
       }
     });
   }
-  navigateToMenu() {
-    this.router.navigate(['/menu']);
+
+  toggleSidenav() {
+    this.sidenavToggled.emit(); // Notify parent component to toggle sidenav
   }
 
   logout() {
     this.apiService.clearUserSession();
-    this.navbarService.setUsername(''); // Clear navbar username
-    this.router.navigate(['/login']); // Redirect to login
+    this.navbarService.setUsername('');
+    this.router.navigate(['/login']);
   }
 }
