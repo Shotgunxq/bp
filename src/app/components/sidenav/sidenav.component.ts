@@ -10,14 +10,14 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
       state(
         'closed',
         style({
-          transform: 'translateX(-100%)',
+          transform: 'translateX(100%)', // Slide out to the right
           opacity: 0,
         })
       ),
       state(
         'open',
         style({
-          transform: 'translateX(0)',
+          transform: 'translateX(0)', // Fully visible
           opacity: 1,
         })
       ),
@@ -30,5 +30,9 @@ export class SidenavComponent {
 
   toggleSidenav() {
     this.isOpen = !this.isOpen;
+  }
+
+  closeSidenav() {
+    this.isOpen = false;
   }
 }
