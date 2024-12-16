@@ -1,9 +1,28 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 #logoHolder {
-    position: absolute;
-    bottom: 0; /* Adjust as needed */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%);
-    z-index: 1; /* Adjust as needed to place it above or below the modal */
-  }
+  position: absolute;
+  bottom: 0; /* Adjust as needed */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%);
+  z-index: 1; /* Adjust as needed to place it above or below the modal */
+}
+
+.sidenav-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: #1363c1; // Change this color to your desired background color
+}
+
+mat-sidenav {
+  width: 250px;
+  z-index: 1000;
+}
+
+mat-sidenav-content {
+  padding: 16px;
+}
+
+.settings-image {
+  cursor: pointer;
+}

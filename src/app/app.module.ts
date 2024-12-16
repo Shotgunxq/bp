@@ -87,6 +87,7 @@ import { ChikvadrantComponent } from './components/graphs/chikvadrant/chikvadran
     MatFormFieldModule,
     MatStepperModule,
     NgApexchartsModule,
+    MatSidenavModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

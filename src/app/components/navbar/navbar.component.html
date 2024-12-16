@@ -1,10 +1,8 @@
 <mat-toolbar [ngClass]="{ navbar: true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
-  <!-- Back button for non-menu routes -->
-  <div class="left-content" *ngIf="!isMenuRoute">
-    <mat-icon fontIcon="arrow_back" (click)="navigateToMenu()" class="back-arrow"></mat-icon>
-  </div>
+  <!-- <button mat-icon-button (click)="toggleSidenav.emit()">
+    <mat-icon>menu</mat-icon>
+  </button> -->
 
-  <!-- Typewriter effect for menu route -->
   <div class="typewriter" *ngIf="isMenuRoute">
     <div class="typewriter-wrapper">
       <span>Welcome</span>
@@ -12,9 +10,10 @@
     </div>
   </div>
 
-  <!-- Holder aligned to the right -->
   <div class="holder">
     <button id="logout" mat-button (click)="logout()">Logout</button>
-    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" />
+
+    <!-- Settings button triggers sidenav -->
+    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" (click)="toggleSidenav.emit()" />
   </div>
 </mat-toolbar>

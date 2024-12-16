@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { navbarService } from '../../services/navbarService';
 import { filter } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { ApiService } from '../../services/apiServices';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
+  @Output() toggleSidenav = new EventEmitter<void>();
+
   username: string | null = '';
   showTypewriter = false;
   isMenuRoute = false;
