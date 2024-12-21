@@ -5,9 +5,24 @@
     <input type="number" [(ngModel)]="degreesOfFreedom" (input)="updateTChart()" min="1" />
   </label>
   <label>
+    Range Start (a):
+    <input type="number" [(ngModel)]="rangeA" (input)="updateTChart()" step="0.1" />
+  </label>
+  <label>
+    Range End (b):
+    <input type="number" [(ngModel)]="rangeB" (input)="updateTChart()" step="0.1" />
+  </label>
+  <label>
     <input type="checkbox" [(ngModel)]="showMarkers" (change)="updateTChart()" />
     Show Markers
   </label>
+</div>
+
+<div>
+  <p>
+    Calculated Area (a = {{ rangeA }}, b = {{ rangeB }}):
+    <strong>{{ calculatedArea }}</strong>
+  </p>
 </div>
 
 <div>
@@ -16,5 +31,6 @@
     [chart]="tChartOptions.chart"
     [xaxis]="tChartOptions.xaxis"
     [yaxis]="tChartOptions.yaxis"
-    [markers]="tChartOptions.markers"></apx-chart>
+    [markers]="tChartOptions.markers"
+    [annotations]="tChartOptions.annotations"></apx-chart>
 </div>

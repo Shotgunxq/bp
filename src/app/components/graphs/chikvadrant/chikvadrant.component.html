@@ -5,9 +5,24 @@
     <input type="number" [(ngModel)]="degreesOfFreedom" (input)="updateChiChart()" min="1" />
   </label>
   <label>
+    Range Start (a):
+    <input type="number" [(ngModel)]="rangeA" (input)="updateChiChart()" step="0.1" />
+  </label>
+  <label>
+    Range End (b):
+    <input type="number" [(ngModel)]="rangeB" (input)="updateChiChart()" step="0.1" />
+  </label>
+  <label>
     <input type="checkbox" [(ngModel)]="showMarkers" (change)="updateChiChart()" />
     Show Markers
   </label>
+</div>
+
+<div>
+  <p>
+    Calculated Area (a = {{ rangeA }}, b = {{ rangeB }}):
+    <strong>{{ calculatedArea }}</strong>
+  </p>
 </div>
 
 <div>
@@ -16,5 +31,6 @@
     [chart]="chiChartOptions.chart"
     [xaxis]="chiChartOptions.xaxis"
     [yaxis]="chiChartOptions.yaxis"
-    [markers]="chiChartOptions.markers"></apx-chart>
+    [markers]="chiChartOptions.markers"
+    [annotations]="chiChartOptions.annotations"></apx-chart>
 </div>
