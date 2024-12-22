@@ -1,36 +1,45 @@
-<div>
-  <h3>Chi-Squared Distribution</h3>
-  <label>
-    Degrees of Freedom (n):
-    <input type="number" [(ngModel)]="degreesOfFreedom" (input)="updateChiChart()" min="1" />
-  </label>
-  <label>
-    Range Start (a):
-    <input type="number" [(ngModel)]="rangeA" (input)="updateChiChart()" step="0.1" />
-  </label>
-  <label>
-    Range End (b):
-    <input type="number" [(ngModel)]="rangeB" (input)="updateChiChart()" step="0.1" />
-  </label>
-  <label>
-    <input type="checkbox" [(ngModel)]="showMarkers" (change)="updateChiChart()" />
-    Show Markers
-  </label>
-</div>
+<div class="p-3">
+  <form class="row g-3">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Degrees of Freedom (n)</mat-label>
+        <input matInput type="number" [(ngModel)]="degreesOfFreedom" (input)="updateChiChart()" min="1" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-4">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Range Start (a)</mat-label>
+        <input matInput type="number" [(ngModel)]="rangeA" (input)="updateChiChart()" step="0.1" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-4">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Range End (b)</mat-label>
+        <input matInput type="number" [(ngModel)]="rangeB" (input)="updateChiChart()" step="0.1" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-12 d-flex align-items-center">
+      <mat-checkbox [(ngModel)]="showMarkers" (change)="updateChiChart()" class="me-2">Show Markers</mat-checkbox>
+    </div>
+  </form>
 
-<div>
-  <p>
-    Calculated Area (a = {{ rangeA }}, b = {{ rangeB }}):
-    <strong>{{ calculatedArea }}</strong>
-  </p>
-</div>
+  <div class="mt-3">
+    <p class="text-muted">
+      <strong>Calculated Area</strong>
+      (a = {{ rangeA }}, b = {{ rangeB }}):
+      <span class="text-primary">
+        <strong>{{ calculatedArea }}</strong>
+      </span>
+    </p>
+  </div>
 
-<div>
-  <apx-chart
-    [series]="chiChartOptions.series"
-    [chart]="chiChartOptions.chart"
-    [xaxis]="chiChartOptions.xaxis"
-    [yaxis]="chiChartOptions.yaxis"
-    [markers]="chiChartOptions.markers"
-    [annotations]="chiChartOptions.annotations"></apx-chart>
+  <div class="mt-4">
+    <apx-chart
+      [series]="chiChartOptions.series"
+      [chart]="chiChartOptions.chart"
+      [xaxis]="chiChartOptions.xaxis"
+      [yaxis]="chiChartOptions.yaxis"
+      [markers]="chiChartOptions.markers"
+      [annotations]="chiChartOptions.annotations"></apx-chart>
+  </div>
 </div>
