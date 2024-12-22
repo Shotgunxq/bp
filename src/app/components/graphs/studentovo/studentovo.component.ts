@@ -32,13 +32,16 @@ export class StudentovoComponent {
   updateTChart() {
     const tData = this.calculateTDistribution(this.degreesOfFreedom);
 
-    // Log data for debugging
-    console.log('Generated t-Distribution Data:', tData);
-
     // Calculate area under the curve between rangeA and rangeB
     this.calculatedArea = this.calculateAreaUnderCurve(tData, this.rangeA, this.rangeB);
 
     const annotations = [
+      {
+        x: this.rangeA, // Start of the range
+        x2: this.rangeB, // End of the range
+        fillColor: 'rgba(0, 123, 255, 0.2)', // Semi-transparent fill color
+        opacity: 0.5, // Opacity of the fill color
+      },
       {
         x: this.rangeA,
         borderColor: '#00E396',
@@ -60,7 +63,7 @@ export class StudentovoComponent {
       ],
       chart: {
         height: 350,
-        type: 'line', // Use line chart type for connecting points
+        type: 'line', // Use line chart type
         toolbar: { show: false },
       },
       markers: {

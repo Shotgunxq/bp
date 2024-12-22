@@ -28,35 +28,54 @@ export class ChikvadrantComponent {
     this.updateChiChart();
   }
 
-  // Update chart with clean data
+  // Update chart with range and shading
   updateChiChart() {
     const chiData = this.calculateChiSquared(this.degreesOfFreedom);
 
     // Calculate area under the curve between rangeA and rangeB
     this.calculatedArea = this.calculateAreaUnderCurve(chiData, this.rangeA, this.rangeB);
 
+    const annotations = [
+      {
+        x: this.rangeA,
+        x2: this.rangeB,
+        fillColor: 'rgba(0, 123, 255, 0.2)', // Semi-transparent shading for the area
+        opacity: 0.5,
+      },
+      {
+        x: this.rangeA,
+        borderColor: '#00E396',
+        label: { text: `a = ${this.rangeA}` },
+      },
+      {
+        x: this.rangeB,
+        borderColor: '#775DD0',
+        label: { text: `b = ${this.rangeB}` },
+      },
+    ];
+
     this.chiChartOptions = {
       series: [
         {
           name: 'Chi-Squared Distribution',
-          data: chiData.map(point => ({ x: parseFloat(point.x.toFixed(2)), y: parseFloat(point.y.toFixed(4)) })), // Clean x, y data
+          data: chiData.map(point => ({ x: point.x, y: point.y })), // Proper x, y mapping
         },
       ],
       chart: {
         height: 350,
-        type: 'line',
+        type: 'line', // Line chart type for smooth curve
         toolbar: { show: false },
       },
       markers: {
-        size: this.showMarkers ? 5 : 0, // Toggle markers
+        size: this.showMarkers ? 5 : 0,
         shape: 'circle',
       },
       xaxis: {
+        type: 'numeric', // Numeric x-axis
         title: { text: 'x' },
-        tickAmount: 10, // Reduce number of ticks on x-axis
+        tickAmount: 10, // Adjust for better spacing
         labels: {
-          rotate: 0,
-          formatter: (value: string) => parseFloat(value).toFixed(1), // Round x-axis labels
+          formatter: val => parseFloat(val).toFixed(1), // Format x-axis labels
         },
       },
       yaxis: {
@@ -64,23 +83,12 @@ export class ChikvadrantComponent {
         min: 0,
       },
       annotations: {
-        xaxis: [
-          {
-            x: this.rangeA,
-            borderColor: '#FF4560',
-            label: { text: `a = ${this.rangeA}` },
-          },
-          {
-            x: this.rangeB,
-            borderColor: '#FF4560',
-            label: { text: `b = ${this.rangeB}` },
-          },
-        ],
+        xaxis: annotations,
       },
     };
   }
 
-  // Calculate Chi-Squared distribution
+  // Calculate Chi-Squared distribution data
   calculateChiSquared(degreesOfFreedom: number): { x: number; y: number }[] {
     const gamma = (z: number): number => {
       if (z === 1) return 1;
@@ -98,16 +106,16 @@ export class ChikvadrantComponent {
 
     const chiData = [];
     const maxRange = 20;
-    const step = 0.2; // Larger step to reduce clutter
+    const step = 0.2; // Smaller step size for more points
 
     for (let x = 0; x <= maxRange; x += step) {
-      chiData.push({ x, y: chiPDF(x, degreesOfFreedom) });
+      chiData.push({ x, y: parseFloat(chiPDF(x, degreesOfFreedom).toFixed(5)) });
     }
 
     return chiData;
   }
 
-  // Trapezoidal Rule for area calculation
+  // Calculate area under curve using Trapezoidal Rule
   calculateAreaUnderCurve(data: { x: number; y: number }[], a: number, b: number): number {
     let area = 0;
     const filteredData = data.filter(point => point.x >= a && point.x <= b);

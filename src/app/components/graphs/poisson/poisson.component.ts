@@ -37,6 +37,12 @@ export class PoissonComponent {
 
     const annotations = [
       {
+        x: this.rangeA, // Start of the range
+        x2: this.rangeB, // End of the range
+        fillColor: 'rgba(0, 123, 255, 0.2)', // Semi-transparent fill color
+        opacity: 0.5, // Opacity of the fill
+      },
+      {
         x: this.rangeA,
         borderColor: '#00E396',
         label: { text: `a = ${this.rangeA}` },
@@ -52,12 +58,12 @@ export class PoissonComponent {
       series: [
         {
           name: 'P(X = x)',
-          data: poissonData.map(point => point.y),
+          data: poissonData.map(point => ({ x: point.x, y: point.y })), // Properly map x, y
         },
       ],
       chart: {
         height: 350,
-        type: 'line',
+        type: 'line', // Line chart type
         toolbar: {
           show: false,
         },
@@ -67,11 +73,10 @@ export class PoissonComponent {
       },
       xaxis: {
         type: 'numeric', // Use numeric x-axis
-        title: {
-          text: 'x (Occurrences)',
-        },
+        title: { text: 'x (Occurrences)' },
+        tickAmount: 20, // Adjust ticks for readability
         labels: {
-          formatter: val => Number(val).toFixed(0), // Format x-axis labels as integers
+          formatter: val => parseFloat(val).toFixed(0), // Format x-axis labels as integers
         },
       },
       yaxis: {
@@ -79,6 +84,9 @@ export class PoissonComponent {
           text: 'P(X = x)',
         },
         min: 0,
+        labels: {
+          formatter: (value: number) => value.toFixed(5), // Round y-axis values to 5 decimals
+        },
       },
       annotations: {
         xaxis: annotations,
@@ -89,12 +97,20 @@ export class PoissonComponent {
   // Calculate Poisson distribution data points
   calculatePoissonData(lambda: number): { x: number; y: number }[] {
     const poissonData = [];
-    const maxRange = 20; // Display up to 20 points
-    for (let x = 0; x <= maxRange; x++) {
-      const probability = (Math.pow(lambda, x) * Math.exp(-lambda)) / this.factorial(x);
-      if (probability < 0.0001) break; // Stop when probabilities are negligible
-      poissonData.push({ x, y: parseFloat(probability.toFixed(5)) });
+    const maxRange = 40; // Increase the maximum x value for more points
+    const step = 0.1; // Reduce step size for finer granularity
+
+    for (let x = 0; x <= maxRange; x += step) {
+      const probability = (Math.pow(lambda, Math.floor(x)) * Math.exp(-lambda)) / this.factorial(Math.floor(x));
+      if (probability < 0.001) break; // Stop when probabilities are negligible
+      poissonData.push({ x: parseFloat(x.toFixed(5)), y: parseFloat(probability.toFixed(5)) });
     }
+
+    // for (let x = 0; x <= maxRange; x++) {
+    //   const probability = (Math.pow(lambda, x) * Math.exp(-lambda)) / this.factorial(x);
+    //   if (probability < 0.0001) break; // Stop when probabilities are negligible
+    //   poissonData.push({ x, y: parseFloat(probability.toFixed(5)) });
+    // }
     return poissonData;
   }
 
