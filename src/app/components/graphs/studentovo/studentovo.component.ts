@@ -32,31 +32,47 @@ export class StudentovoComponent {
   updateTChart() {
     const tData = this.calculateTDistribution(this.degreesOfFreedom);
 
+    // Log data for debugging
+    console.log('Generated t-Distribution Data:', tData);
+
     // Calculate area under the curve between rangeA and rangeB
     this.calculatedArea = this.calculateAreaUnderCurve(tData, this.rangeA, this.rangeB);
+
+    const annotations = [
+      {
+        x: this.rangeA,
+        borderColor: '#00E396',
+        label: { text: `a = ${this.rangeA}` },
+      },
+      {
+        x: this.rangeB,
+        borderColor: '#775DD0',
+        label: { text: `b = ${this.rangeB}` },
+      },
+    ];
 
     this.tChartOptions = {
       series: [
         {
           name: 't-Distribution',
-          data: tData.map(point => ({ x: parseFloat(point.x.toFixed(2)), y: parseFloat(point.y.toFixed(4)) })), // Clean x, y data
+          data: tData.map(point => ({ x: point.x, y: point.y })), // Properly map x, y
         },
       ],
       chart: {
         height: 350,
-        type: 'line',
+        type: 'line', // Use line chart type for connecting points
         toolbar: { show: false },
       },
       markers: {
-        size: this.showMarkers ? 5 : 0, // Toggle markers
+        size: this.showMarkers ? 5 : 0,
         shape: 'circle',
       },
       xaxis: {
+        type: 'numeric', // Ensure numeric x-axis
         title: { text: 't' },
-        tickAmount: 8, // Reduce clutter on the x-axis
+        tickAmount: 10, // Adjust number of ticks
         labels: {
-          rotate: 0,
-          formatter: (value: string) => parseFloat(value).toFixed(1), // Round x-axis labels
+          formatter: val => parseFloat(val).toFixed(1), // Format x-axis labels
         },
       },
       yaxis: {
@@ -64,18 +80,7 @@ export class StudentovoComponent {
         min: 0,
       },
       annotations: {
-        xaxis: [
-          {
-            x: this.rangeA,
-            borderColor: '#FF4560',
-            label: { text: `a = ${this.rangeA}` },
-          },
-          {
-            x: this.rangeB,
-            borderColor: '#FF4560',
-            label: { text: `b = ${this.rangeB}` },
-          },
-        ],
+        xaxis: annotations,
       },
     };
   }
@@ -96,10 +101,12 @@ export class StudentovoComponent {
 
     const tData = [];
     const range = 4; // Range for t-values (-4 to 4)
-    const step = 0.2; // Larger step to reduce clutter
+    const step = 0.1; // Use consistent step size
 
     for (let t = -range; t <= range; t += step) {
-      tData.push({ x: t, y: tPDF(t, degreesOfFreedom) });
+      const x = parseFloat(t.toFixed(1)); // Ensure proper x values
+      const y = parseFloat(tPDF(t, degreesOfFreedom).toFixed(4)); // Ensure proper y values
+      tData.push({ x, y });
     }
 
     return tData;
