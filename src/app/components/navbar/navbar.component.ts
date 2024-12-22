@@ -10,10 +10,11 @@ import { navbarService } from '../../services/navbarService';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-  @Output() sidenavToggled = new EventEmitter<void>();
+  @Output() toggleSidenav = new EventEmitter<void>();
 
   username: string | null = '';
   isMenuRoute = false;
+  showBackButton = false;
 
   constructor(
     private navbarService: navbarService,
@@ -25,13 +26,17 @@ export class NavbarComponent {
     const user = this.apiService.getUserFromStorage();
     if (user) {
       this.username = user.givenName;
-      this.navbarService.setUsername(this.username || '');
+      this.navbarService.setUsername(this.username!);
     }
 
+    // Subscribe to route changes and filter for NavigationEnd
     this.router.events.pipe(filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.isMenuRoute = event.urlAfterRedirects === '/menu';
+      this.showBackButton = !this.isMenuRoute; // Show Back button if not on /menu
+      console.log('Route:', event.urlAfterRedirects, 'isMenuRoute:', this.isMenuRoute);
     });
 
+    // Listen for username updates dynamically
     this.navbarService.currentUsername$.subscribe(name => {
       if (name) {
         this.username = name;
@@ -39,8 +44,12 @@ export class NavbarComponent {
     });
   }
 
-  toggleSidenav() {
-    this.sidenavToggled.emit(); // Notify parent component to toggle sidenav
+  toggleSidenavMenu() {
+    this.toggleSidenav.emit();
+  }
+
+  goBack() {
+    this.router.navigate(['/menu']); // Always navigate to /menu
   }
 
   logout() {

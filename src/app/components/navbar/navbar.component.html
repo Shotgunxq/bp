@@ -1,4 +1,10 @@
 <mat-toolbar [ngClass]="{ navbar: true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
+  <!-- Back Button -->
+  <button mat-icon-button *ngIf="showBackButton" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <!-- Typewriter Animation -->
   <div class="typewriter" *ngIf="isMenuRoute">
     <div class="typewriter-wrapper">
       <span>Welcome</span>
@@ -6,10 +12,9 @@
     </div>
   </div>
 
+  <!-- Logout and Settings Buttons -->
   <div class="holder">
     <button id="logout" mat-button (click)="logout()">Logout</button>
-
-    <!-- Settings button triggers sidenav -->
-    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" (click)="toggleSidenav()" />
+    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" (click)="toggleSidenav.emit()" />
   </div>
 </mat-toolbar>
