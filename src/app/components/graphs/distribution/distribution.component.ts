@@ -1,14 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  ChartComponent,
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexYAxis,
-  ApexTitleSubtitle,
-  ApexAnnotations,
-  ApexDataLabels,
-} from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexTitleSubtitle, ApexAnnotations, ApexDataLabels } from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;

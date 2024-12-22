@@ -5,10 +5,6 @@
     <input type="number" [(ngModel)]="lambda" (input)="updatePoissonChart()" step="0.1" min="0.1" />
   </label>
   <label>
-    Highlight Value:
-    <input type="number" [(ngModel)]="highlightX" (input)="updatePoissonChart()" step="1" min="0" />
-  </label>
-  <label>
     Range Start (a):
     <input type="number" [(ngModel)]="rangeA" (input)="updatePoissonChart()" step="1" min="0" />
   </label>
@@ -17,10 +13,6 @@
     <input type="number" [(ngModel)]="rangeB" (input)="updatePoissonChart()" step="1" min="0" />
   </label>
   <div>
-    <label>
-      <input type="checkbox" [(ngModel)]="showHighlight" (change)="updatePoissonChart()" />
-      Show Highlight
-    </label>
     <label>
       <input type="checkbox" [(ngModel)]="showMarkers" (change)="updatePoissonChart()" />
       Show Markers

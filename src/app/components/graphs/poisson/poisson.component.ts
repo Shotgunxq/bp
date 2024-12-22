@@ -19,11 +19,9 @@ export type ChartOptions = {
 export class PoissonComponent {
   public poissonChartOptions!: Partial<ChartOptions>;
   public lambda: number = 3; // Default λ
-  public highlightX: number = 2; // Default highlight value
   public rangeA: number = 1; // Start of range
   public rangeB: number = 5; // End of range
   public calculatedArea: number = 0; // Area under the curve
-  public showHighlight: boolean = true; // Toggle for highlighting
   public showMarkers: boolean = true; // Toggle for markers visibility
 
   constructor() {
@@ -38,22 +36,6 @@ export class PoissonComponent {
     this.calculatedArea = this.calculateAreaUnderCurve(poissonData, this.rangeA, this.rangeB);
 
     const annotations = [
-      ...(this.showHighlight
-        ? [
-            {
-              x: this.highlightX,
-              borderColor: '#FF4560',
-              strokeDashArray: 10,
-              label: {
-                text: `P(X = ${this.highlightX})`,
-                style: {
-                  background: '#FF4560',
-                  color: '#fff',
-                },
-              },
-            },
-          ]
-        : []),
       {
         x: this.rangeA,
         borderColor: '#00E396',

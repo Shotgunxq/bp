@@ -10,17 +10,9 @@
     <input type="number" [(ngModel)]="stdDev" (input)="updateDensityChart()" step="0.1" />
   </label>
   <br />
-  <label>
-    Highlight Up To:
-    <input type="number" [(ngModel)]="highlightX" (input)="updateDensityChart()" step="0.1" />
-  </label>
 </div>
 
 <div>
-  <label>
-    <input type="checkbox" [(ngModel)]="showHighlight" (change)="toggleHighlight()" />
-    Show Highlight
-  </label>
   <br />
   <label>
     <input type="checkbox" [(ngModel)]="showDataLabels" (change)="toggleDataLabels()" />

@@ -29,20 +29,15 @@ export type ChartOptions = {
 export class DensityComponent {
   public chartOptions!: Partial<ChartOptions>;
   public densityChartOptions!: Partial<ChartOptions>;
-  public showHighlight = true; // Default state for highlight
   public showDataLabels = true; // Toggle for data labels (values)
 
   public mean = 0;
   public stdDev = 1;
   public n = 10;
   public p = 0.5;
-  highlightX = -4;
 
   constructor() {
     this.updateDensityChart();
-  }
-  toggleHighlight() {
-    this.updateDensityChart(); // Rebuild the chart with or without highlight
   }
 
   // Update the density chart for normal distribution
@@ -76,8 +71,6 @@ export class DensityComponent {
       densityData.unshift({ x: parseFloat(x.toFixed(2)), y: parseFloat(density.toFixed(4)) });
       x -= step;
     }
-
-    const roundedHighlightX = parseFloat(this.highlightX.toFixed(1));
 
     this.densityChartOptions = {
       series: [
@@ -114,29 +107,7 @@ export class DensityComponent {
         },
         min: 0,
       },
-      annotations: {
-        xaxis: this.showHighlight
-          ? [
-              {
-                x: roundedHighlightX,
-                borderColor: '#FF4560',
-                strokeDashArray: 10,
-                label: {
-                  text: `P(x <= ${roundedHighlightX})`,
-                  style: {
-                    background: '#FF4560',
-                    color: '#fff',
-                  },
-                },
-              },
-              {
-                x: densityData[0].x,
-                x2: roundedHighlightX,
-                fillColor: 'rgba(255, 69, 96, 0.2)',
-              },
-            ]
-          : [],
-      },
+      annotations: {},
     };
   }
 }
