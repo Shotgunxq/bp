@@ -36,3 +36,17 @@ body {
 #asdasd {
   background-color: grey;
 }
+
+html,
+body {
+  height: 100%; /* Ensure body fills the viewport */
+  margin: 0; /* Remove default browser margins */
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.scrollable-container {
+  min-height: calc(100vh - 64px); /* Example: Adjust for fixed headers, footers, etc. */
+  overflow-y: auto; /* Allow internal scrolling only when content overflows */
+  padding: 0 10px; /* Add horizontal padding only if necessary */
+}
