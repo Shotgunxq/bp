@@ -92,4 +92,9 @@
   margin-left: auto; /* Push holder to the far right */
   display: flex;
   align-items: center; /* Vertically center the contents */
+  #logout {
+    margin-right: 16px; /* Add some space to the left */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    border-radius: 20%;
+  }
 }
