@@ -44,6 +44,7 @@ import { PoissonComponent } from './components/graphs/poisson/poisson.component'
 import { StudentovoComponent } from './components/graphs/studentovo/studentovo.component';
 import { ChikvadrantComponent } from './components/graphs/chikvadrant/chikvadrant.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,6 +62,7 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
     StudentovoComponent,
     ChikvadrantComponent,
     SidenavComponent,
+    AdminPageComponent,
   ],
   imports: [
     MathjaxModule.forRoot(),
