@@ -17,53 +17,32 @@ export type ChartOptions = {
 })
 export class StudentovoComponent {
   public tChartOptions!: Partial<ChartOptions>;
-  public degreesOfFreedom: number = 10; // Default degrees of freedom
-  public showMarkers: boolean = true;
-
-  public rangeA: number = -2; // Start of range
-  public rangeB: number = 2; // End of range
+  public degreesOfFreedom: number = 10;
+  public rangeA: number = -2;
+  public rangeB: number = 2;
   public calculatedArea: number = 0;
+  public showMarkers: boolean = true;
 
   constructor() {
     this.updateTChart();
   }
 
-  // Update chart when parameters change
   updateTChart() {
     const tData = this.calculateTDistribution(this.degreesOfFreedom);
 
-    // Calculate area under the curve between rangeA and rangeB
+    // Calculate the area under the curve
     this.calculatedArea = this.calculateAreaUnderCurve(tData, this.rangeA, this.rangeB);
-
-    const annotations = [
-      {
-        x: this.rangeA, // Start of the range
-        x2: this.rangeB, // End of the range
-        fillColor: 'rgba(0, 123, 255, 0.2)', // Semi-transparent fill color
-        opacity: 0.5, // Opacity of the fill color
-      },
-      {
-        x: this.rangeA,
-        borderColor: '#00E396',
-        label: { text: `a = ${this.rangeA}` },
-      },
-      {
-        x: this.rangeB,
-        borderColor: '#775DD0',
-        label: { text: `b = ${this.rangeB}` },
-      },
-    ];
 
     this.tChartOptions = {
       series: [
         {
           name: 't-Distribution',
-          data: tData.map(point => ({ x: point.x, y: point.y })), // Properly map x, y
+          data: tData.map(point => ({ x: point.x, y: point.y })),
         },
       ],
       chart: {
         height: 350,
-        type: 'line', // Use line chart type
+        type: 'line',
         toolbar: { show: false },
       },
       markers: {
@@ -71,11 +50,11 @@ export class StudentovoComponent {
         shape: 'circle',
       },
       xaxis: {
-        type: 'numeric', // Ensure numeric x-axis
+        type: 'numeric',
         title: { text: 't' },
-        tickAmount: 10, // Adjust number of ticks
+        tickAmount: 10,
         labels: {
-          formatter: val => parseFloat(val).toFixed(1), // Format x-axis labels
+          formatter: val => parseFloat(val).toFixed(1),
         },
       },
       yaxis: {
@@ -83,12 +62,22 @@ export class StudentovoComponent {
         min: 0,
       },
       annotations: {
-        xaxis: annotations,
+        xaxis: [
+          {
+            x: this.rangeA,
+            borderColor: '#00E396',
+            label: { text: `a = ${this.rangeA}` },
+          },
+          {
+            x: this.rangeB,
+            borderColor: '#775DD0',
+            label: { text: `b = ${this.rangeB}` },
+          },
+        ],
       },
     };
   }
 
-  // Calculate the Student's t-distribution data
   calculateTDistribution(degreesOfFreedom: number): { x: number; y: number }[] {
     const gamma = (z: number): number => {
       if (z === 1) return 1;
@@ -104,18 +93,17 @@ export class StudentovoComponent {
 
     const tData = [];
     const range = 4; // Range for t-values (-4 to 4)
-    const step = 0.1; // Use consistent step size
+    const step = 0.1;
 
     for (let t = -range; t <= range; t += step) {
-      const x = parseFloat(t.toFixed(1)); // Ensure proper x values
-      const y = parseFloat(tPDF(t, degreesOfFreedom).toFixed(4)); // Ensure proper y values
+      const x = parseFloat(t.toFixed(1));
+      const y = parseFloat(tPDF(t, degreesOfFreedom).toFixed(4));
       tData.push({ x, y });
     }
 
     return tData;
   }
 
-  // Trapezoidal Rule for area calculation
   calculateAreaUnderCurve(data: { x: number; y: number }[], a: number, b: number): number {
     let area = 0;
     const filteredData = data.filter(point => point.x >= a && point.x <= b);
@@ -126,7 +114,7 @@ export class StudentovoComponent {
       const x2 = filteredData[i + 1].x;
       const y2 = filteredData[i + 1].y;
 
-      area += ((y1 + y2) / 2) * (x2 - x1); // Trapezoidal rule
+      area += ((y1 + y2) / 2) * (x2 - x1);
     }
 
     return parseFloat(area.toFixed(5));

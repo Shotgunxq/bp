@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import ApexCharts from 'apexcharts';
+import { ChangeDetectorRef } from '@angular/core';
+
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -28,6 +30,29 @@ export type ChartOptions = {
   styleUrl: './materials-page.component.scss',
 })
 export class MaterialsPageComponent {
+  showPoisson: boolean = false; // Initial state for Poisson
+  showStudentT: boolean = false; // Initial state for Student's t-Distribution
+  showChiSquared: boolean = false; // Initial state for Chi-Squared
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  loadPoisson() {
+    this.showPoisson = true;
+    this.cdr.detectChanges(); // Trigger change detection
+  }
+
+  // Load Student's t-Distribution
+  loadStudentT() {
+    this.showStudentT = true;
+    this.cdr.detectChanges(); // Trigger change detection
+  }
+
+  // Load Chi-Squared Distribution
+  loadChiSquared() {
+    this.showChiSquared = true;
+    this.cdr.detectChanges(); // Trigger change detection
+  }
+
   content =
     '<strong>Podmienená pravdepodobnosť:</strong> Vyjadruje pravdepodobnosť udalosti $A$ za predpokladu, že nastala udalosť $B$, vypočítaná ako $P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}, \\quad \\text{ak } P(B) > 0$';
   content2: string = `<strong>Veta o úplnej pravdepodobnosti:</strong> Používa sa na výpočet pravdepodobnosti udalosti $B$ s využitím rozkladu na množiny $A_i$, kde $P(B) = \sum_{i} P(A_i) \\cdot P(B \mid A_i)$`;

@@ -18,30 +18,22 @@ export type ChartOptions = {
 export class ChikvadrantComponent {
   public chiChartOptions!: Partial<ChartOptions>;
   public degreesOfFreedom: number = 4; // Default degrees of freedom
-  public showMarkers: boolean = true;
-
   public rangeA: number = 1; // Start of range
   public rangeB: number = 5; // End of range
-  public calculatedArea: number = 0;
+  public calculatedArea: number = 0; // Calculated area under the curve
+  public showMarkers: boolean = true; // Toggle for markers visibility
 
   constructor() {
     this.updateChiChart();
   }
 
-  // Update chart with range and shading
   updateChiChart() {
     const chiData = this.calculateChiSquared(this.degreesOfFreedom);
 
-    // Calculate area under the curve between rangeA and rangeB
+    // Calculate area under the curve
     this.calculatedArea = this.calculateAreaUnderCurve(chiData, this.rangeA, this.rangeB);
 
     const annotations = [
-      {
-        x: this.rangeA,
-        x2: this.rangeB,
-        fillColor: 'rgba(0, 123, 255, 0.2)', // Semi-transparent shading for the area
-        opacity: 0.5,
-      },
       {
         x: this.rangeA,
         borderColor: '#00E396',
@@ -52,18 +44,24 @@ export class ChikvadrantComponent {
         borderColor: '#775DD0',
         label: { text: `b = ${this.rangeB}` },
       },
+      {
+        x: this.rangeA,
+        x2: this.rangeB,
+        fillColor: 'rgba(0, 123, 255, 0.2)', // Highlight area under the curve
+        opacity: 0.5,
+      },
     ];
 
     this.chiChartOptions = {
       series: [
         {
           name: 'Chi-Squared Distribution',
-          data: chiData.map(point => ({ x: point.x, y: point.y })), // Proper x, y mapping
+          data: chiData.map(point => ({ x: point.x, y: point.y })),
         },
       ],
       chart: {
         height: 350,
-        type: 'line', // Line chart type for smooth curve
+        type: 'line',
         toolbar: { show: false },
       },
       markers: {
@@ -71,16 +69,19 @@ export class ChikvadrantComponent {
         shape: 'circle',
       },
       xaxis: {
-        type: 'numeric', // Numeric x-axis
+        type: 'numeric',
         title: { text: 'x' },
-        tickAmount: 10, // Adjust for better spacing
+        tickAmount: 20,
         labels: {
-          formatter: val => parseFloat(val).toFixed(1), // Format x-axis labels
+          formatter: val => parseFloat(val).toFixed(1),
         },
       },
       yaxis: {
         title: { text: 'f(x)' },
         min: 0,
+        labels: {
+          formatter: value => value.toFixed(3),
+        },
       },
       annotations: {
         xaxis: annotations,
@@ -88,7 +89,6 @@ export class ChikvadrantComponent {
     };
   }
 
-  // Calculate Chi-Squared distribution data
   calculateChiSquared(degreesOfFreedom: number): { x: number; y: number }[] {
     const gamma = (z: number): number => {
       if (z === 1) return 1;
@@ -106,16 +106,15 @@ export class ChikvadrantComponent {
 
     const chiData = [];
     const maxRange = 20;
-    const step = 0.2; // Smaller step size for more points
+    const step = 0.1;
 
     for (let x = 0; x <= maxRange; x += step) {
-      chiData.push({ x, y: parseFloat(chiPDF(x, degreesOfFreedom).toFixed(5)) });
+      chiData.push({ x: parseFloat(x.toFixed(1)), y: parseFloat(chiPDF(x, degreesOfFreedom).toFixed(4)) });
     }
 
     return chiData;
   }
 
-  // Calculate area under curve using Trapezoidal Rule
   calculateAreaUnderCurve(data: { x: number; y: number }[], a: number, b: number): number {
     let area = 0;
     const filteredData = data.filter(point => point.x >= a && point.x <= b);

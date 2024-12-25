@@ -1,113 +1,95 @@
 import { Component } from '@angular/core';
-import {
-  ChartComponent,
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexYAxis,
-  ApexTitleSubtitle,
-  ApexAnnotations,
-  ApexMarkers,
-  ApexDataLabels,
-} from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexDataLabels } from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
-  title: ApexTitleSubtitle;
-  annotations?: ApexAnnotations;
-  dataLabels: ApexDataLabels; // Add this line
-  // regions?: ApexAnnotations;
+  dataLabels: ApexDataLabels;
 };
+
 @Component({
   selector: 'graph-density',
   templateUrl: './density.component.html',
-  styleUrl: './density.component.scss',
+  styleUrls: ['./density.component.scss'],
 })
 export class DensityComponent {
-  public chartOptions!: Partial<ChartOptions>;
   public densityChartOptions!: Partial<ChartOptions>;
-  public showDataLabels = true; // Toggle for data labels (values)
+  public showDataLabels = true; // Toggle for data labels
 
-  public mean = 0;
-  public stdDev = 1;
-  public n = 10;
-  public p = 0.5;
+  public mean = 0; // Default mean
+  public stdDev = 1; // Default standard deviation
 
   constructor() {
     this.updateDensityChart();
   }
 
-  // Update the density chart for normal distribution
+  // Toggle data labels visibility
   toggleDataLabels() {
     this.densityChartOptions.dataLabels = {
       enabled: this.showDataLabels,
     };
   }
 
+  // Update density chart
   updateDensityChart() {
-    const densityData = [];
-    const normalDensity = (x: number, mean: number, stdDev: number): number => {
-      return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
-    };
-
-    const threshold = 0.0001;
-    const step = 0.1;
-
-    let x = this.mean;
-    while (true) {
-      const density = normalDensity(x, this.mean, this.stdDev);
-      if (density < threshold) break;
-      densityData.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(density.toFixed(4)) });
-      x += step;
-    }
-
-    x = this.mean - step;
-    while (true) {
-      const density = normalDensity(x, this.mean, this.stdDev);
-      if (density < threshold) break;
-      densityData.unshift({ x: parseFloat(x.toFixed(2)), y: parseFloat(density.toFixed(4)) });
-      x -= step;
-    }
+    const densityData = this.calculateNormalDensity(this.mean, this.stdDev);
 
     this.densityChartOptions = {
       series: [
         {
           name: 'f_X(x)',
-          data: densityData,
+          data: densityData.map(point => ({ x: point.x, y: point.y })),
         },
       ],
       chart: {
         height: 350,
-        type: 'area',
-        toolbar: {
-          show: false,
-        },
+        type: 'area', // Area chart for smooth curve
+        toolbar: { show: false },
       },
       dataLabels: {
-        enabled: this.showDataLabels, // Control data label visibility
+        enabled: this.showDataLabels, // Control visibility dynamically
         style: {
           fontSize: '12px',
           colors: ['#304758'],
         },
-        formatter: (val: number) => val.toFixed(2), // Format data labels
+        formatter: (val: number) => val.toFixed(2),
       },
-
       xaxis: {
-        type: 'numeric',
-        title: {
-          text: 'x',
+        type: 'numeric', // Numeric x-axis for smooth distribution
+        title: { text: 'x' },
+        tickAmount: 10, // Control x-axis ticks
+        labels: {
+          formatter: val => parseFloat(val).toFixed(1), // Format x-axis values
         },
       },
       yaxis: {
-        title: {
-          text: 'f_X(x)',
-        },
+        title: { text: 'f_X(x)' },
         min: 0,
+        labels: {
+          formatter: value => value.toFixed(3), // Format y-axis values
+        },
       },
-      annotations: {},
     };
+  }
+
+  // Calculate normal distribution density
+  calculateNormalDensity(mean: number, stdDev: number): { x: number; y: number }[] {
+    const densityData = [];
+    const normalDensity = (x: number, mean: number, stdDev: number): number => {
+      return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
+    };
+
+    const range = 4 * stdDev; // Display range ±4σ
+    const step = 0.1;
+
+    for (let x = mean - range; x <= mean + range; x += step) {
+      const y = normalDensity(x, mean, stdDev);
+      if (y < 0.0001) continue; // Ignore negligible values
+      densityData.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(y.toFixed(4)) });
+    }
+
+    return densityData;
   }
 }

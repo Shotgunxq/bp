@@ -1,45 +1,54 @@
-<div class="p-3">
-  <form class="row g-3">
-    <div class="col-md-4">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Degrees of Freedom (n)</mat-label>
-        <input matInput type="number" [(ngModel)]="degreesOfFreedom" (input)="updateChiChart()" min="1" />
-      </mat-form-field>
-    </div>
-    <div class="col-md-4">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Range Start (a)</mat-label>
-        <input matInput type="number" [(ngModel)]="rangeA" (input)="updateChiChart()" step="0.1" />
-      </mat-form-field>
-    </div>
-    <div class="col-md-4">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Range End (b)</mat-label>
-        <input matInput type="number" [(ngModel)]="rangeB" (input)="updateChiChart()" step="0.1" />
-      </mat-form-field>
-    </div>
-    <div class="col-md-12 d-flex align-items-center">
-      <mat-checkbox [(ngModel)]="showMarkers" (change)="updateChiChart()" class="me-2">Show Markers</mat-checkbox>
-    </div>
-  </form>
-
-  <div class="mt-3">
-    <p class="text-muted">
-      <strong>Calculated Area</strong>
-      (a = {{ rangeA }}, b = {{ rangeB }}):
-      <span class="text-primary">
-        <strong>{{ calculatedArea }}</strong>
-      </span>
-    </p>
+<form class="row g-3">
+  <!-- Degrees of Freedom (n) -->
+  <div class="col-md-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Degrees of Freedom (n)</mat-label>
+      <input matInput type="number" [(ngModel)]="degreesOfFreedom" [ngModelOptions]="{ standalone: true }" (input)="updateChiChart()" min="1" />
+    </mat-form-field>
   </div>
 
-  <div class="mt-4">
-    <apx-chart
-      [series]="chiChartOptions.series"
-      [chart]="chiChartOptions.chart"
-      [xaxis]="chiChartOptions.xaxis"
-      [yaxis]="chiChartOptions.yaxis"
-      [markers]="chiChartOptions.markers"
-      [annotations]="chiChartOptions.annotations"></apx-chart>
+  <!-- Range Start (a) -->
+  <div class="col-md-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Range Start (a)</mat-label>
+      <input matInput type="number" [(ngModel)]="rangeA" [ngModelOptions]="{ standalone: true }" (input)="updateChiChart()" step="0.1" />
+    </mat-form-field>
   </div>
+
+  <!-- Range End (b) -->
+  <div class="col-md-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Range End (b)</mat-label>
+      <input matInput type="number" [(ngModel)]="rangeB" [ngModelOptions]="{ standalone: true }" (input)="updateChiChart()" step="0.1" />
+    </mat-form-field>
+  </div>
+
+  <!-- Show Markers Checkbox -->
+  <div class="col-md-12 d-flex align-items-center">
+    <mat-checkbox [(ngModel)]="showMarkers" [ngModelOptions]="{ standalone: true }" (change)="updateChiChart()" class="me-2">
+      Show Markers
+    </mat-checkbox>
+  </div>
+</form>
+
+<!-- Calculated Area Display -->
+<div class="mt-3">
+  <p class="text-muted">
+    <strong>Calculated Area</strong>
+    (a = {{ rangeA }}, b = {{ rangeB }}):
+    <span class="text-primary">
+      <strong>{{ calculatedArea }}</strong>
+    </span>
+  </p>
+</div>
+
+<!-- Chart Display -->
+<div class="mt-4">
+  <apx-chart
+    [series]="chiChartOptions.series"
+    [chart]="chiChartOptions.chart"
+    [xaxis]="chiChartOptions.xaxis"
+    [yaxis]="chiChartOptions.yaxis"
+    [markers]="chiChartOptions.markers"
+    [annotations]="chiChartOptions.annotations"></apx-chart>
 </div>

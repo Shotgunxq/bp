@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexTitleSubtitle, ApexAnnotations, ApexMarkers } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexAnnotations, ApexMarkers } from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
-  title: ApexTitleSubtitle;
-  annotations?: ApexAnnotations;
   markers?: ApexMarkers;
+  annotations?: ApexAnnotations;
 };
 
 @Component({
@@ -21,14 +20,13 @@ export class PoissonComponent {
   public lambda: number = 3; // Default λ
   public rangeA: number = 1; // Start of range
   public rangeB: number = 5; // End of range
-  public calculatedArea: number = 0; // Area under the curve
+  public calculatedArea: number = 0; // Calculated area under the curve
   public showMarkers: boolean = true; // Toggle for markers visibility
 
   constructor() {
     this.updatePoissonChart();
   }
 
-  // Update the chart dynamically
   updatePoissonChart() {
     const poissonData = this.calculatePoissonData(this.lambda);
 
@@ -36,12 +34,6 @@ export class PoissonComponent {
     this.calculatedArea = this.calculateAreaUnderCurve(poissonData, this.rangeA, this.rangeB);
 
     const annotations = [
-      {
-        x: this.rangeA, // Start of the range
-        x2: this.rangeB, // End of the range
-        fillColor: 'rgba(0, 123, 255, 0.2)', // Semi-transparent fill color
-        opacity: 0.5, // Opacity of the fill
-      },
       {
         x: this.rangeA,
         borderColor: '#00E396',
@@ -52,40 +44,43 @@ export class PoissonComponent {
         borderColor: '#775DD0',
         label: { text: `b = ${this.rangeB}` },
       },
+      {
+        x: this.rangeA,
+        x2: this.rangeB,
+        fillColor: 'rgba(0, 123, 255, 0.2)', // Highlight area under the curve
+        opacity: 0.5,
+      },
     ];
 
     this.poissonChartOptions = {
       series: [
         {
           name: 'P(X = x)',
-          data: poissonData.map(point => ({ x: point.x, y: point.y })), // Properly map x, y
+          data: poissonData.map(point => ({ x: point.x, y: point.y })),
         },
       ],
       chart: {
         height: 350,
-        type: 'line', // Line chart type
-        toolbar: {
-          show: false,
-        },
+        type: 'line',
+        toolbar: { show: false },
       },
       markers: {
-        size: this.showMarkers ? 5 : 0, // Dynamically toggle marker size
+        size: this.showMarkers ? 5 : 0,
+        shape: 'circle',
       },
       xaxis: {
-        type: 'numeric', // Use numeric x-axis
+        type: 'numeric',
         title: { text: 'x (Occurrences)' },
-        tickAmount: 20, // Adjust ticks for readability
+        tickAmount: 20,
         labels: {
-          formatter: val => parseFloat(val).toFixed(0), // Format x-axis labels as integers
+          formatter: val => parseFloat(val).toFixed(0),
         },
       },
       yaxis: {
-        title: {
-          text: 'P(X = x)',
-        },
+        title: { text: 'P(X = x)' },
         min: 0,
         labels: {
-          formatter: (value: number) => value.toFixed(5), // Round y-axis values to 5 decimals
+          formatter: value => value.toFixed(3), // Round to 3 decimals
         },
       },
       annotations: {
@@ -94,32 +89,24 @@ export class PoissonComponent {
     };
   }
 
-  // Calculate Poisson distribution data points
   calculatePoissonData(lambda: number): { x: number; y: number }[] {
     const poissonData = [];
-    const maxRange = 40; // Increase the maximum x value for more points
-    const step = 0.1; // Reduce step size for finer granularity
+    const maxRange = 40;
+    const step = 1;
 
     for (let x = 0; x <= maxRange; x += step) {
-      const probability = (Math.pow(lambda, Math.floor(x)) * Math.exp(-lambda)) / this.factorial(Math.floor(x));
-      if (probability < 0.001) break; // Stop when probabilities are negligible
-      poissonData.push({ x: parseFloat(x.toFixed(5)), y: parseFloat(probability.toFixed(5)) });
+      const probability = (Math.pow(lambda, x) * Math.exp(-lambda)) / this.factorial(x);
+      if (probability < 0.001) break;
+      poissonData.push({ x, y: parseFloat(probability.toFixed(5)) });
     }
 
-    // for (let x = 0; x <= maxRange; x++) {
-    //   const probability = (Math.pow(lambda, x) * Math.exp(-lambda)) / this.factorial(x);
-    //   if (probability < 0.0001) break; // Stop when probabilities are negligible
-    //   poissonData.push({ x, y: parseFloat(probability.toFixed(5)) });
-    // }
     return poissonData;
   }
 
-  // Calculate the factorial of a number
   factorial(n: number): number {
     return n <= 1 ? 1 : n * this.factorial(n - 1);
   }
 
-  // Calculate area under the curve using the trapezoidal rule
   calculateAreaUnderCurve(data: { x: number; y: number }[], a: number, b: number): number {
     let area = 0;
     const filteredData = data.filter(point => point.x >= a && point.x <= b);

@@ -1,18 +1,31 @@
-<div>
-  <!-- Inputs for Binomial Distribution -->
-  <h3>Binomial Distribution Parameters</h3>
-  <label>
-    Trials (n):
-    <input type="number" [(ngModel)]="n" (input)="updateBinomialChart()" />
-  </label>
-  <label>
-    Probability (p):
-    <input type="number" step="0.01" [(ngModel)]="p" (input)="updateBinomialChart()" />
-  </label>
-</div>
+<form class="row g-3">
+  <!-- Number of Trials (n) -->
+  <div class="col-md-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Number of Trials (n)</mat-label>
+      <input matInput type="number" [(ngModel)]="n" [ngModelOptions]="{ standalone: true }" (input)="updateBinomialChart()" min="1" />
+    </mat-form-field>
+  </div>
 
-<!-- ApexCharts for Binomial Distribution -->
-<div>
+  <!-- Probability (p) -->
+  <div class="col-md-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Probability (p)</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="p"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="updateBinomialChart()"
+        step="0.01"
+        min="0"
+        max="1" />
+    </mat-form-field>
+  </div>
+</form>
+
+<!-- Chart Display -->
+<div class="mt-4">
   <apx-chart
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
