@@ -1,1 +1,30 @@
-<p>admin-page works!</p>
+<!-- <div class="section">
+  <mat-tab-group>
+    <mat-tab *ngFor="let theme of themes" [label]="theme.theme_name">
+      <div>
+        <p>Content for {{ theme.theme_name }}</p>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div> -->
+
+<div class="section">
+  <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+    <mat-tab *ngFor="let theme of themes" [label]="theme.theme_name">
+      <div *ngIf="theme.exercises">
+        <table mat-table [dataSource]="theme.exercises" class="mat-elevation-z8">
+          <!-- Description Column -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+          </ng-container>
+
+          <!-- Header and Row -->
+          <tr mat-header-row *matHeaderRowDef="['description']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['description']"></tr>
+        </table>
+      </div>
+      <p *ngIf="!theme.exercises">No exercises available for this theme.</p>
+    </mat-tab>
+  </mat-tab-group>
+</div>

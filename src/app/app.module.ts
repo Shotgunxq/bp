@@ -45,6 +45,9 @@ import { StudentovoComponent } from './components/graphs/studentovo/studentovo.c
 import { ChikvadrantComponent } from './components/graphs/chikvadrant/chikvadrant.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { DataTableComponent } from './components/tables/data-table/data-table.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,6 +66,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
     ChikvadrantComponent,
     SidenavComponent,
     AdminPageComponent,
+    DataTableComponent,
   ],
   imports: [
     MathjaxModule.forRoot(),
@@ -92,6 +96,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
     MatStepperModule,
     NgApexchartsModule,
     MatSidenavModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
