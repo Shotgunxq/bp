@@ -33,9 +33,9 @@
 <!-- Chart Display -->
 <div class="mt-4">
   <apx-chart
-    [series]="densityChartOptions.series"
-    [chart]="densityChartOptions.chart"
-    [xaxis]="densityChartOptions.xaxis"
-    [yaxis]="densityChartOptions.yaxis"
-    [dataLabels]="densityChartOptions.dataLabels"></apx-chart>
+    [series]="densityChartOptions.series || []"
+    [chart]="densityChartOptions.chart || { type: 'line' }"
+    [xaxis]="densityChartOptions.xaxis || {}"
+    [yaxis]="densityChartOptions.yaxis || {}"
+    [dataLabels]="densityChartOptions.dataLabels || {}"></apx-chart>
 </div>

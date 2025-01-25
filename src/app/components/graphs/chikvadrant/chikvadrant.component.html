@@ -45,10 +45,10 @@
 <!-- Chart Display -->
 <div class="mt-4">
   <apx-chart
-    [series]="chiChartOptions.series"
-    [chart]="chiChartOptions.chart"
-    [xaxis]="chiChartOptions.xaxis"
-    [yaxis]="chiChartOptions.yaxis"
-    [markers]="chiChartOptions.markers"
-    [annotations]="chiChartOptions.annotations"></apx-chart>
+    [series]="chiChartOptions.series || []"
+    [chart]="chiChartOptions.chart || { type: 'line' }"
+    [xaxis]="chiChartOptions.xaxis || {}"
+    [yaxis]="chiChartOptions.yaxis || {}"
+    [markers]="chiChartOptions.markers || {}"
+    [annotations]="chiChartOptions.annotations || {}"></apx-chart>
 </div>

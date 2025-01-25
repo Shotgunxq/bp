@@ -16,12 +16,19 @@ export type ChartOptions = {
   styleUrls: ['./chikvadrant.component.scss'],
 })
 export class ChikvadrantComponent {
-  public chiChartOptions!: Partial<ChartOptions>;
-  public degreesOfFreedom: number = 4; // Default degrees of freedom
-  public rangeA: number = 1; // Start of range
-  public rangeB: number = 5; // End of range
-  public calculatedArea: number = 0; // Calculated area under the curve
-  public showMarkers: boolean = true; // Toggle for markers visibility
+  public chiChartOptions: Partial<ChartOptions> = {
+    series: [],
+    chart: { height: 350, type: 'line', toolbar: { show: false } },
+    xaxis: { type: 'numeric', title: { text: 'x' }, tickAmount: 20, labels: { formatter: val => parseFloat(val).toFixed(1) } },
+    yaxis: { title: { text: 'f(x)' }, min: 0, labels: { formatter: value => value.toFixed(3) } },
+    markers: { size: 0, shape: 'circle' },
+    annotations: { xaxis: [] },
+  }; // Default initialization
+  public degreesOfFreedom: number = 4;
+  public rangeA: number = 1;
+  public rangeB: number = 5;
+  public calculatedArea: number = 0;
+  public showMarkers: boolean = true;
 
   constructor() {
     this.updateChiChart();
@@ -30,7 +37,6 @@ export class ChikvadrantComponent {
   updateChiChart() {
     const chiData = this.calculateChiSquared(this.degreesOfFreedom);
 
-    // Calculate area under the curve
     this.calculatedArea = this.calculateAreaUnderCurve(chiData, this.rangeA, this.rangeB);
 
     const annotations = [
@@ -47,7 +53,7 @@ export class ChikvadrantComponent {
       {
         x: this.rangeA,
         x2: this.rangeB,
-        fillColor: 'rgba(0, 123, 255, 0.2)', // Highlight area under the curve
+        fillColor: 'rgba(0, 123, 255, 0.2)',
         opacity: 0.5,
       },
     ];
@@ -109,7 +115,10 @@ export class ChikvadrantComponent {
     const step = 0.1;
 
     for (let x = 0; x <= maxRange; x += step) {
-      chiData.push({ x: parseFloat(x.toFixed(1)), y: parseFloat(chiPDF(x, degreesOfFreedom).toFixed(4)) });
+      chiData.push({
+        x: parseFloat(x.toFixed(1)),
+        y: parseFloat(chiPDF(x, degreesOfFreedom).toFixed(4)),
+      });
     }
 
     return chiData;

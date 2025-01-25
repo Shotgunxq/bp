@@ -52,10 +52,10 @@
 <!-- Chart Display -->
 <div class="mt-4">
   <apx-chart
-    [series]="poissonChartOptions.series"
-    [chart]="poissonChartOptions.chart"
-    [xaxis]="poissonChartOptions.xaxis"
-    [yaxis]="poissonChartOptions.yaxis"
-    [markers]="poissonChartOptions.markers"
-    [annotations]="poissonChartOptions.annotations"></apx-chart>
+    [series]="poissonChartOptions.series || []"
+    [chart]="poissonChartOptions.chart || { type: 'line' }"
+    [xaxis]="poissonChartOptions.xaxis || {}"
+    [yaxis]="poissonChartOptions.yaxis || {}"
+    [markers]="poissonChartOptions.markers || {}"
+    [annotations]="poissonChartOptions.annotations || {}"></apx-chart>
 </div>

@@ -43,10 +43,10 @@
 <!-- Chart Display -->
 <div class="mt-4">
   <apx-chart
-    [series]="tChartOptions.series"
-    [chart]="tChartOptions.chart"
-    [xaxis]="tChartOptions.xaxis"
-    [yaxis]="tChartOptions.yaxis"
-    [markers]="tChartOptions.markers"
-    [annotations]="tChartOptions.annotations"></apx-chart>
+    [series]="tChartOptions.series || []"
+    [chart]="tChartOptions.chart || { type: 'line' }"
+    [xaxis]="tChartOptions.xaxis || {}"
+    [yaxis]="tChartOptions.yaxis || {}"
+    [markers]="tChartOptions.markers || {}"
+    [annotations]="tChartOptions.annotations || {}"></apx-chart>
 </div>

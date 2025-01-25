@@ -27,9 +27,9 @@
 <!-- Chart Display -->
 <div class="mt-4">
   <apx-chart
-    [series]="chartOptions.series"
-    [chart]="chartOptions.chart"
-    [title]="chartOptions.title"
-    [xaxis]="chartOptions.xaxis"
-    [yaxis]="chartOptions.yaxis"></apx-chart>
+    [series]="chartOptions.series || []"
+    [chart]="chartOptions.chart || { type: 'line' }"
+    [title]="chartOptions.title || {}"
+    [xaxis]="chartOptions.xaxis || {}"
+    [yaxis]="chartOptions.yaxis || {}"></apx-chart>
 </div>
