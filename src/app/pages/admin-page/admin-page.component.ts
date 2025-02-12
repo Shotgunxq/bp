@@ -1,13 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '../../services/apiServices';
 import { adminService } from '../../services/adminServices';
+
 @Component({
   selector: 'app-admin-page',
   templateUrl: './admin-page.component.html',
-  styleUrl: './admin-page.component.scss',
+  styleUrls: ['./admin-page.component.scss'],
 })
 export class AdminPageComponent implements OnInit {
-  themes: { theme_id: number; theme_name: string; selected: boolean; exercises?: any[] }[] = [];
+  themes: {
+    theme_id: number;
+    theme_name: string;
+    selected: boolean;
+    exercises?: MatTableDataSource<any>; // Use MatTableDataSource for sorting and pagination
+  }[] = [];
+  displayedColumns: string[] = ['description', 'correct_answer', 'points'];
+
+  @ViewChildren(MatSort) sorts!: QueryList<MatSort>; // Access all MatSort instances
 
   constructor(
     private apiService: ApiService,
@@ -37,7 +48,16 @@ export class AdminPageComponent implements OnInit {
       // Fetch all exercises for the selected theme
       this.adminService.getAllExercisesByTheme(theme.theme_id).subscribe(
         response => {
-          theme.exercises = response.exercises; // Store fetched exercises in the theme object
+          // Convert the exercises to MatTableDataSource for sorting
+          theme.exercises = new MatTableDataSource(response.exercises);
+
+          // Dynamically assign MatSort to the exercises data source
+          setTimeout(() => {
+            const sort = this.sorts.toArray()[index];
+            if (sort) {
+              theme.exercises!.sort = sort;
+            }
+          });
         },
         error => console.error('Error fetching all exercises:', error)
       );

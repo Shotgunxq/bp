@@ -47,6 +47,7 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DataTableComponent } from './components/tables/data-table/data-table.component';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { DataTableComponent } from './components/tables/data-table/data-table.co
     NoopAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSortModule,
     ReactiveFormsModule,
     MatInputModule,
     MatFormFieldModule,

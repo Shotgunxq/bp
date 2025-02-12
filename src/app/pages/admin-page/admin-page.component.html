@@ -1,27 +1,28 @@
-<!-- <div class="section">
-  <mat-tab-group>
-    <mat-tab *ngFor="let theme of themes" [label]="theme.theme_name">
-      <div>
-        <p>Content for {{ theme.theme_name }}</p>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-</div> -->
-
 <div class="section">
   <mat-tab-group (selectedIndexChange)="onTabChange($event)">
-    <mat-tab *ngFor="let theme of themes" [label]="theme.theme_name">
+    <mat-tab *ngFor="let theme of themes; let tabIndex = index" [label]="theme.theme_name">
       <div *ngIf="theme.exercises">
-        <table mat-table [dataSource]="theme.exercises" class="mat-elevation-z8">
+        <table mat-table [dataSource]="theme.exercises" matSort class="mat-elevation-z8">
           <!-- Description Column -->
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
             <td mat-cell *matCellDef="let element">{{ element.description }}</td>
           </ng-container>
 
-          <!-- Header and Row -->
-          <tr mat-header-row *matHeaderRowDef="['description']"></tr>
-          <tr mat-row *matRowDef="let row; columns: ['description']"></tr>
+          <!-- Correct Answer Column -->
+          <ng-container matColumnDef="correct_answer">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Answers</th>
+            <td mat-cell *matCellDef="let element">{{ element.correct_answer }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="points">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Points</th>
+            <td mat-cell *matCellDef="let element">{{ element.points }}</td>
+          </ng-container>
+
+          <!-- Header and Rows -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
       </div>
       <p *ngIf="!theme.exercises">No exercises available for this theme.</p>
