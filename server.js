@@ -163,6 +163,73 @@ app.get('/themes/:theme_id/exercises', async (req, res) => {
   }
 });
 
+app.delete('/exercises/:exercise_id', async (req, res) => {
+  try {
+    const { exercise_id } = req.params;
+
+    if (!exercise_id) {
+      return res.status(400).json({ error: 'exercise_id is required' });
+    }
+
+    // Query to fetch all exercises for the given exercise_id
+    const exercisesQuery = `
+      SELECT * 
+      FROM exercises 
+      WHERE exercise_id = $1
+    `;
+    const exercisesResult = await db.query(exercisesQuery, [exercise_id]);
+
+    if (exercisesResult.rows.length === 0) {
+      return res.status(404).json({ error: 'No exercises found for the selected theme.' });
+    }
+
+    res.json({ exercises: exercisesResult.rows });
+  } catch (err) {
+    console.error('Error deleting exercise with id:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/exercises/:exercise_id', async (req, res) => {
+  try {
+    const { exercise_id } = req.params;
+    if (!exercise_id) {
+      return res.status(400).json({ error: 'exercise_id is required' });
+    }
+
+    // Extract fields to update from the request body
+    const { description, correct_answer, points } = req.body;
+
+    // Optionally validate that at least one field is provided
+    if (description === undefined && correct_answer === undefined && points === undefined) {
+      return res.status(400).json({ error: 'At least one field must be provided for update.' });
+    }
+
+    // Construct the UPDATE query using COALESCE to update only the provided fields
+    const updateQuery = `
+      UPDATE exercises
+      SET 
+        description = COALESCE($1, description),
+        correct_answer = COALESCE($2, correct_answer),
+        points = COALESCE($3, points)
+      WHERE exercise_id = $4
+      RETURNING *;
+    `;
+    const values = [description, correct_answer, points, exercise_id];
+
+    const updateResult = await db.query(updateQuery, values);
+
+    if (updateResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Exercise not found.' });
+    }
+
+    res.json({ updatedExercise: updateResult.rows[0] });
+  } catch (err) {
+    console.error('Error updating exercise:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Create a new test entry
 app.post('/tests', async (req, res) => {
   try {

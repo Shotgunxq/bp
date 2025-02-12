@@ -101,10 +101,10 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Update the exercise in the table's data
+        // Update the exercise in the table's data using the correct identifier
         const data = theme.exercises?.data;
         if (data) {
-          const index = data.findIndex((ex: any) => ex.id === result.id);
+          const index = data.findIndex((ex: any) => ex.exercise_id === result.exercise_id);
           if (index !== -1) {
             data[index] = result;
             theme.exercises!.data = data;
@@ -124,16 +124,17 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
-        // Execute delete API call
-        this.adminService.deleteExercise(exercise.id).subscribe(
+        // Use exercise.exercise_id instead of exercise.id
+        this.adminService.deleteExercise(exercise.exercise_id).subscribe(
           () => {
             // Remove the exercise from the table's data
             const data = theme.exercises?.data;
             if (data) {
-              const index = data.indexOf(exercise);
+              const index = data.findIndex((ex: any) => ex.exercise_id === exercise.exercise_id);
               if (index > -1) {
                 data.splice(index, 1);
                 theme.exercises!.data = data;
+                // Refresh the table display
                 theme.exercises!._updateChangeSubscription();
               }
             }

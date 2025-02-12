@@ -49,21 +49,18 @@ export class EditDialogComponent {
   }
 
   onConfirm(): void {
-    // Create an updated exercise object
     const updatedExercise = {
       ...this.data.exercise,
       ...this.editForm.value,
     };
 
-    // Call the update API
+    // Use the update API which now references exercise.exercise_id
     this.adminService.updateExercise(updatedExercise).subscribe(
       response => {
-        // Close the dialog and return the updated exercise
         this.dialogRef.close(response.updatedExercise || updatedExercise);
       },
       error => {
         console.error('Error updating exercise:', error);
-        // Optionally, display an error message to the user
       }
     );
   }

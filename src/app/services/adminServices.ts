@@ -15,10 +15,12 @@ export class AdminService {
   }
 
   deleteExercise(exerciseId: number): Observable<any> {
+    // Ensure you pass the correct id (exercise_id)
     return this.http.delete<any>(`${this.baseUrl}/exercises/${exerciseId}`);
   }
 
   updateExercise(exercise: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/exercises/${exercise.id}`, exercise);
+    // Use exercise.exercise_id when updating
+    return this.http.put<any>(`${this.baseUrl}/exercises/${exercise.exercise_id}`, exercise);
   }
 }
