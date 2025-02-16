@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,6 +6,8 @@ import { ApiService } from '../../services/apiServices';
 import { AdminService } from '../../services/adminServices';
 import { ConfirmDialogComponent } from './adminDialog/confirm-dialog.component';
 import { EditDialogComponent } from './adminDialog/edit-dialog.component';
+
+import * as $ from 'jquery';
 
 interface Theme {
   theme_id: number;
@@ -28,6 +30,8 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
 
   @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
 
+  @ViewChild('testFuck', { static: true }) testFuck?: ElementRef;
+
   constructor(
     private apiService: ApiService,
     private adminService: AdminService,
@@ -42,6 +46,10 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
     // Subscribe to changes in the MatSort QueryList to reassign sorting
     this.sorts.changes.subscribe((sorts: QueryList<MatSort>) => {
       this.assignSorts(sorts);
+    });
+
+    $.default(this.testFuck?.nativeElement).on('click', () => {
+      alert('click');
     });
   }
 
