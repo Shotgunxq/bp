@@ -25,11 +25,9 @@ interface Theme {
 })
 export class AdminPageComponent implements OnInit, AfterViewInit {
   themes: Theme[] = [];
-  // Added 'actions' to displayedColumns.
   displayedColumns: string[] = ['description', 'correct_answer', 'points', 'actions'];
 
   @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
-
   @ViewChild('testFuck', { static: true }) testFuck?: ElementRef;
 
   constructor(
@@ -43,14 +41,35 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Subscribe to changes in the MatSort QueryList to reassign sorting
+    // Reassign sorting when changes occur
     this.sorts.changes.subscribe((sorts: QueryList<MatSort>) => {
       this.assignSorts(sorts);
     });
 
+    // Example: Using jQuery on testFuck button (if needed)
     $.default(this.testFuck?.nativeElement).on('click', () => {
-      alert('click');
+      alert('Test button clicked');
     });
+
+    // Initialize Test MathQuill Field
+    const testMathFieldElement = document.getElementById('test-math-field');
+    if (testMathFieldElement) {
+      // Get MathQuill's interface from the global window object
+      const MQ = (window as any).MathQuill.getInterface(2);
+      const testMathField = MQ.MathField(testMathFieldElement, {
+        spaceBehavesLikeTab: true,
+        handlers: {
+          edit: (fieldInstance: any) => {
+            // Log the current LaTeX value on each edit
+            console.log('Test MathQuill LaTeX:', fieldInstance.latex());
+          },
+        },
+      });
+      // Set an initial LaTeX value for testing
+      testMathField.latex('E = mc^2');
+    } else {
+      console.error('Test MathQuill field not found.');
+    }
   }
 
   assignSorts(sorts: QueryList<MatSort>): void {
@@ -103,20 +122,17 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
 
   onEdit(exercise: any, theme: Theme): void {
     const dialogRef = this.dialog.open(EditDialogComponent, {
-      width: '500px',
       data: { exercise },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Update the exercise in the table's data using the correct identifier
         const data = theme.exercises?.data;
         if (data) {
           const index = data.findIndex((ex: any) => ex.exercise_id === result.exercise_id);
           if (index !== -1) {
             data[index] = result;
             theme.exercises!.data = data;
-            // Refresh the table display
             theme.exercises!._updateChangeSubscription();
           }
         }
@@ -132,17 +148,14 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
-        // Use exercise.exercise_id instead of exercise.id
         this.adminService.deleteExercise(exercise.exercise_id).subscribe(
           () => {
-            // Remove the exercise from the table's data
             const data = theme.exercises?.data;
             if (data) {
               const index = data.findIndex((ex: any) => ex.exercise_id === exercise.exercise_id);
               if (index > -1) {
                 data.splice(index, 1);
                 theme.exercises!.data = data;
-                // Refresh the table display
                 theme.exercises!._updateChangeSubscription();
               }
             }
