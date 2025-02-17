@@ -65,7 +65,7 @@ export class EditDialogComponent implements AfterViewInit {
     }
     // Initialize the MathQuill field on the container element
     this.mathField = this.MQ.MathField(this.mathFieldContainer.nativeElement, {
-      spaceBehavesLikeTab: true,
+      spaceBehavesLikeTab: false,
       supSubsRequireOperand: true,
       maxDepth: 1,
       handlers: {

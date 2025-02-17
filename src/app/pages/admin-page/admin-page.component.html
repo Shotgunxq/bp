@@ -14,8 +14,10 @@
         <table mat-table [dataSource]="theme.exercises" matSort class="mat-elevation-z8">
           <!-- Description Column -->
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-            <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="description-col">Description</th>
+            <td mat-cell *matCellDef="let element" class="description-col">
+              <p [mathjax]="'$' + element.description + '$'"></p>
+            </td>
           </ng-container>
 
           <!-- Correct Answer Column -->
@@ -55,12 +57,4 @@
       <p *ngIf="!theme.exercises && !theme.isLoading && !theme.errorMessage">No exercises available for this theme.</p>
     </mat-tab>
   </mat-tab-group>
-
-  <!-- Test MathQuill Area -->
-  <div class="test-area" style="margin-top: 20px">
-    <h3>Test MathQuill Editor</h3>
-    <div id="test-math-field" style="min-height: 40px; border: 1px solid rgb(0, 0, 0); padding: 8px; cursor: text"></div>
-  </div>
-
-  <button #testFuck>Test Button</button>
 </div>
