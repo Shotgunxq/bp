@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,8 +6,8 @@ import { ApiService } from '../../services/apiServices';
 import { AdminService } from '../../services/adminServices';
 import { ConfirmDialogComponent } from './adminDialog/confirm-dialog.component';
 import { EditDialogComponent } from './adminDialog/edit-dialog.component';
-
-import * as $ from 'jquery';
+import { AdminNewExerciseComponent } from './adminDialog/admin-new-exercise/admin-new-exercise.component';
+import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service'; // <-- Import the service
 
 declare var MathJax: any;
 
@@ -30,25 +30,28 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['description', 'correct_answer', 'points', 'actions'];
 
   @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
-  @ViewChild('testFuck', { static: true }) testFuck?: ElementRef;
 
   constructor(
     private apiService: ApiService,
     private adminService: AdminService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private adminExerciseDialogService: AdminExerciseDialogService // <-- Inject here
   ) {}
 
   ngOnInit(): void {
     this.fetchThemes();
+
+    // Subscribe to the dialog trigger event from the service
+    this.adminExerciseDialogService.adminDialogTriggered$.subscribe(() => {
+      this.openExerciseDialog();
+    });
   }
 
   ngAfterViewInit(): void {
-    // Reassign sorting when changes occur
     this.sorts.changes.subscribe((sorts: QueryList<MatSort>) => {
       this.assignSorts(sorts);
     });
 
-    // Initialize MathJax
     MathJax.Hub.Config({
       tex2jax: {
         inlineMath: [
@@ -164,5 +167,18 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
 
   trackByThemeId(index: number, theme: Theme): number {
     return theme.theme_id;
+  }
+
+  openExerciseDialog(): void {
+    const dialogRef = this.dialog.open(AdminNewExerciseComponent, {
+      width: '400px',
+      data: { inputValue: '' },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Admin Dialog Result:', result);
+      }
+    });
   }
 }

@@ -52,6 +52,7 @@ import { ConfirmDialogComponent } from './pages/admin-page/adminDialog/confirm-d
 import { MatDialogActions } from '@angular/material/dialog';
 import { MatDialogContent } from '@angular/material/dialog';
 import { EditDialogComponent } from './pages/admin-page/adminDialog/edit-dialog.component';
+import { AdminNewExerciseComponent } from './pages/admin-page/adminDialog/admin-new-exercise/admin-new-exercise.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { EditDialogComponent } from './pages/admin-page/adminDialog/edit-dialog.
     DataTableComponent,
     ConfirmDialogComponent,
     EditDialogComponent,
+    AdminNewExerciseComponent,
   ],
   imports: [
     MathjaxModule.forRoot(),

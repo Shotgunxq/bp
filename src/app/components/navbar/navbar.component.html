@@ -12,6 +12,10 @@
     </div>
   </div>
 
+  <div class="admin-buttons" *ngIf="isAdminRoute">
+    <button mat-button (click)="triggerExerciseDialog()">Open Admin Dialog</button>
+  </div>
+
   <!-- Logout and Settings Buttons -->
   <div class="holder">
     <button id="logout" mat-button (click)="logout()">Logout</button>
