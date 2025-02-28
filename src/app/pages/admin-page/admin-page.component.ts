@@ -52,17 +52,17 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
       this.assignSorts(sorts);
     });
 
-    MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [
-          ['$', '$'],
-          ['\\(', '\\)'],
-        ],
-      },
-      CommonHTML: { linebreaks: { automatic: true } },
-      'HTML-CSS': { linebreaks: { automatic: true } },
-      SVG: { linebreaks: { automatic: true } },
-    });
+    // MathJax.Hub.Config({
+    //   tex2jax: {
+    //     inlineMath: [
+    //       ['$', '$'],
+    //       ['\\(', '\\)'],
+    //     ],
+    //   },
+    //   CommonHTML: { linebreaks: { automatic: true } },
+    //   'HTML-CSS': { linebreaks: { automatic: true } },
+    //   SVG: { linebreaks: { automatic: true } },
+    // });
   }
 
   assignSorts(sorts: QueryList<MatSort>): void {
@@ -171,13 +171,14 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
 
   openExerciseDialog(): void {
     const dialogRef = this.dialog.open(AdminNewExerciseComponent, {
-      width: '400px',
-      data: { inputValue: '' },
+      width: '800px',
+      data: { theme_id: /* you can pass the current theme id if needed */ '' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Admin Dialog Result:', result);
+        // Here you can update your UI with the newly created exercise.
       }
     });
   }

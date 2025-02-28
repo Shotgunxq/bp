@@ -23,4 +23,8 @@ export class AdminService {
     // Use exercise.exercise_id when updating
     return this.http.put<any>(`${this.baseUrl}/exercises/${exercise.exercise_id}`, exercise);
   }
+
+  createExercise(exercise: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/admin/exercises`, exercise);
+  }
 }

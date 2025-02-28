@@ -46,14 +46,15 @@ import { ChikvadrantComponent } from './components/graphs/chikvadrant/chikvadran
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { DataTableComponent } from './components/tables/data-table/data-table.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ConfirmDialogComponent } from './pages/admin-page/adminDialog/confirm-dialog.component';
 import { MatDialogActions } from '@angular/material/dialog';
 import { MatDialogContent } from '@angular/material/dialog';
 import { EditDialogComponent } from './pages/admin-page/adminDialog/edit-dialog.component';
 import { AdminNewExerciseComponent } from './pages/admin-page/adminDialog/admin-new-exercise/admin-new-exercise.component';
-
+import { MatOptionModule } from '@angular/material/core';
+import { MatOption } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
@@ -72,7 +73,6 @@ import { AdminNewExerciseComponent } from './pages/admin-page/adminDialog/admin-
     ChikvadrantComponent,
     SidenavComponent,
     AdminPageComponent,
-    DataTableComponent,
     ConfirmDialogComponent,
     EditDialogComponent,
     AdminNewExerciseComponent,
@@ -109,6 +109,9 @@ import { AdminNewExerciseComponent } from './pages/admin-page/adminDialog/admin-
     MatTabsModule,
     MatDialogActions,
     MatDialogContent,
+    MatOptionModule,
+    MatOption,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
