@@ -55,6 +55,7 @@ import { AdminNewExerciseComponent } from './pages/admin-page/adminDialog/admin-
 import { MatOptionModule } from '@angular/material/core';
 import { MatOption } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { StatisticsComponent } from './components/tables/admin-stats-table/admin-stats-table.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,6 +77,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ConfirmDialogComponent,
     EditDialogComponent,
     AdminNewExerciseComponent,
+    StatisticsComponent,
   ],
   imports: [
     MathjaxModule.forRoot(),

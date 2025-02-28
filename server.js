@@ -349,3 +349,28 @@ app.post('/admin/exercises', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.get('/admin/statistics', async (req, res) => {
+  try {
+    const query = `
+       SELECT 
+  CONCAT(u.first_name, ' ', u.last_name) AS full_name,
+  ts.points_scored,
+  ts.submitted_at AS submission_date,
+  t.exercises AS test_exercises,
+  COALESCE((
+    SELECT SUM((ex ->> 'points')::int)
+    FROM jsonb_array_elements(t.exercises) AS ex
+  ), 0) AS max_points
+FROM Test_Submissions ts
+JOIN Users u ON ts.user_id = u.user_id
+JOIN Tests t ON ts.test_id = t.test_id
+ORDER BY ts.submitted_at DESC;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
