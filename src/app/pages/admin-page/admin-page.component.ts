@@ -9,6 +9,8 @@ import { EditDialogComponent } from './adminDialog/edit-dialog.component';
 
 import * as $ from 'jquery';
 
+declare var MathJax: any;
+
 interface Theme {
   theme_id: number;
   theme_name: string;
@@ -46,30 +48,18 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
       this.assignSorts(sorts);
     });
 
-    // Example: Using jQuery on testFuck button (if needed)
-    $.default(this.testFuck?.nativeElement).on('click', () => {
-      alert('Test button clicked');
+    // Initialize MathJax
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [
+          ['$', '$'],
+          ['\\(', '\\)'],
+        ],
+      },
+      CommonHTML: { linebreaks: { automatic: true } },
+      'HTML-CSS': { linebreaks: { automatic: true } },
+      SVG: { linebreaks: { automatic: true } },
     });
-
-    // Initialize Test MathQuill Field
-    const testMathFieldElement = document.getElementById('test-math-field');
-    if (testMathFieldElement) {
-      // Get MathQuill's interface from the global window object
-      const MQ = (window as any).MathQuill.getInterface(2);
-      const testMathField = MQ.MathField(testMathFieldElement, {
-        spaceBehavesLikeTab: true,
-        handlers: {
-          edit: (fieldInstance: any) => {
-            // Log the current LaTeX value on each edit
-            console.log('Test MathQuill LaTeX:', fieldInstance.latex());
-          },
-        },
-      });
-      // Set an initial LaTeX value for testing
-      testMathField.latex('E = mc^2');
-    } else {
-      console.error('Test MathQuill field not found.');
-    }
   }
 
   assignSorts(sorts: QueryList<MatSort>): void {
@@ -118,6 +108,10 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
         }
       );
     }
+    setTimeout(() => {
+      const container = document.querySelector('.description-col');
+      MathJax.typesetPromise([container]).catch((err: any) => console.error(err));
+    }, 100);
   }
 
   onEdit(exercise: any, theme: Theme): void {

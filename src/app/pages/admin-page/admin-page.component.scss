@@ -61,3 +61,31 @@ mjx-container * {
 .description-col .mathjax-wrapper {
   overflow-x: hidden !important;
 }
+.description-col,
+.description-col * {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+::ng-deep mjx-container,
+::ng-deep mjx-container * {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+}
+::ng-deep mjx-container {
+  transform: none !important;
+  /* Ensure natural block behavior */
+  display: block !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+}
+.mathjax-content {
+  width: 100%;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-all !important;
+}
