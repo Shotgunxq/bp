@@ -1,17 +1,24 @@
 <mat-toolbar [ngClass]="{ navbar: true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
-  <!-- Back button for non-menu routes -->
-  <div class="left-content" *ngIf="!isMenuRoute">
-    <mat-icon fontIcon="arrow_back" (click)="navigateToMenu()" class="back-arrow"></mat-icon>
+  <!-- Back Button -->
+  <button mat-icon-button *ngIf="showBackButton" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <!-- Typewriter Animation -->
+  <div class="typewriter" *ngIf="isMenuRoute">
+    <div class="typewriter-wrapper">
+      <span>Welcome</span>
+      <span *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
+    </div>
   </div>
 
-  <!-- Typewriter effect for menu route -->
-  <div class="typewriter" *ngIf="isMenuRoute">
-    <span>Welcome</span>
+  <div class="admin-buttons" *ngIf="isAdminRoute">
+    <button mat-button (click)="triggerExerciseDialog()">Pridať novú úlohu</button>
+  </div>
 
-    <!-- Display the username if it exists and showTypewriter is true -->
-    <span *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
-
-    <!-- Logout button -->
-    <button mat-button (click)="logout()">Logout</button>
+  <!-- Logout and Settings Buttons -->
+  <div class="holder">
+    <button id="logout" mat-button (click)="logout()">Logout</button>
+    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" (click)="toggleSidenav.emit()" />
   </div>
 </mat-toolbar>

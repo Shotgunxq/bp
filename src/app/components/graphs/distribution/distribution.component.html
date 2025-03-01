@@ -1,0 +1,35 @@
+<form class="row g-3">
+  <!-- Number of Trials (n) -->
+  <div class="col-md-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Number of Trials (n)</mat-label>
+      <input matInput type="number" [(ngModel)]="n" [ngModelOptions]="{ standalone: true }" (input)="updateBinomialChart()" min="1" />
+    </mat-form-field>
+  </div>
+
+  <!-- Probability (p) -->
+  <div class="col-md-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Probability (p)</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="p"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="updateBinomialChart()"
+        step="0.01"
+        min="0"
+        max="1" />
+    </mat-form-field>
+  </div>
+</form>
+
+<!-- Chart Display -->
+<div class="mt-4">
+  <apx-chart
+    [series]="chartOptions.series || []"
+    [chart]="chartOptions.chart || { type: 'line' }"
+    [title]="chartOptions.title || {}"
+    [xaxis]="chartOptions.xaxis || {}"
+    [yaxis]="chartOptions.yaxis || {}"></apx-chart>
+</div>

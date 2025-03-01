@@ -1,0 +1,59 @@
+<h2 mat-dialog-title>Pridanie novej úlohy</h2>
+<mat-dialog-content>
+  <form [formGroup]="exerciseForm">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Téma</mat-label>
+      <mat-select formControlName="theme_id">
+        <mat-option *ngFor="let theme of themes" [value]="theme.theme_id">
+          {{ theme.theme_name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Difficulty Level Dropdown -->
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Ťažkosť</mat-label>
+        <mat-select formControlName="difficulty_level">
+          <mat-option *ngFor="let level of difficultyLevels" [value]="level.value">
+            {{ level.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Description Input -->
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Popis úlohy</mat-label>
+        <textarea matInput formControlName="description" rows="5"></textarea>
+      </mat-form-field>
+    </div>
+
+    <!-- Image Checkbox -->
+    <div class="form-row">
+      <mat-checkbox formControlName="image">Obsahuje obrázok?</mat-checkbox>
+    </div>
+
+    <!-- Points Input -->
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Body</mat-label>
+        <input matInput formControlName="points" type="number" />
+      </mat-form-field>
+    </div>
+
+    <!-- Correct Answer Input -->
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Správna odpoveď</mat-label>
+        <input matInput formControlName="correct_answer" />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Close</button>
+  <button mat-button color="primary" (click)="onConfirm()" [disabled]="!exerciseForm.valid">Confirm</button>
+</mat-dialog-actions>

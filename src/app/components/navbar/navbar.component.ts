@@ -1,51 +1,70 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { navbarService } from '../../services/navbarService';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ApiService } from '../../services/apiServices';
+import { navbarService } from '../../services/navbarService';
+import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service'; // <-- Import here
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
+  @Output() toggleSidenav = new EventEmitter<void>();
+  @Output() openExerciseDialogEvent = new EventEmitter<void>(); // NEW event emitter
+
   username: string | null = '';
-  showTypewriter = false;
   isMenuRoute = false;
+  showBackButton = false;
+  isAdminRoute = false;
 
   constructor(
     private navbarService: navbarService,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private adminExerciseDialogService: AdminExerciseDialogService // <-- Inject here
   ) {}
 
   ngOnInit() {
     const user = this.apiService.getUserFromStorage();
     if (user) {
-      this.username = `${user.givenName}`;
-      console.log('User found in storage:', this.username);
-      this.navbarService.setUsername(this.username);
+      this.username = user.givenName;
+      this.navbarService.setUsername(this.username!);
     }
 
-    // Watch for route changes
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
+    // Subscribe to route changes and filter for NavigationEnd
+    this.router.events.pipe(filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.isMenuRoute = event.urlAfterRedirects === '/menu';
+      this.showBackButton = !this.isMenuRoute; // Show Back button if not on /menu
+      console.log('Route:', event.urlAfterRedirects, 'isMenuRoute:', this.isMenuRoute);
+      this.isAdminRoute = event.urlAfterRedirects.startsWith('/admin');
     });
 
-    // Listen for username changes dynamically
+    // Listen for username updates dynamically
     this.navbarService.currentUsername$.subscribe(name => {
       if (name) {
         this.username = name;
       }
     });
   }
-  navigateToMenu() {
-    this.router.navigate(['/menu']);
+
+  toggleSidenavMenu() {
+    this.toggleSidenav.emit();
+  }
+
+  goBack() {
+    this.router.navigate(['/menu']); // Always navigate to /menu
   }
 
   logout() {
     this.apiService.clearUserSession();
-    this.navbarService.setUsername(''); // Clear navbar username
-    this.router.navigate(['/login']); // Redirect to login
+    this.navbarService.setUsername('');
+    this.router.navigate(['/login']);
+  }
+
+  triggerExerciseDialog() {
+    // Trigger the dialog via the shared service
+    this.adminExerciseDialogService.triggerAdminDialog();
   }
 }

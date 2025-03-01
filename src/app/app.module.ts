@@ -29,19 +29,36 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatStepper } from '@angular/material/stepper';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatCheckboxModule }from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MathjaxModule } from 'mathjax-angular';
 
-import { MathjaxModule } from "mathjax-angular";
-
-import { NgApexchartsModule } from "ng-apexcharts";
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { DensityComponent } from './components/graphs/density/density.component';
+import { DistributionComponent } from './components/graphs/distribution/distribution.component';
+import { PoissonComponent } from './components/graphs/poisson/poisson.component';
+import { StudentovoComponent } from './components/graphs/studentovo/studentovo.component';
+import { ChikvadrantComponent } from './components/graphs/chikvadrant/chikvadrant.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSortModule } from '@angular/material/sort';
+import { ConfirmDialogComponent } from './pages/admin-page/adminDialog/confirm-dialog.component';
+import { MatDialogActions } from '@angular/material/dialog';
+import { MatDialogContent } from '@angular/material/dialog';
+import { EditDialogComponent } from './pages/admin-page/adminDialog/edit-dialog.component';
+import { AdminNewExerciseComponent } from './pages/admin-page/adminDialog/admin-new-exercise/admin-new-exercise.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatOption } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { StatisticsComponent } from './components/tables/admin-stats-table/admin-stats-table.component';
 @NgModule({
   declarations: [
     AppComponent,
-    
     LoginModalComponent,
     MenuPageComponent,
     TestCreationComponent,
@@ -50,6 +67,17 @@ import { NgApexchartsModule } from "ng-apexcharts";
     TestDoneComponent,
     TestWritingComponent,
     NavbarComponent,
+    DensityComponent,
+    DistributionComponent,
+    PoissonComponent,
+    StudentovoComponent,
+    ChikvadrantComponent,
+    SidenavComponent,
+    AdminPageComponent,
+    ConfirmDialogComponent,
+    EditDialogComponent,
+    AdminNewExerciseComponent,
+    StatisticsComponent,
   ],
   imports: [
     MathjaxModule.forRoot(),
@@ -63,6 +91,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
     MatExpansionModule,
     MatDividerModule,
     NgbModule,
+    MatSidenavModule,
     AppRoutingModule,
     FormsModule, // Add FormsModule to imports
     HttpClientModule, // Add HttpClientModule to imports
@@ -72,11 +101,19 @@ import { NgApexchartsModule } from "ng-apexcharts";
     NoopAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSortModule,
     ReactiveFormsModule,
     MatInputModule,
     MatFormFieldModule,
     MatStepperModule,
     NgApexchartsModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatDialogActions,
+    MatDialogContent,
+    MatOptionModule,
+    MatOption,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

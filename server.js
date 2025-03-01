@@ -80,26 +80,6 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-// Fetch random exercises by difficulty
-// app.get('/test/api', async (req, res) => {
-//   try {
-//     const { easy, medium, hard } = req.query;
-
-//     const easyQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['easy', parseInt(easy, 10)]);
-//     const mediumQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['medium', parseInt(medium, 10)]);
-//     const hardQuery = db.query('SELECT * FROM exercises WHERE difficulty_level = $1 ORDER BY RANDOM() LIMIT $2', ['hard', parseInt(hard, 10)]);
-
-//     const [easyResult, mediumResult, hardResult] = await Promise.all([easyQuery, mediumQuery, hardQuery]);
-
-//     const allExercises = [...easyResult.rows, ...mediumResult.rows, ...hardResult.rows];
-
-//     res.json({ exercises: allExercises });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send(err);
-//   }
-// });
-
 app.get('/themes', async (req, res) => {
   try {
     // const themesQuery = 'SELECT theme_id, theme_name FROM themes WHERE theme_id != 0';
@@ -152,6 +132,100 @@ app.get('/test/api', async (req, res) => {
     res.json({ exercises: allExercises });
   } catch (err) {
     console.error('Error in /test/api:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/themes/:theme_id/exercises', async (req, res) => {
+  try {
+    const { theme_id } = req.params;
+
+    if (!theme_id) {
+      return res.status(400).json({ error: 'theme_id is required' });
+    }
+
+    // Query to fetch all exercises for the given theme_id
+    const exercisesQuery = `
+      SELECT * 
+      FROM exercises 
+      WHERE theme_id = $1
+    `;
+    const exercisesResult = await db.query(exercisesQuery, [parseInt(theme_id, 10)]);
+
+    if (exercisesResult.rows.length === 0) {
+      return res.status(404).json({ error: 'No exercises found for the selected theme.' });
+    }
+
+    res.json({ exercises: exercisesResult.rows });
+  } catch (err) {
+    console.error('Error fetching exercises for theme:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.delete('/exercises/:exercise_id', async (req, res) => {
+  try {
+    const { exercise_id } = req.params;
+
+    if (!exercise_id) {
+      return res.status(400).json({ error: 'exercise_id is required' });
+    }
+
+    // Query to fetch all exercises for the given exercise_id
+    const exercisesQuery = `
+      SELECT * 
+      FROM exercises 
+      WHERE exercise_id = $1
+    `;
+    const exercisesResult = await db.query(exercisesQuery, [exercise_id]);
+
+    if (exercisesResult.rows.length === 0) {
+      return res.status(404).json({ error: 'No exercises found for the selected theme.' });
+    }
+
+    res.json({ exercises: exercisesResult.rows });
+  } catch (err) {
+    console.error('Error deleting exercise with id:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/exercises/:exercise_id', async (req, res) => {
+  try {
+    const { exercise_id } = req.params;
+    if (!exercise_id) {
+      return res.status(400).json({ error: 'exercise_id is required' });
+    }
+
+    // Extract fields to update from the request body
+    const { description, correct_answer, points } = req.body;
+
+    // Optionally validate that at least one field is provided
+    if (description === undefined && correct_answer === undefined && points === undefined) {
+      return res.status(400).json({ error: 'At least one field must be provided for update.' });
+    }
+
+    // Construct the UPDATE query using COALESCE to update only the provided fields
+    const updateQuery = `
+      UPDATE exercises
+      SET 
+        description = COALESCE($1, description),
+        correct_answer = COALESCE($2, correct_answer),
+        points = COALESCE($3, points)
+      WHERE exercise_id = $4
+      RETURNING *;
+    `;
+    const values = [description, correct_answer, points, exercise_id];
+
+    const updateResult = await db.query(updateQuery, values);
+
+    if (updateResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Exercise not found.' });
+    }
+
+    res.json({ updatedExercise: updateResult.rows[0] });
+  } catch (err) {
+    console.error('Error updating exercise:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -244,4 +318,59 @@ app.get('/api/test/:test_id', async (req, res) => {
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+// POST /exercises - Create a new exercise with auto-assigned theme_id
+app.post('/admin/exercises', async (req, res) => {
+  try {
+    // Destructure theme_id along with the other fields from the request body.
+    const { theme_id, difficulty_level, description, image, points, correct_answer } = req.body;
+
+    // Validate required fields including theme_id.
+    if (!theme_id || !difficulty_level || !description || points === undefined || !correct_answer) {
+      return res.status(400).json({ error: 'Missing required fields: theme_id, difficulty_level, description, points, correct_answer' });
+    }
+
+    // Process image: if the image field is falsy, set to null.
+    const imageValue = image ? image : null;
+
+    // Build the INSERT query using the provided theme_id.
+    const insertQuery = `
+      INSERT INTO exercises (theme_id, difficulty_level, description, image, points, correct_answer)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *;
+    `;
+    const values = [theme_id, difficulty_level, description, imageValue, points, correct_answer];
+
+    const result = await db.query(insertQuery, values);
+    res.status(201).json({ exercise: result.rows[0] });
+  } catch (error) {
+    console.error('Error creating new exercise:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/admin/statistics', async (req, res) => {
+  try {
+    const query = `
+       SELECT 
+  CONCAT(u.first_name, ' ', u.last_name) AS full_name,
+  ts.points_scored,
+  ts.submitted_at AS submission_date,
+  t.exercises AS test_exercises,
+  COALESCE((
+    SELECT SUM((ex ->> 'points')::int)
+    FROM jsonb_array_elements(t.exercises) AS ex
+  ), 0) AS max_points
+FROM Test_Submissions ts
+JOIN Users u ON ts.user_id = u.user_id
+JOIN Tests t ON ts.test_id = t.test_id
+ORDER BY ts.submitted_at DESC;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });

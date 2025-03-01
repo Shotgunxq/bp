@@ -1,0 +1,91 @@
+.section {
+  margin-top: 1.8%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  background-color: white;
+  width: 80%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+table.mat-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+table.mat-table th,
+table.mat-table td {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.description-col {
+  max-width: 50%; /* Adjust as needed */
+  white-space: normal;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+/* Force MathJax output to wrap and not cause horizontal scrolling */
+mjx-container,
+mjx-container * {
+  width: auto !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+  display: block !important;
+}
+
+/* Specific override for your table cells */
+.description-col .mathjax-wrapper mjx-container,
+.description-col .mathjax-wrapper mjx-container * {
+  width: auto !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+  display: block !important;
+}
+
+/* Prevent horizontal scrolling in the wrapper */
+.description-col .mathjax-wrapper {
+  overflow-x: hidden !important;
+}
+.description-col,
+.description-col * {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+::ng-deep mjx-container,
+::ng-deep mjx-container * {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+}
+::ng-deep mjx-container {
+  transform: none !important;
+  /* Ensure natural block behavior */
+  display: block !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+}
+.mathjax-content {
+  width: 100%;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-all !important;
+}

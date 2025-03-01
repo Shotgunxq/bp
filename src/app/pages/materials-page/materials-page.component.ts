@@ -1,6 +1,17 @@
 import { Component } from '@angular/core';
 import ApexCharts from 'apexcharts';
-import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexTitleSubtitle, ApexAnnotations } from 'ng-apexcharts';
+import { ChangeDetectorRef } from '@angular/core';
+
+import {
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexYAxis,
+  ApexTitleSubtitle,
+  ApexAnnotations,
+  ApexDataLabels,
+} from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -9,6 +20,8 @@ export type ChartOptions = {
   yaxis: ApexYAxis;
   title: ApexTitleSubtitle;
   annotations?: ApexAnnotations;
+  // Add this line
+  dataLabels: ApexDataLabels; // Add this line
   // regions?: ApexAnnotations;
 };
 @Component({
@@ -17,6 +30,29 @@ export type ChartOptions = {
   styleUrl: './materials-page.component.scss',
 })
 export class MaterialsPageComponent {
+  showPoisson: boolean = false; // Initial state for Poisson
+  showStudentT: boolean = false; // Initial state for Student's t-Distribution
+  showChiSquared: boolean = false; // Initial state for Chi-Squared
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  loadPoisson() {
+    this.showPoisson = true;
+    this.cdr.detectChanges(); // Trigger change detection
+  }
+
+  // Load Student's t-Distribution
+  loadStudentT() {
+    this.showStudentT = true;
+    this.cdr.detectChanges(); // Trigger change detection
+  }
+
+  // Load Chi-Squared Distribution
+  loadChiSquared() {
+    this.showChiSquared = true;
+    this.cdr.detectChanges(); // Trigger change detection
+  }
+
   content =
     '<strong>Podmienená pravdepodobnosť:</strong> Vyjadruje pravdepodobnosť udalosti $A$ za predpokladu, že nastala udalosť $B$, vypočítaná ako $P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}, \\quad \\text{ak } P(B) > 0$';
   content2: string = `<strong>Veta o úplnej pravdepodobnosti:</strong> Používa sa na výpočet pravdepodobnosti udalosti $B$ s využitím rozkladu na množiny $A_i$, kde $P(B) = \sum_{i} P(A_i) \\cdot P(B \mid A_i)$`;
@@ -231,155 +267,4 @@ export class MaterialsPageComponent {
     </ul>
   </li>
 </ul>`;
-
-  public chartOptions!: Partial<ChartOptions>;
-  public densityChartOptions!: Partial<ChartOptions>;
-
-  // Initial parameters
-  public mean = 0;
-  public stdDev = 1;
-  public n = 10;
-  public p = 0.5;
-  highlightX = 10;
-
-  constructor() {
-    this.updateBinomialChart();
-    this.updateDensityChart();
-  }
-
-  // Update the binomial distribution chart
-  updateBinomialChart() {
-    const data = [];
-    const binomialCoefficient = (n: number, k: number): number => {
-      let coeff = 1;
-      for (let i = 0; i < k; i++) {
-        coeff *= (n - i) / (i + 1);
-      }
-      return coeff;
-    };
-
-    const cumulativeDistribution = (k: number): number => {
-      let sum = 0;
-      for (let i = 0; i <= k; i++) {
-        sum += binomialCoefficient(this.n, i) * Math.pow(this.p, i) * Math.pow(1 - this.p, this.n - i);
-      }
-      return parseFloat(sum.toFixed(2)); // Round to 2 decimal places
-    };
-
-    for (let k = 0; k <= this.n; k++) {
-      data.push({ x: k, y: cumulativeDistribution(k) });
-    }
-
-    this.chartOptions = {
-      series: [
-        {
-          name: 'F_X(k)',
-          data: data.map(point => point.y),
-        },
-      ],
-      chart: {
-        height: 350,
-        type: 'line',
-        toolbar: {
-          show: false,
-        },
-      },
-      title: {
-        text: 'Distribučná Funkcia Binomického Rozdelenia',
-        align: 'center',
-      },
-      xaxis: {
-        categories: data.map(point => point.x.toString()),
-        title: {
-          text: 'k',
-        },
-      },
-      yaxis: {
-        title: {
-          text: 'F_X(k)',
-        },
-        min: 0,
-        max: 1,
-      },
-    };
-  }
-
-  // Update the density chart for normal distribution
-  updateDensityChart() {
-    const densityData = [];
-    const normalDensity = (x: number, mean: number, stdDev: number): number => {
-      return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
-    };
-
-    // Generate data for the density function
-    for (let x = -3; x <= 3; x += 0.2) {
-      const roundedX = parseFloat(x.toFixed(1)); // Round x for cleaner labels
-      const roundedY = parseFloat(normalDensity(x, this.mean, this.stdDev).toFixed(2)); // Round y to 3 decimals
-      densityData.push({ x: roundedX, y: roundedY });
-    }
-
-    const highlightX = this.highlightX; // Use the dynamic highlight value
-
-    // Update chart options
-    this.densityChartOptions = {
-      series: [
-        {
-          name: 'f_X(x)',
-          data: densityData.map(point => point.y), // Use density values for the chart
-        },
-      ],
-      chart: {
-        height: 350,
-        type: 'area',
-        toolbar: {
-          show: false,
-        },
-      },
-      title: {
-        text: 'Funkcia Hustoty Pravdepodobnosti Normálneho Rozdelenia',
-        align: 'center',
-      },
-      xaxis: {
-        categories: densityData.map(point => point.x.toString()), // Use rounded x values as categories
-        title: {
-          text: 'x',
-        },
-      },
-      yaxis: {
-        title: {
-          text: 'f_X(x)',
-        },
-        min: 0,
-      },
-      dataLabels: {
-        enabled: true,
-        style: {
-          fontSize: '12px', // Increase font size
-          colors: ['#304758'], // Improve contrast
-        },
-        formatter: (val: number) => val.toFixed(2), // Round to 2 decimals
-      },
-      annotations: {
-        xaxis: [
-          {
-            x: highlightX,
-            borderColor: '#FF4560',
-            strokeDashArray: 10,
-            label: {
-              text: `P(x <= ${highlightX})`,
-              style: {
-                background: '#FF4560',
-                color: '#fff',
-              },
-            },
-          },
-          {
-            x: -4, // Start of the shaded area
-            x2: highlightX, // End of the shaded area
-            fillColor: 'rgba(255, 69, 96, 0.2)', // Light red fill
-          },
-        ],
-      },
-    } as Partial<ChartOptions>;
-  }
 }

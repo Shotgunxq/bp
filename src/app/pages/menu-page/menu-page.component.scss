@@ -13,8 +13,8 @@
 // }
 
 #menu {
-  // max-width: 90%;
-  margin: 5% auto;
+  max-width: 90%;
+  margin: auto;
 }
 
 .custom-button {
@@ -30,7 +30,6 @@
   width: 55%;
   transition: all 0.3s ease-in-out; /* Smooth transition for the hover effect */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Initial shadow */
-
 }
 .custom-button:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* On hover: deeper shadow */
@@ -64,9 +63,11 @@ img:hover {
   transform: scale(1.1); /* Scale the image slightly on hover */
 }
 .scrollable-container {
-  max-height: 100vh; /* Use 100% of the viewport height */
-  overflow-y: auto; /* Enable vertical scrolling */
-  padding-right: 10px; /* Add some padding to prevent overflow clipping */
+  max-height: none; /* Remove the 100vh limitation */
+  height: auto; /* Allow height to grow naturally */
+  overflow-y: visible; /* Allow browser scrollbar to handle scrolling */
+  padding-right: 10px; /* Retain padding if needed */
+  box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
 .mat-grid-list {
