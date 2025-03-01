@@ -5,7 +5,12 @@
     <input matInput placeholder="Search" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
   </mat-form-field>
 </div>
-
+<!-- Header Row -->
+<div class="header-row">
+  <span id="header-name" class="header-cell">Full Name</span>
+  <span id="header-points" class="header-cell">Points</span>
+  <span id="header-date" class="header-cell">Date</span>
+</div>
 <!-- Accordion with paged data -->
 <mat-accordion>
   <mat-expansion-panel *ngFor="let row of pagedStatisticsData" [hideToggle]="!row.test_exercises?.length">
