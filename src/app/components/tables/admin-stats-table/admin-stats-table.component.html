@@ -1,11 +1,21 @@
+<!-- Search Bar -->
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label>Search by name or date</mat-label>
+    <input matInput placeholder="Search" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
+  </mat-form-field>
+</div>
+
+<!-- Accordion with paged data -->
 <mat-accordion>
-  <mat-expansion-panel *ngFor="let row of statisticsData" [hideToggle]="!row.test_exercises?.length">
+  <mat-expansion-panel *ngFor="let row of pagedStatisticsData" [hideToggle]="!row.test_exercises?.length">
     <mat-expansion-panel-header>
       <div class="data-row">
-        <span class="data-cell">{{ row.full_name }}</span>
-        <span class="data-cell">{{ row.points_scored }}</span>
-        <span class="data-cell">{{ row.max_points }}</span>
-        <span class="data-cell">{{ row.submission_date | date: 'short' }}</span>
+        <span id="data-name" class="data-cell">{{ row.full_name }}</span>
+        <span id="data-points-earned" class="data-cell">{{ row.points_scored }}</span>
+        <span id="data-divider" class="data-cell">/</span>
+        <span id="data-maxpoints" class="data-cell">{{ row.max_points }}</span>
+        <span id="data-date" class="data-cell">{{ row.submission_date | date: 'short' }}</span>
       </div>
     </mat-expansion-panel-header>
     <ng-container *ngIf="row.test_exercises?.length">
@@ -27,3 +37,6 @@
     </ng-container>
   </mat-expansion-panel>
 </mat-accordion>
+
+<!-- Paginator (binds to the filtered data length) -->
+<mat-paginator [length]="filteredDataLength" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25]" (page)="onPageChange($event)"></mat-paginator>
