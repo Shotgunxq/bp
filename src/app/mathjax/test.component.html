@@ -1,0 +1,15 @@
+<head>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<h2>Mathjax playground for Angular 6</h2>
+<hr />
+<app-mathjax [content]="mathContent"></app-mathjax>
+
+<br />
+<hr />
+`
+<h4>Type mathjax text here</h4>
+<textarea rows="10" style="width: 100%" [(ngModel)]="mathContent"></textarea>
+<script>
+  window.MathJax = MathJax;
+</script>
