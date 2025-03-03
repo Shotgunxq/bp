@@ -56,8 +56,14 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatOption } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { StatisticsComponent } from './components/tables/admin-stats-table/admin-stats-table.component';
+import { MathjaxComponent } from '../app/mathjax/mathjax.component';
+import { GlobalService } from './mathjax/global.service';
+import { TestComponent } from './mathjax/test.component';
+
 @NgModule({
   declarations: [
+    MathjaxComponent,
+    TestComponent,
     AppComponent,
     LoginModalComponent,
     MenuPageComponent,
@@ -115,7 +121,7 @@ import { StatisticsComponent } from './components/tables/admin-stats-table/admin
     MatOption,
     MatDialogModule,
   ],
-  providers: [],
+  providers: [GlobalService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
