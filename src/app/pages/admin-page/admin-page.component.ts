@@ -51,18 +51,6 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
     this.sorts.changes.subscribe((sorts: QueryList<MatSort>) => {
       this.assignSorts(sorts);
     });
-
-    // MathJax.Hub.Config({
-    //   tex2jax: {
-    //     inlineMath: [
-    //       ['$', '$'],
-    //       ['\\(', '\\)'],
-    //     ],
-    //   },
-    //   CommonHTML: { linebreaks: { automatic: true } },
-    //   'HTML-CSS': { linebreaks: { automatic: true } },
-    //   SVG: { linebreaks: { automatic: true } },
-    // });
   }
 
   assignSorts(sorts: QueryList<MatSort>): void {
@@ -103,6 +91,13 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
           if (sortInstance) {
             theme.exercises.sort = sortInstance;
           }
+          // Trigger MathJax typesetting after the data has been rendered
+          // setTimeout(() => {
+          //   const container = document.querySelector('.description-col');
+          //   if (container) {
+          //     MathJax.Hub.Queue(['Typeset', MathJax.Hub, container]);
+          //   }
+          // }, 100);
         },
         error => {
           console.error('Error fetching exercises:', error);
@@ -111,10 +106,6 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
         }
       );
     }
-    setTimeout(() => {
-      const container = document.querySelector('.description-col');
-      MathJax.typesetPromise([container]).catch((err: any) => console.error(err));
-    }, 100);
   }
 
   onEdit(exercise: any, theme: Theme): void {

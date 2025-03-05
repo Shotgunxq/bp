@@ -1,24 +1,17 @@
-<script type="text/javascript">
-  window.MathJax = {
-    tex: {
-      inlineMath: [
-        ['$', '$'],
-        ['\\(', '\\)'],
-      ],
-      displayMath: [
-        ['$$', '$$'],
-        ['\\[', '\\]'],
-      ],
-      processEscapes: true,
-      linebreaks: { automatic: true, width: 'container' },
+<!-- MathJax 2.x Configuration -->
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.7.7/MathJax.js" async></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
     },
-    options: {
-      ignoreHtmlClass: 'ignore-mathjax',
-      processHtmlClass: 'mathjax-process',
-    },
-  };
+    CommonHTML: { linebreaks: { automatic: true } },
+    'HTML-CSS': { linebreaks: { automatic: true } },
+    SVG: { linebreaks: { automatic: true } }
+  });
 </script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<!-- Load MathJax 2.x from CDN -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML" async></script> -->
 
 <div class="section">
   <mat-tab-group (selectedIndexChange)="onTabChange($event)">
@@ -38,8 +31,10 @@
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="description-col">Description</th>
             <td mat-cell *matCellDef="let element" class="description-col">
-              <p class="mathjax-content" [mathjax]="'$$' + element.description + '$$'"></p>
-              <!-- <div class="mathjax-content" [innerHTML]="'$$' + element.description + '$$'"></div> -->
+              <!-- <p class="mathjax-content" [mathjax]="'$$' + element.description + '$$'"></p> -->
+              <div class="full-width-math">
+                <div class="mathjax-content" [innerHTML]="'$$' + element.description + '$$'"></div>
+              </div>
             </td>
           </ng-container>
 
