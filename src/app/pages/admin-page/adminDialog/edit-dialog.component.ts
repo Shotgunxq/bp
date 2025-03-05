@@ -57,12 +57,20 @@ export class EditDialogComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     // Get MathQuill's interface (version 2)
     this.MQ = (window as any).MathQuill.getInterface(2);
-    // Prepare the description text fetched from the API
+
+    // Get the description from the data (or default to an empty string)
     let description = this.data.exercise.description || '';
-    // If the description doesn't start with "\text{", wrap it in \text{...}
-    if (!description.trim().startsWith('\\text{')) {
-      description = `\\text{${description}}`;
+
+    // Check if the description contains a multiline aligned environment
+    if (description.includes('\\begin{aligned}') && description.includes('\\end{aligned}')) {
+      // Remove the \begin{aligned} and \end{aligned} markers
+      description = description.replace(/\\begin\{aligned\}/g, '').replace(/\\end\{aligned\}/g, '');
+      // Replace the line breaks (\\) with a space so the text becomes inline
+      description = description.replace(/\\\\/g, ' ');
+      // Replace all ampersand (&) symbols with a space
+      description = description.replace(/&/g, ' ');
     }
+
     // Initialize the MathQuill field on the container element
     this.mathField = this.MQ.MathField(this.mathFieldContainer.nativeElement, {
       spaceBehavesLikeTab: false,
@@ -70,13 +78,13 @@ export class EditDialogComponent implements AfterViewInit {
       maxDepth: 1,
       handlers: {
         edit: (fieldInstance: any) => {
-          // When the MathQuill field is edited, update the form control.
-          // You might want to remove the \text{...} wrapper before saving, depending on your use case.
+          // Update the form control with the current LaTeX of the MathQuill field.
           this.editForm.patchValue({ description: fieldInstance.latex() });
         },
       },
     });
-    // Set the initial LaTeX value in the MathQuill field
+
+    // Set the processed LaTeX value in the MathQuill field
     this.mathField.latex(description);
   }
 
