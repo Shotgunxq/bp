@@ -27,7 +27,7 @@ interface Theme {
 })
 export class AdminPageComponent implements OnInit, AfterViewInit {
   themes: Theme[] = [];
-  displayedColumns: string[] = ['description', 'correct_answer', 'points', 'actions'];
+  displayedColumns: string[] = ['description', 'correct_answer', 'difficulty_level', 'points', 'actions'];
 
   @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
 
@@ -109,6 +109,10 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
         }
       );
     }
+    setTimeout(() => {
+      const container = document.querySelector('.description-col');
+      MathJax.typesetPromise([container]).catch((err: any) => console.error(err));
+    }, 100);
   }
 
   onEdit(exercise: any, theme: Theme): void {

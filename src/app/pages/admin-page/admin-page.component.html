@@ -29,6 +29,11 @@
             <td mat-cell *matCellDef="let element">{{ element.correct_answer }}</td>
           </ng-container>
 
+          <ng-container matColumnDef="difficulty_level">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Difficulty</th>
+            <td mat-cell *matCellDef="let element">{{ element.difficulty_level }}</td>
+          </ng-container>
+
           <!-- Points Column -->
           <ng-container matColumnDef="points">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Points</th>
