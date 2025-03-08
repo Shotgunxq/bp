@@ -49,11 +49,25 @@ export class AdminNewExerciseComponent implements OnInit {
       }
     );
   }
+  private convertToMultiline(input: string): string {
+    // Split the input text at sentence-ending punctuation (. ? !) followed by a space.
+    const sentences = input.split(/(?<=[.!?])\s+/);
+    // Remove any empty lines
+    const filtered = sentences.filter(sentence => sentence.trim() !== '');
+    // Format each sentence with an ampersand and wrap it with \text{...}
+    const formattedLines = filtered.map(sentence => `& \\text{${sentence.trim()}}`);
+    // Wrap all lines in the aligned environment, joining with LaTeX's line break command (\\)
+    return `\\begin{aligned}\n${formattedLines.join(' \\\\\n')}\n\\end{aligned}`;
+  }
 
   onConfirm(): void {
     if (this.exerciseForm.valid) {
       // Get form values
       const newExercise = this.exerciseForm.value;
+
+      // Automatically convert the description to the multiline LaTeX format
+      newExercise.description = this.convertToMultiline(newExercise.description);
+
       // If image checkbox is false, set image to null
       if (!newExercise.image) {
         newExercise.image = null;

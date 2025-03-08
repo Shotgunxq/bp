@@ -7,7 +7,7 @@ import { AdminService } from '../../services/adminServices';
 import { ConfirmDialogComponent } from './adminDialog/confirm-dialog.component';
 import { EditDialogComponent } from './adminDialog/edit-dialog.component';
 import { AdminNewExerciseComponent } from './adminDialog/admin-new-exercise/admin-new-exercise.component';
-import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service'; // <-- Import the service
+import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service';
 
 declare var MathJax: any;
 
@@ -28,6 +28,7 @@ interface Theme {
 export class AdminPageComponent implements OnInit, AfterViewInit {
   themes: Theme[] = [];
   displayedColumns: string[] = ['description', 'correct_answer', 'points', 'actions'];
+  private shouldTypesetMath: boolean = false;
 
   @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
 
@@ -35,7 +36,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
     private apiService: ApiService,
     private adminService: AdminService,
     private dialog: MatDialog,
-    private adminExerciseDialogService: AdminExerciseDialogService // <-- Inject here
+    private adminExerciseDialogService: AdminExerciseDialogService
   ) {}
 
   ngOnInit(): void {
@@ -91,13 +92,8 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
           if (sortInstance) {
             theme.exercises.sort = sortInstance;
           }
-          // Trigger MathJax typesetting after the data has been rendered
-          // setTimeout(() => {
-          //   const container = document.querySelector('.description-col');
-          //   if (container) {
-          //     MathJax.Hub.Queue(['Typeset', MathJax.Hub, container]);
-          //   }
-          // }, 100);
+          // Set flag so MathJax will typeset in ngAfterViewChecked.
+          this.shouldTypesetMath = true;
         },
         error => {
           console.error('Error fetching exercises:', error);
@@ -122,6 +118,8 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
             data[index] = result;
             theme.exercises!.data = data;
             theme.exercises!._updateChangeSubscription();
+            // Mark that new content has been rendered.
+            this.shouldTypesetMath = true;
           }
         }
       }
@@ -145,6 +143,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
                 data.splice(index, 1);
                 theme.exercises!.data = data;
                 theme.exercises!._updateChangeSubscription();
+                this.shouldTypesetMath = true;
               }
             }
           },
@@ -163,13 +162,14 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
   openExerciseDialog(): void {
     const dialogRef = this.dialog.open(AdminNewExerciseComponent, {
       width: '800px',
-      data: { theme_id: /* you can pass the current theme id if needed */ '' },
+      data: { theme_id: '' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Admin Dialog Result:', result);
         // Here you can update your UI with the newly created exercise.
+        // Optionally set this.shouldTypesetMath = true if new content is added.
       }
     });
   }
