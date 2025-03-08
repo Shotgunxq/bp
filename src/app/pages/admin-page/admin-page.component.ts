@@ -48,9 +48,12 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.sorts.changes.subscribe((sorts: QueryList<MatSort>) => {
-      this.assignSorts(sorts);
-    });
+    setTimeout(() => {
+      const container = document.querySelector('.mathjax-content');
+      if (container) {
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, container]);
+      }
+    }, 3000);
   }
 
   assignSorts(sorts: QueryList<MatSort>): void {
@@ -61,11 +64,13 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
           theme.exercises.sort = sortInstance;
         }
       }
+      setTimeout(() => {
+        const container = document.querySelector('.mathjax-content');
+        if (container) {
+          MathJax.Hub.Queue(['Typeset', MathJax.Hub, container]);
+        }
+      }, 2000);
     });
-    setTimeout(() => {
-      const container = document.querySelector('.mathjax-content');
-      MathJax.typesetPromise([container]).catch((err: any) => console.error(err));
-    }, 100);
   }
 
   fetchThemes(): void {

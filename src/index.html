@@ -6,6 +6,26 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- MathJax 2.x Configuration -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          processEscapes: true
+        },
+        CommonHTML: { linebreaks: { automatic: true } },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+      });
+      // Register a startup hook so we know when MathJax is ready.
+      MathJax.Hub.Register.StartupHook("End", function() {
+        window.MathJaxReady = true;
+        console.log("MathJax v2 is ready");
+      });
+    </script>
+    <!-- Load MathJax v2.x from CDN -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   </head>
   <body>
     <app-root id="zaklad"></app-root>
