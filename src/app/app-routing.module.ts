@@ -9,7 +9,6 @@ import { MaterialsPageComponent } from './pages/materials-page/materials-page.co
 import { TestWritingComponent } from './pages/test-writing/test-writing.component';
 import { AuthGuard } from './auth.guard';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
-import { TestComponent } from './mathjax/test.component';
 
 const routes: Routes = [
   { component: LoginModalComponent, path: '' },
@@ -20,7 +19,6 @@ const routes: Routes = [
   { component: MaterialsPageComponent, path: 'mats', canActivate: [AuthGuard] },
   { component: TestWritingComponent, path: 'test-writing', canActivate: [AuthGuard] },
   { component: AdminPageComponent, path: 'admin' },
-  { component: TestComponent, path: 'mathjax' },
   { path: '**', redirectTo: '' },
 ];
 
