@@ -28,7 +28,6 @@ interface Theme {
 export class AdminPageComponent implements OnInit, AfterViewInit {
   themes: Theme[] = [];
   displayedColumns: string[] = ['description', 'correct_answer', 'points', 'actions'];
-  private shouldTypesetMath: boolean = false;
 
   @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
 
@@ -63,6 +62,10 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
         }
       }
     });
+    setTimeout(() => {
+      const container = document.querySelector('.mathjax-content');
+      MathJax.typesetPromise([container]).catch((err: any) => console.error(err));
+    }, 100);
   }
 
   fetchThemes(): void {
@@ -93,7 +96,6 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
             theme.exercises.sort = sortInstance;
           }
           // Set flag so MathJax will typeset in ngAfterViewChecked.
-          this.shouldTypesetMath = true;
         },
         error => {
           console.error('Error fetching exercises:', error);
@@ -119,7 +121,6 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
             theme.exercises!.data = data;
             theme.exercises!._updateChangeSubscription();
             // Mark that new content has been rendered.
-            this.shouldTypesetMath = true;
           }
         }
       }
@@ -143,7 +144,6 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
                 data.splice(index, 1);
                 theme.exercises!.data = data;
                 theme.exercises!._updateChangeSubscription();
-                this.shouldTypesetMath = true;
               }
             }
           },
@@ -169,7 +169,6 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
       if (result) {
         console.log('Admin Dialog Result:', result);
         // Here you can update your UI with the newly created exercise.
-        // Optionally set this.shouldTypesetMath = true if new content is added.
       }
     });
   }
