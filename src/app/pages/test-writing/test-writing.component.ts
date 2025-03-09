@@ -25,6 +25,9 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   userId: number = 1; // Replace with actual user ID from authentication
   testId: number = 1; // Replace with actual test ID
 
+  // New property to track how many hints have been revealed
+  hintsRevealed: number = 0;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -36,7 +39,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     const stateData = history.state.data;
     this.data = stateData || [];
 
-    this.timeLimit = history.state.timeLimit || '00:30:00'; // Default time limit
+    this.timeLimit = history.state.timeLimit || '00:30:00';
     const savedTimeLeft = localStorage.getItem(this.timerKey);
 
     if (savedTimeLeft) {
@@ -46,14 +49,26 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     }
 
     if (this.data.length > 0) {
-      this.data.forEach((exercise) => {
+      // Initialize each exercise
+      this.data.forEach(exercise => {
         exercise.answerLocked = exercise.answerLocked || false;
-        exercise.points = exercise.points || 0; // Default points if missing
+        exercise.points = exercise.points || 0;
+        // Initialize hintsRevealed if not present
+        if (exercise.hintsRevealed === undefined) {
+          exercise.hintsRevealed = 0;
+        }
       });
 
       const savedExercises = localStorage.getItem(this.exercisesKey);
       if (savedExercises) {
         this.data = JSON.parse(savedExercises);
+
+        // Ensure we still have hintsRevealed even after reloading from local storage
+        this.data.forEach(exercise => {
+          if (exercise.hintsRevealed === undefined) {
+            exercise.hintsRevealed = 0;
+          }
+        });
       }
 
       this.currentExercise = this.data[0];
@@ -122,6 +137,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   saveUserAnswers(): void {
     if (this.currentExercise) {
       this.data[this.currentExerciseIndex].userAnswer = this.userAnswer;
+      // Make sure we keep the updated hintsRevealed
+      this.data[this.currentExerciseIndex].hintsRevealed = this.currentExercise.hintsRevealed;
       localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
     }
   }
@@ -141,6 +158,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
       this.currentExerciseIndex--;
       this.currentExercise = this.data[this.currentExerciseIndex];
+      // DO NOT reset hintsRevealed here
       this.loadUserAnswer();
     }
   }
@@ -150,6 +168,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
       this.currentExerciseIndex++;
       this.currentExercise = this.data[this.currentExerciseIndex];
+      // DO NOT reset hintsRevealed here
       this.loadUserAnswer();
     }
   }
@@ -159,6 +178,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
       this.currentExerciseIndex = index;
       this.currentExercise = this.data[index];
+      // DO NOT reset hintsRevealed here
       this.loadUserAnswer();
     }
   }
@@ -167,6 +187,18 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     if (this.currentExercise) {
       this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
       this.saveUserAnswers();
+    }
+  }
+
+  // New method to reveal the next hint
+  revealHint(): void {
+    if (this.currentExercise && this.currentExercise.hints) {
+      const totalHints = this.currentExercise.hints.length;
+      if (this.currentExercise.hintsRevealed < totalHints) {
+        this.currentExercise.hintsRevealed++;
+        // Save to localStorage so it’s remembered
+        localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
+      }
     }
   }
 
@@ -187,7 +219,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   submitTest(): void {
     let totalPoints = 0;
 
-    this.data.forEach((exercise) => {
+    this.data.forEach(exercise => {
       if (exercise.userAnswer === exercise.answer) {
         totalPoints += exercise.points || 0; // Add points for correct answers
       }
@@ -203,7 +235,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     console.log('Submitting test score with body:', body);
 
     this.apiService.submitTestScore(this.userId, this.testId, totalPoints).subscribe(
-      (response) => {
+      response => {
         console.log('Test submitted successfully:', response);
 
         // Show success notification
@@ -214,7 +246,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
         this.resetTestState();
         this.router.navigate(['/test'], { state: { points: totalPoints } });
       },
-      (error) => {
+      error => {
         console.error('Error submitting test:', error);
 
         // Show error notification
