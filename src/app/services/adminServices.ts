@@ -31,4 +31,16 @@ export class AdminService {
   getStatistics(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/admin/statistics`);
   }
+
+  getSubmissionsOverTime(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/admin/submissions-over-time`);
+  }
+
+  getAvgPercentageScores(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/admin/avg-percentage-scores`);
+  }
+
+  getAvgPointsPerExercise(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/admin/avg-points-per-exercise`);
+  }
 }

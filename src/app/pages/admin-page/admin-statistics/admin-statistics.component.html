@@ -1,0 +1,38 @@
+<div class="section">
+  <app-admin-stats-table></app-admin-stats-table>
+</div>
+<div class="section">
+  <!-- Graph 1: Submissions Over Time -->
+  <h2>Graf Počet odovzdaní testov v čase:</h2>
+  <p>Ukazuje, koľko testov bolo odovzdaných v priebehu času, čo umožňuje sledovať trendy a identifikovať obdobia s vyššou či nižšou aktivitou.</p>
+  <apx-chart
+    [series]="submissionsChartOptions.series || []"
+    [chart]="submissionsChartOptions.chart || { type: 'line' }"
+    [xaxis]="submissionsChartOptions.xaxis || {}"
+    [yaxis]="submissionsChartOptions.yaxis || {}"></apx-chart>
+</div>
+<div class="section">
+  <!-- Graph 2: Average Percentage Score per Test -->
+  <h2>Graf Priemerné bodové skóre na test:</h2>
+  <p>
+    Zobrazuje priemerný počet bodov získaných na jednotlivých testoch, čím pomáha určiť, ktoré testy sú príliš jednoduché alebo naopak príliš náročné.
+  </p>
+  <apx-chart
+    [series]="avgPercentageChartOptions.series || []"
+    [chart]="avgPercentageChartOptions.chart || { type: 'bar' }"
+    [xaxis]="avgPercentageChartOptions.xaxis || {}"
+    [yaxis]="avgPercentageChartOptions.yaxis || {}"></apx-chart>
+</div>
+<div class="section">
+  <!-- Graph 3: Average Points per Exercise -->
+  <h2>Graf Histogram rozloženia bodov:</h2>
+  <p>
+    Ukazuje, ako sú dosiahnuté body rozdelené medzi všetkými odovzdanými testami, čo poskytuje prehľad o frekvencii jednotlivých bodových hodnôt a
+    distribúcii výsledkov.
+  </p>
+  <apx-chart
+    [series]="avgPointsChartOptions.series || []"
+    [chart]="avgPointsChartOptions.chart || { type: 'bar' }"
+    [xaxis]="avgPointsChartOptions.xaxis || {}"
+    [yaxis]="avgPointsChartOptions.yaxis || {}"></apx-chart>
+</div>

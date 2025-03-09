@@ -57,6 +57,7 @@ import { MatOption } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { StatisticsComponent } from './components/tables/admin-stats-table/admin-stats-table.component';
 import { MatCardModule } from '@angular/material/card';
+import { AdminStatisticsComponent } from './pages/admin-page/admin-statistics/admin-statistics.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -79,6 +80,7 @@ import { MatCardModule } from '@angular/material/card';
     EditDialogComponent,
     AdminNewExerciseComponent,
     StatisticsComponent,
+    AdminStatisticsComponent,
   ],
   imports: [
     MatCardModule,

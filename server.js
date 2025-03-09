@@ -405,3 +405,58 @@ app.get('/statistics/:user_id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.get('/admin/submissions-over-time', async (req, res) => {
+  try {
+    const query = `
+SELECT 
+    DATE(submitted_at) AS submission_date,
+    COUNT(*) AS total_submissions
+FROM test_submissions
+GROUP BY DATE(submitted_at)
+ORDER BY submission_date;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/admin/avg-percentage-scores', async (req, res) => {
+  try {
+    const query = `
+SELECT 
+    t.test_id,
+    AVG(ts.points_scored) AS avg_points
+FROM test_scores ts
+JOIN tests t ON t.test_id = ts.test_id
+GROUP BY t.test_id
+ORDER BY t.test_id;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/admin/avg-points-per-exercise', async (req, res) => {
+  try {
+    const query = `
+SELECT 
+    ts.points_scored,
+    COUNT(*) AS frequency
+FROM test_scores ts
+GROUP BY ts.points_scored
+ORDER BY ts.points_scored;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
