@@ -1,34 +1,55 @@
 <div class="container">
-  <div class="mat-elevation-z8" id="table">
-    <table mat-table [dataSource]="dataSource">
-      <!-- Test ID Column -->
-      <ng-container matColumnDef="test_id">
-        <th mat-header-cell *matHeaderCellDef> Test ID </th>
-        <td mat-cell *matCellDef="let element"> {{ element.test_id }} </td>
-      </ng-container>
-
-      <!-- Exercises Column -->
-      <ng-container matColumnDef="exercises">
-        <th mat-header-cell *matHeaderCellDef> Exercises </th>
-        <td mat-cell *matCellDef="let element"> {{ element.exercises | json }} </td>
-      </ng-container>
-
-      <!-- Cas_na_pisanie Column -->
-      <ng-container matColumnDef="cas_na_pisanie">
-        <th mat-header-cell *matHeaderCellDef> Cas na Pisanie </th>
-        <td mat-cell *matCellDef="let element"> {{ element.cas_na_pisanie }} </td>
-      </ng-container>
-
-      <!-- Created_at Column -->
-      <ng-container matColumnDef="created_at">
-        <th mat-header-cell *matHeaderCellDef> Created At </th>
-        <td mat-cell *matCellDef="let element"> {{ element.created_at }} </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of exercises"></mat-paginator>
+  <!-- Header Row -->
+  <div class="header-row">
+    <span class="header-cell">Test ID</span>
+    <span class="header-cell">Points</span>
+    <span class="header-cell">Date</span>
   </div>
+
+  <!-- Accordion for Test Submissions -->
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let test of pagedTests" [hideToggle]="!test.test_exercises?.length">
+      <mat-expansion-panel-header>
+        <div class="data-row">
+          <span class="data-cell">Test ID: {{ test.test_id }}</span>
+          <span class="data-cell">Points: {{ test.points_scored }} / {{ test.max_points }}</span>
+          <span class="data-cell">Date: {{ test.submission_date | date: 'short' }}</span>
+        </div>
+      </mat-expansion-panel-header>
+
+      <!-- Details: List of Exercises -->
+      <ng-container *ngIf="test.test_exercises && test.test_exercises.length">
+        <div *ngFor="let exercise of test.test_exercises" class="exercise-detail">
+          <p>
+            <strong>Description:</strong>
+            {{ exercise.description }}
+          </p>
+          <p>
+            <strong>Correct Answer:</strong>
+            {{ exercise.correct_answer }}
+          </p>
+          <p>
+            <strong>Points:</strong>
+            {{ exercise.points }}
+          </p>
+          <p>
+            <strong>Difficulty:</strong>
+            {{ exercise.difficulty_level }}
+          </p>
+          <p>
+            <strong>Your Answer:</strong>
+            {{ exercise.userAnswer || 'N/A' }}
+          </p>
+        </div>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- Paginator -->
+  <mat-paginator
+    [length]="filteredTests.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25]"
+    (page)="onPageChange($event)"
+    aria-label="Select page of test submissions"></mat-paginator>
 </div>

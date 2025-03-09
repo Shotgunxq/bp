@@ -374,3 +374,34 @@ ORDER BY ts.submitted_at DESC;
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.get('/statistics/:user_id', async (req, res) => {
+  try {
+    // Retrieve and parse the user_id from the URL parameter
+    const userId = parseInt(req.params.user_id, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid user_id parameter' });
+    }
+    const query = `
+      SELECT
+      ts.test_id,
+        ts.points_scored,
+        ts.submitted_at AS submission_date,
+        t.exercises AS test_exercises,
+        COALESCE((
+          SELECT SUM((ex ->> 'points')::int)
+          FROM jsonb_array_elements(t.exercises) ex
+        ), 0) AS max_points
+      FROM test_submissions ts
+      JOIN tests t ON ts.test_id = t.test_id
+      WHERE ts.user_id = $1
+      ORDER BY ts.submitted_at DESC;
+    `;
+
+    const result = await db.query(query, [userId]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics for user:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});

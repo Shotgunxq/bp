@@ -69,4 +69,8 @@ export class ApiService {
   fetchTestData(testId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/api/test/${testId}`);
   }
+
+  getStatistics(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/statistics/${userId}`);
+  }
 }
