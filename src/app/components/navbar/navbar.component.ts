@@ -18,6 +18,7 @@ export class NavbarComponent {
   isMenuRoute = false;
   showBackButton = false;
   isAdminRoute = false;
+  isStatisticsPage: boolean = false;
 
   constructor(
     private navbarService: navbarService,
@@ -47,6 +48,11 @@ export class NavbarComponent {
         this.username = name;
       }
     });
+
+    // Subscribe to router events to determine if the current page is the statistics page
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      this.isStatisticsPage = event.urlAfterRedirects === '/admin/statistics';
+    });
   }
 
   toggleSidenavMenu() {
@@ -54,7 +60,11 @@ export class NavbarComponent {
   }
 
   goBack() {
-    this.router.navigate(['/menu']); // Always navigate to /menu
+    if (this.router.url === '/admin/statistics') {
+      this.router.navigate(['/admin']);
+    } else {
+      this.router.navigate(['/menu']); // Always navigate to /menu
+    }
   }
 
   logout() {

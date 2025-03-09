@@ -8,10 +8,11 @@ export type ChartOptions = {
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
 };
+
 @Component({
   selector: 'app-admin-statistics',
   templateUrl: './admin-statistics.component.html',
-  styleUrl: './admin-statistics.component.scss',
+  styleUrls: ['./admin-statistics.component.scss'],
 })
 export class AdminStatisticsComponent implements OnInit {
   submissionsChartOptions: Partial<ChartOptions> = {};
@@ -28,7 +29,7 @@ export class AdminStatisticsComponent implements OnInit {
 
   loadSubmissionsOverTime() {
     this.adminService.getSubmissionsOverTime().subscribe(data => {
-      // Assume data is formatted as [{ submission_date: '2025-01-01', total_submissions: 10 }, ...]
+      // Expected format: [{ submission_date: '2025-01-01', total_submissions: 10 }, ...]
       const chartData = data.map((item: { submission_date: string; total_submissions: number }) => ({
         x: new Date(item.submission_date),
         y: item.total_submissions,
@@ -44,8 +45,11 @@ export class AdminStatisticsComponent implements OnInit {
 
   loadAvgPercentageScores() {
     this.adminService.getAvgPercentageScores().subscribe(data => {
-      // Assume data is formatted .as [{ test_name: 'Test A', avg_percentage: 78.5 }, ...]
-      const chartData = data.map((item: { test_name: any; avg_percentage: any }) => ({ x: item.test_name, y: item.avg_percentage }));
+      // Expected format: [{ test_name: 'Test A', avg_percentage: 78.5 }, ...]
+      const chartData = data.map((item: { test_name: string; avg_percentage: number }) => ({
+        x: item.test_name,
+        y: item.avg_percentage,
+      }));
       this.avgPercentageChartOptions = {
         series: [{ name: 'Average % Score', data: chartData }],
         chart: { type: 'bar', height: 350 },
@@ -57,14 +61,15 @@ export class AdminStatisticsComponent implements OnInit {
 
   loadAvgPointsPerExercise() {
     this.adminService.getAvgPointsPerExercise().subscribe(data => {
-      // Assume data is formatted as [{ test_name: 'Test A', avg_points_per_exercise: 4.5 }, ...]
-      const chartData = data.map((item: { test_name: any; avg_points_per_exercise: any }) => ({
+      // Expected format: [{ test_name: 'Test A', avg_points_per_exercise: 4.5 }, ...]
+      const chartData = data.map((item: { test_name: string; avg_points_per_exercise: number }) => ({
         x: item.test_name,
         y: item.avg_points_per_exercise,
       }));
       this.avgPointsChartOptions = {
         series: [{ name: 'Avg Points per Exercise', data: chartData }],
-        chart: { type: 'bar', height: 350 },
+        // Use a bar chart since we only have one numeric value per test
+        chart: { type: 'boxPlot', height: 350 },
         xaxis: { title: { text: 'Test' } },
         yaxis: { title: { text: 'Average Points per Exercise' } },
       };
