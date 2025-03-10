@@ -1,0 +1,31 @@
+.section {
+  margin-top: 1.8%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  background-color: white;
+  width: 80%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+button {
+  background-color: whitesmoke;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+@media print {
+  button,
+  hr {
+    display: none;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table,
+  th,
+  td {
+    border: 1px solid #000;
+  }
+}

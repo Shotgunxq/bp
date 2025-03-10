@@ -1,0 +1,103 @@
+<div class="container">
+  <!-- Test Creation Section -->
+  <div class="section">
+    <h1>Test Creation</h1>
+    <div>
+      <h2>Total Exercise Count</h2>
+      <input
+        type="number"
+        placeholder="Počet úloh"
+        (input)="preventNegativeValue($event)"
+        [ngClass]="{
+          'valid-input': validateTotalExerciseCount(),
+          'invalid-input': !validateTotalExerciseCount(),
+        }" />
+    </div>
+
+    <div>
+      <h2>Výber tém</h2>
+      <div *ngFor="let theme of themes">
+        <label>
+          <input type="checkbox" [(ngModel)]="theme.selected" />
+          {{ theme.theme_name }}
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <h2>Typ úloh</h2>
+      <div style="display: flex; gap: 1rem">
+        <div>
+          <span>Ľahké</span>
+          <input type="number" [(ngModel)]="easyCount" placeholder="Počet úloh" [disabled]="!isEasyEnabled" (input)="preventNegativeValue($event)" />
+          <label>
+            <input type="checkbox" [(ngModel)]="isEasyEnabled" />
+            Enable
+          </label>
+        </div>
+        <div>
+          <span>Stredné</span>
+          <input
+            type="number"
+            [(ngModel)]="mediumCount"
+            placeholder="Počet úloh"
+            [disabled]="!isMediumEnabled"
+            (input)="preventNegativeValue($event)" />
+          <label>
+            <input type="checkbox" [(ngModel)]="isMediumEnabled" />
+            Enable
+          </label>
+        </div>
+        <div>
+          <span>Ťažké</span>
+          <input type="number" [(ngModel)]="hardCount" placeholder="Počet úloh" [disabled]="!isHardEnabled" (input)="preventNegativeValue($event)" />
+          <label>
+            <input type="checkbox" [(ngModel)]="isHardEnabled" />
+            Enable
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2>Časový limit</h2>
+      <select [(ngModel)]="selectedTime">
+        <option *ngFor="let time of times" [value]="time">{{ time }} minút</option>
+      </select>
+    </div>
+
+    <button (click)="getData()">Generovať Test</button>
+    <!-- Optional: add a button to export the generated exercises as PDF -->
+    <button (click)="generateExercisesPDF()" *ngIf="exercises.length">Export Generated Exercises to PDF</button>
+  </div>
+
+  <hr />
+
+  <!-- User Statistics Section -->
+  <div class="section">
+    <h1>User Statistics</h1>
+    <button (click)="generateStatisticsPDF()">Export Statistics to PDF</button>
+    <button (click)="printStatistics()">Print Statistics</button>
+
+    <table id="statisticsTable" *ngIf="tests.length">
+      <thead>
+        <tr>
+          <th>Test ID</th>
+          <th>Score</th>
+          <th>Submission Date</th>
+          <th>Exercises</th>
+          <th>Max Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let test of tests">
+          <td>{{ test.testId }}</td>
+          <td>{{ test.score }}</td>
+          <td>{{ test.submissionDate | date: 'shortDate' }}</td>
+          <td>{{ test.exercises | json }}</td>
+          <td>{{ test.maxPoints }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
