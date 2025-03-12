@@ -1,5 +1,4 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ApiService } from '../../services/apiServices';
 import { PdfService } from '../../services/pdf.service';
 
@@ -14,11 +13,8 @@ import { geometricProbabilityRandom } from '../../services/geometricProbability'
   styleUrls: ['./export-page.component.scss'],
 })
 export class ExportPageComponent implements OnInit {
-  // --- For Test Creation ---
+  // For exercise selection
   gridCols: number = 3;
-  times: number[] = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
-  selectedTime: number = 5;
-
   isEasyEnabled: boolean = false;
   isMediumEnabled: boolean = false;
   isHardEnabled: boolean = false;
@@ -30,20 +26,18 @@ export class ExportPageComponent implements OnInit {
   themes: { theme_id: number; theme_name: string; selected: boolean }[] = [];
   exercises: any[] = [];
 
-  // --- For User Statistics ---
+  // For user statistics
   tests: any[] = [];
   filteredTests: any[] = [];
 
   constructor(
     private apiService: ApiService,
-    private pdfService: PdfService,
-    private router: Router
+    private pdfService: PdfService
   ) {}
 
   ngOnInit(): void {
     this.adjustGridCols(window.innerWidth);
     this.fetchThemes();
-    localStorage.clear();
     // Fetch user statistics (using userId=1 for now)
     this.fetchDataFromDatabase();
   }
@@ -92,6 +86,7 @@ export class ExportPageComponent implements OnInit {
     }
 
     const selectedThemes = this.getSelectedThemeIds();
+
     // Generate exercises using your service functions
     const generatedEasy = binomialProbabilityRandom();
     const generatedMedium = hypergeometricProbabilityRandom();
@@ -120,21 +115,11 @@ export class ExportPageComponent implements OnInit {
         this.exercises = [...easy, ...medium, ...hard];
 
         if (this.exercises.length === 0) {
-          alert('No exercises found to create a test.');
+          alert('No exercises found to generate.');
           return;
         }
-
-        const writingTime = `00:${this.selectedTime.toString().padStart(2, '0')}:00`;
-        this.apiService.createTest(this.exercises, writingTime).subscribe(
-          testResponse => {
-            // Optionally export PDF of generated exercises before navigating
-            // this.generateExercisesPDF();
-            this.router.navigate(['/test-writing'], {
-              state: { data: this.exercises, timeLimit: writingTime },
-            });
-          },
-          error => console.error('Error creating test:', error)
-        );
+        // Directly generate the PDF without any routing.
+        this.generateExercisesPDF();
       },
       error => console.error('Error fetching exercises:', error)
     );
@@ -170,7 +155,7 @@ export class ExportPageComponent implements OnInit {
 
   // --- User Statistics Methods ---
   fetchDataFromDatabase(): void {
-    const userId = 1; // Hardcode for now; replace with real logic if needed
+    const userId = 1; // Hardcoded userId; adjust with your real logic if needed.
     this.apiService.getStatistics(userId).subscribe(
       (data: any[]) => {
         console.log('Test data:', data[0]?.testId);
@@ -184,13 +169,12 @@ export class ExportPageComponent implements OnInit {
     );
   }
 
-  // Dummy pagination logic; customize as needed
+  // Dummy pagination logic; customize as needed.
   setPagedTests(): void {
     // Implement your pagination logic here if required.
   }
 
   // --- PDF Generation Methods ---
-  // Export generated exercises to PDF
   generateExercisesPDF(): void {
     const documentDefinition = {
       content: [
@@ -199,7 +183,12 @@ export class ExportPageComponent implements OnInit {
           table: {
             headerRows: 1,
             widths: ['auto', 'auto', '*'],
-            body: [['ID', 'Difficulty', 'Content'], ...this.exercises.map(ex => [ex.id || '-', ex.difficulty_level || '-', ex.content || '-'])],
+            body: [
+              // Table header using proper labels
+              ['Exercise ID', 'Difficulty', 'Description'],
+              // Map the exercises array using the correct keys from the API response
+              ...this.exercises.map(ex => [ex.exercise_id || '-', ex.difficulty_level || '-', ex.description || '-']),
+            ],
           },
         },
       ],
@@ -211,7 +200,6 @@ export class ExportPageComponent implements OnInit {
     this.pdfService.generatePDF(documentDefinition, 'generated-exercises.pdf');
   }
 
-  // Export user statistics (tests) to PDF
   generateStatisticsPDF(): void {
     const documentDefinition = {
       content: [
@@ -241,7 +229,6 @@ export class ExportPageComponent implements OnInit {
     this.pdfService.generatePDF(documentDefinition, 'user-statistics.pdf');
   }
 
-  // Trigger browser print for user statistics
   printStatistics(): void {
     window.print();
   }

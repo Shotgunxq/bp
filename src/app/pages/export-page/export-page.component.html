@@ -1,7 +1,7 @@
 <div class="container">
-  <!-- Test Creation Section -->
+  <!-- Exercise Generation Section -->
   <div class="section">
-    <h1>Test Creation</h1>
+    <h1>Exercise Generation</h1>
     <div>
       <h2>Total Exercise Count</h2>
       <input
@@ -59,15 +59,8 @@
       </div>
     </div>
 
-    <div>
-      <h2>Časový limit</h2>
-      <select [(ngModel)]="selectedTime">
-        <option *ngFor="let time of times" [value]="time">{{ time }} minút</option>
-      </select>
-    </div>
-
-    <button (click)="getData()">Generovať Test</button>
-    <!-- Optional: add a button to export the generated exercises as PDF -->
+    <button (click)="getData()">Generovať cvičenia</button>
+    <!-- Optionally, show an additional button if needed -->
     <button (click)="generateExercisesPDF()" *ngIf="exercises.length">Export Generated Exercises to PDF</button>
   </div>
 
