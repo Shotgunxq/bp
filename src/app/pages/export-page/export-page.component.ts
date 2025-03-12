@@ -201,31 +201,124 @@ export class ExportPageComponent implements OnInit {
   }
 
   generateStatisticsPDF(): void {
-    const documentDefinition = {
-      content: [
-        { text: 'User Statistics', style: 'header' },
-        {
+    // Build the content for the PDF
+    const content: any[] = [{ text: 'User Statistics Report', style: 'header', alignment: 'center', margin: [0, 0, 0, 20] }];
+
+    // Loop over each test from the API response
+    this.tests.forEach(test => {
+      // Test header information
+      content.push({
+        text: `Test ID: ${test.test_id}`,
+        style: 'testHeader',
+        margin: [0, 10, 0, 5],
+      });
+      content.push({
+        columns: [
+          { text: `Score: ${test.points_scored}`, style: 'subHeader' },
+          { text: `Max Points: ${test.max_points}`, style: 'subHeader', alignment: 'right' },
+        ],
+      });
+      content.push({
+        text: `Submission Date: ${new Date(test.submission_date).toLocaleDateString()}`,
+        style: 'subHeader',
+        margin: [0, 0, 0, 10],
+      });
+
+      // Build a table for the exercises in this test if available
+      if (test.test_exercises && test.test_exercises.length > 0) {
+        const tableBody = [];
+        // Table header row
+        tableBody.push([
+          { text: 'Exercise', style: 'tableHeader' },
+          { text: 'Details', style: 'tableHeader' },
+          { text: 'Points', style: 'tableHeader' },
+        ]);
+
+        // Loop over each exercise in the test
+        test.test_exercises.forEach(
+          (
+            ex: {
+              description: string;
+              exercise_id: { toString: () => any };
+              difficulty_level: any;
+              correct_answer: any;
+              answer: any;
+              probability: any;
+              points: { toString: () => any };
+            },
+            idx: number
+          ) => {
+            // Prepare a short description (truncate if too long)
+            let description = ex.description || '';
+            if (description.length > 100) {
+              description = description.substring(0, 100) + '...';
+            }
+            // Build details based on exercise type
+            let details = '';
+            if (ex.exercise_id) {
+              details = `Difficulty: ${ex.difficulty_level}\nCorrect Answer: ${ex.correct_answer}`;
+            } else {
+              details = `Answer: ${ex.answer}\nProbability: ${ex.probability}`;
+            }
+
+            tableBody.push([
+              { text: ex.exercise_id ? ex.exercise_id.toString() : (idx + 1).toString(), margin: [0, 2, 0, 2] },
+              { text: description + '\n' + details, margin: [0, 2, 0, 2] },
+              { text: ex.points ? ex.points.toString() : '-', margin: [0, 2, 0, 2] },
+            ]);
+          }
+        );
+
+        content.push({
           table: {
             headerRows: 1,
-            widths: ['*', 'auto', 'auto', '*', 'auto'],
-            body: [
-              ['Test ID', 'Score', 'Submission Date', 'Exercises', 'Max Points'],
-              ...this.tests.map(test => [
-                test.testId || '-',
-                test.score || '-',
-                test.submissionDate ? new Date(test.submissionDate).toLocaleDateString() : '-',
-                JSON.stringify(test.exercises) || '-',
-                test.maxPoints || '-',
-              ]),
-            ],
+            widths: ['auto', '*', 'auto'],
+            body: tableBody,
           },
-        },
-      ],
+          layout: {
+            fillColor: (rowIndex: number) => (rowIndex === 0 ? '#CCCCCC' : null),
+          },
+          margin: [0, 0, 0, 20],
+        });
+      }
+    });
+
+    // Define the document definition
+    const documentDefinition = {
+      pageMargins: [40, 60, 40, 60],
+      header: {
+        columns: [{ text: 'User Statistics Report', style: 'header', alignment: 'center' }],
+      },
+      footer: (currentPage: number, pageCount: number) => ({
+        text: `${currentPage} / ${pageCount}`,
+        alignment: 'center',
+        margin: [0, 0, 0, 20],
+      }),
+      content: content,
       styles: {
-        header: { fontSize: 22, bold: true, margin: [0, 0, 0, 10] },
+        header: {
+          fontSize: 20,
+          bold: true,
+          margin: [0, 0, 0, 10],
+        },
+        testHeader: {
+          fontSize: 16,
+          bold: true,
+          color: '#2E86C1',
+        },
+        subHeader: {
+          fontSize: 12,
+          margin: [0, 2, 0, 2],
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 12,
+          color: 'black',
+        },
       },
     };
 
+    // Generate the PDF using your PdfService
     this.pdfService.generatePDF(documentDefinition, 'user-statistics.pdf');
   }
 
