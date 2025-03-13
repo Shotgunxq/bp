@@ -38,7 +38,7 @@
               [disabled]="!isEasyEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <input type="checkbox" [(ngModel)]="isEasyEnabled" />
+              <mat-slide-toggle type="checkbox" [(ngModel)]="isEasyEnabled" />
               Enable
             </label>
           </div>
@@ -51,7 +51,7 @@
               [disabled]="!isMediumEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <input type="checkbox" [(ngModel)]="isMediumEnabled" />
+              <mat-slide-toggle type="checkbox" [(ngModel)]="isMediumEnabled" />
               Enable
             </label>
           </div>
@@ -64,7 +64,7 @@
               [disabled]="!isHardEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <input type="checkbox" [(ngModel)]="isHardEnabled" />
+              <mat-slide-toggle type="checkbox" [(ngModel)]="isHardEnabled" />
               Enable
             </label>
           </div>
@@ -72,8 +72,8 @@
       </div>
 
       <div class="buttons">
-        <button (click)="getData()">Generovať cvičenia</button>
-        <button (click)="generateExercisesPDF()" *ngIf="exercises.length">Export do PDF</button>
+        <button mat-raised-button color="primary" (click)="getData()">Generovať ulohy</button>
+        <button mat-raised-button color="primary" (click)="generateExercisesPDF()" *ngIf="exercises.length">Export do PDF</button>
       </div>
     </div>
 
@@ -83,8 +83,8 @@
     <div class="section user-statistics">
       <h1>Štatistiky používateľa</h1>
       <div class="buttons">
-        <button (click)="generateStatisticsPDF()">Export do PDF</button>
-        <button (click)="printStatistics()">Tlačiť</button>
+        <button mat-raised-button color="primary" (click)="generateStatisticsPDF()">Export do PDF</button>
+        <button mat-raised-button color="primary" (click)="printStatistics()">Tlačiť</button>
       </div>
       <div class="table-container" *ngIf="tests.length">
         <table id="statisticsTable">
