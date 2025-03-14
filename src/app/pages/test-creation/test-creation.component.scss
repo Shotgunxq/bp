@@ -1,12 +1,11 @@
 .container {
   max-width: 60%;
-
   margin: 2% auto;
   padding: 20px;
-  max-height: 80%;
   background-color: white;
   border-radius: 40px;
-  overflow-y: auto; /* Always allow vertical scrolling */
+  /* Removed max-height */
+  /* Optionally, remove or change overflow-y as well */
 }
 
 .section {
