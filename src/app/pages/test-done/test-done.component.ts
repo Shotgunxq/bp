@@ -23,6 +23,12 @@ export class TestDoneComponent implements OnInit {
   // Search query for filtering tests (by test_id or submission_date)
   searchQuery: string = '';
 
+  currentSortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+
+  userOverallPercentile: number = 0;
+  userId = 1;
+
   constructor(
     private apiService: ApiService,
     private adminService: AdminService
@@ -30,12 +36,19 @@ export class TestDoneComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchDataFromDatabase();
+    this.apiService.getOverallPercentile(this.userId).subscribe(
+      (response: any) => {
+        this.userOverallPercentile = response.percentile;
+      },
+      error => {
+        console.error('Error fetching overall percentile:', error);
+      }
+    );
   }
 
   fetchDataFromDatabase(): void {
     // Hardcode userId=1 for now (replace with your actual logic as needed)
-    const userId = 1;
-    this.apiService.getStatistics(userId).subscribe(
+    this.apiService.getStatistics(this.userId).subscribe(
       (data: any[]) => {
         console.log('Test data:', data[0].testId);
         // Backend already returns tests for the correct user, so no need to filter here
@@ -77,5 +90,47 @@ export class TestDoneComponent implements OnInit {
     const startIndex = this.pageIndex * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.pagedTests = this.filteredTests.slice(startIndex, endIndex);
+  }
+
+  sortData(column: string): void {
+    // If the same column is clicked, toggle the sort direction
+    if (this.currentSortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Otherwise, set new column and default to ascending order
+      this.currentSortColumn = column;
+      this.sortDirection = 'asc';
+    }
+
+    // Sort the filteredTests based on the selected column and direction
+    this.filteredTests.sort((a, b) => {
+      let aValue, bValue;
+      switch (column) {
+        case 'testId':
+          aValue = a.test_id;
+          bValue = b.test_id;
+          break;
+        case 'points':
+          aValue = a.points_scored;
+          bValue = b.points_scored;
+          break;
+        case 'date':
+          aValue = new Date(a.submission_date).getTime();
+          bValue = new Date(b.submission_date).getTime();
+          break;
+        default:
+          return 0;
+      }
+      // For ascending order
+      if (this.sortDirection === 'asc') {
+        return aValue - bValue;
+      }
+      // For descending order
+      return bValue - aValue;
+    });
+
+    // Reset to the first page after sorting
+    this.pageIndex = 0;
+    this.setPagedTests();
   }
 }

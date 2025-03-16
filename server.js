@@ -353,7 +353,7 @@ app.post('/admin/exercises', async (req, res) => {
 app.get('/admin/statistics', async (req, res) => {
   try {
     const query = `
-       SELECT 
+        SELECT 
   CONCAT(u.first_name, ' ', u.last_name) AS full_name,
   ts.points_scored,
   ts.submitted_at AS submission_date,
@@ -457,6 +457,63 @@ ORDER BY ts.points_scored;
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/percentile/overall/:userId', async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid userId parameter' });
+    }
+
+    // Aggregate total points for each user from test_submissions.
+    const aggregateQuery = `
+      SELECT user_id, SUM(points_scored) AS total_points
+      FROM test_submissions
+      GROUP BY user_id;
+    `;
+    const result = await db.query(aggregateQuery);
+    const totals = result.rows;
+
+    if (totals.length === 0) {
+      return res.status(404).json({ error: 'No submissions found' });
+    }
+
+    // Find the total points for the current user.
+    const userRecord = totals.find(record => parseInt(record.user_id) === userId);
+    if (!userRecord) {
+      return res.status(404).json({ error: 'User has no submissions' });
+    }
+    const userTotal = parseInt(userRecord.total_points, 10);
+
+    // Count how many users have total_points less than or equal to the user's total.
+    const countBelowOrEqual = totals.filter(record => parseInt(record.total_points, 10) <= userTotal).length;
+
+    // Calculate the percentile rank.
+    const percentile = (countBelowOrEqual / totals.length) * 100;
+
+    res.json({ percentile: percentile });
+  } catch (error) {
+    console.error('Error computing overall percentile:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const query = `
+      SELECT u.email, SUM(ts.points_scored) AS total_points
+FROM test_submissions ts
+JOIN Users u ON ts.user_id = u.user_id
+GROUP BY u.email
+ORDER BY total_points DESC;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

@@ -17,6 +17,8 @@ export class TestCreationComponent implements OnInit {
   times: number[] = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
   selectedTime: number = 5;
 
+  isGamificationEnabled: boolean = false;
+
   isEasyEnabled: boolean = false;
   isMediumEnabled: boolean = false;
   isHardEnabled: boolean = false;
@@ -28,7 +30,11 @@ export class TestCreationComponent implements OnInit {
   themes: { theme_id: number; theme_name: string; selected: boolean }[] = [];
   exercises: any[] = [];
 
-  constructor(private router: Router, private http: HttpClient, private apiService: ApiService) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private apiService: ApiService
+  ) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -47,13 +53,13 @@ export class TestCreationComponent implements OnInit {
 
   fetchThemes(): void {
     this.apiService.getThemes().subscribe(
-      (response) => {
+      response => {
         this.themes = response.map((theme: any) => ({
           ...theme,
           selected: false,
         }));
       },
-      (error) => console.error('Error fetching themes:', error)
+      error => console.error('Error fetching themes:', error)
     );
   }
 
@@ -70,7 +76,7 @@ export class TestCreationComponent implements OnInit {
   }
 
   getSelectedThemeIds(): number[] {
-    return this.themes.filter((theme) => theme.selected).map((theme) => theme.theme_id);
+    return this.themes.filter(theme => theme.selected).map(theme => theme.theme_id);
   }
 
   async getData(): Promise<void> {
@@ -89,11 +95,23 @@ export class TestCreationComponent implements OnInit {
     const queryParams = `?easy=${this.easyCount}&medium=${this.mediumCount}&hard=${this.hardCount}&themes=${selectedThemes.join(',')}`;
 
     this.apiService.getExercises(queryParams).subscribe(
-      (response) => {
+      response => {
         // Mix fetched and generated exercises
-        const easy = this.mixExercises(response.exercises.filter((e: any) => e.difficulty_level === 'easy'), generatedEasy, this.easyCount);
-        const medium = this.mixExercises(response.exercises.filter((e: any) => e.difficulty_level === 'medium'), generatedMedium, this.mediumCount);
-        const hard = this.mixExercises(response.exercises.filter((e: any) => e.difficulty_level === 'hard'), generatedHard, this.hardCount);
+        const easy = this.mixExercises(
+          response.exercises.filter((e: any) => e.difficulty_level === 'easy'),
+          generatedEasy,
+          this.easyCount
+        );
+        const medium = this.mixExercises(
+          response.exercises.filter((e: any) => e.difficulty_level === 'medium'),
+          generatedMedium,
+          this.mediumCount
+        );
+        const hard = this.mixExercises(
+          response.exercises.filter((e: any) => e.difficulty_level === 'hard'),
+          generatedHard,
+          this.hardCount
+        );
 
         // Combine all difficulty levels
         this.exercises = [...easy, ...medium, ...hard];
@@ -105,15 +123,15 @@ export class TestCreationComponent implements OnInit {
 
         const writingTime = `00:${this.selectedTime.toString().padStart(2, '0')}:00`;
         this.apiService.createTest(this.exercises, writingTime).subscribe(
-          (testResponse) => {
+          testResponse => {
             this.router.navigate(['/test-writing'], {
-              state: { data: this.exercises, timeLimit: writingTime },
+              state: { data: this.exercises, timeLimit: writingTime, gamification: this.isGamificationEnabled },
             });
           },
-          (error) => console.error('Error creating test:', error)
+          error => console.error('Error creating test:', error)
         );
       },
-      (error) => console.error('Error fetching exercises:', error)
+      error => console.error('Error fetching exercises:', error)
     );
   }
 
@@ -121,27 +139,26 @@ export class TestCreationComponent implements OnInit {
     // Determine how many exercises to use from each source
     let fetchedCount = Math.min(fetched.length, Math.ceil(count / 2)); // Round up for fetched
     let generatedCount = count - fetchedCount; // Remainder for generated
-  
+
     // Adjust if generated doesn't have enough exercises
     if (generatedCount > generated.length) {
       fetchedCount += generatedCount - generated.length;
       generatedCount = generated.length;
     }
-  
+
     // Adjust if fetched doesn't have enough exercises
     if (fetchedCount > fetched.length) {
       generatedCount += fetchedCount - fetched.length;
       fetchedCount = fetched.length;
     }
-  
+
     // Select the required number of exercises
     const selectedFetched = fetched.slice(0, fetchedCount);
     const selectedGenerated = generated.slice(0, generatedCount);
-  
+
     // Combine and shuffle the exercises
     return this.shuffleArray([...selectedFetched, ...selectedGenerated]);
   }
-  
 
   shuffleArray(array: any[]): any[] {
     for (let i = array.length - 1; i > 0; i--) {

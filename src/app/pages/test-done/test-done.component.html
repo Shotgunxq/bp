@@ -1,9 +1,9 @@
 <div class="container">
   <!-- Header Row -->
-  <div class="header-row">
-    <span class="header-cell">Test ID</span>
-    <span class="header-cell">Points</span>
-    <span class="header-cell">Date</span>
+  <div class="sort-buttons header-row">
+    <button mat-raised-button (click)="sortData('testId')">Sort by Test ID</button>
+    <button mat-raised-button (click)="sortData('points')">Sort by Points</button>
+    <button mat-raised-button (click)="sortData('date')">Sort by Date</button>
   </div>
 
   <!-- Accordion for Test Submissions -->
@@ -40,6 +40,10 @@
             <strong>Your Answer:</strong>
             {{ exercise.userAnswer || 'N/A' }}
           </p>
+          <p>
+            <strong>Hints Used:</strong>
+            {{ exercise.hints_used || '0' }}
+          </p>
         </div>
       </ng-container>
     </mat-expansion-panel>
@@ -52,4 +56,10 @@
     [pageSizeOptions]="[5, 10, 25]"
     (page)="onPageChange($event)"
     aria-label="Select page of test submissions"></mat-paginator>
+
+  <p *ngIf="userOverallPercentile">
+    Your overall performance is in the
+    <strong>{{ userOverallPercentile | number: '1.0-2' }}%</strong>
+    percentile.
+  </p>
 </div>

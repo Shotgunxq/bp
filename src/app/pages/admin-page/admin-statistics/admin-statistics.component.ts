@@ -18,6 +18,7 @@ export class AdminStatisticsComponent implements OnInit {
   submissionsChartOptions: Partial<ChartOptions> = {};
   avgPercentageChartOptions: Partial<ChartOptions> = {};
   avgPointsChartOptions: Partial<ChartOptions> = {};
+  leaderboardChartOptions: Partial<ChartOptions> = {};
 
   constructor(private adminService: AdminService) {}
 
@@ -25,6 +26,7 @@ export class AdminStatisticsComponent implements OnInit {
     this.loadSubmissionsOverTime();
     this.loadAvgPercentageScores();
     this.loadAvgPointsPerExercise();
+    this.loadLeaderboard();
   }
 
   loadSubmissionsOverTime() {
@@ -72,6 +74,22 @@ export class AdminStatisticsComponent implements OnInit {
         chart: { type: 'boxPlot', height: 350 },
         xaxis: { title: { text: 'Test' } },
         yaxis: { title: { text: 'Average Points per Exercise' } },
+      };
+    });
+  }
+
+  loadLeaderboard() {
+    this.adminService.getLeaderboard().subscribe(data => {
+      // Expected format: [{ username: 'Alice', total_points: 120 }, { username: 'Bob', total_points: 100 }, ...]
+      const chartData = data.map((item: { username: string; total_points: number }) => ({
+        x: item.username,
+        y: item.total_points,
+      }));
+      this.leaderboardChartOptions = {
+        series: [{ name: 'Total Points', data: chartData }],
+        chart: { type: 'bar', height: 350 },
+        xaxis: { title: { text: 'User' } },
+        yaxis: { title: { text: 'Total Points' } },
       };
     });
   }

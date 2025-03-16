@@ -43,4 +43,7 @@ export class AdminService {
   getAvgPointsPerExercise(): Observable<any> {
     return this.http.get(`${this.baseUrl}/admin/avg-points-per-exercise`);
   }
+  getLeaderboard(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/api/leaderboard`);
+  }
 }

@@ -25,6 +25,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   userId: number = 1; // Replace with actual user ID from authentication
   testId: number = 1; // Replace with actual test ID
 
+  gamificationEnabled: boolean = false;
+
   // New property to track how many hints have been revealed
   hintsRevealed: number = 0;
 
@@ -38,7 +40,14 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const stateData = history.state.data;
     this.data = stateData || [];
+    this.gamificationEnabled = history.state.gamification || false;
 
+    if (!this.gamificationEnabled) {
+      // Disable gamification effects:
+      // - Skip playing sounds
+      // - Skip visual animations (or use static styles)
+      // - Set points calculation to zero if desired
+    }
     this.timeLimit = history.state.timeLimit || '00:30:00';
     const savedTimeLeft = localStorage.getItem(this.timerKey);
 
@@ -218,42 +227,44 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
   submitTest(): void {
     let totalPoints = 0;
-
+    let totalHintsUsed = 0;
     this.data.forEach(exercise => {
       if (exercise.userAnswer === exercise.answer) {
-        totalPoints += exercise.points || 0; // Add points for correct answers
+        const exerciseScore = this.calculateExerciseScore(exercise);
+        totalPoints += exerciseScore;
       }
+      totalHintsUsed += exercise.hintsRevealed || 0;
     });
 
-    const body = {
+    const submissionBody = {
       user_id: this.userId,
       test_id: this.testId,
       points: totalPoints,
+      total_hints_used: totalHintsUsed, // additional info for gamification
       timestamp: new Date().toISOString(),
     };
 
-    console.log('Submitting test score with body:', body);
+    console.log('Submitting test score with body:', submissionBody);
 
-    this.apiService.submitTestScore(this.userId, this.testId, totalPoints).subscribe(
+    this.apiService.submitTestScore(this.userId, this.testId, totalPoints, totalHintsUsed).subscribe(
       response => {
         console.log('Test submitted successfully:', response);
-
-        // Show success notification
-        this.snackBar.open('Test submitted successfully!', 'Close', {
-          duration: 7000,
-        });
-
+        this.snackBar.open('Test submitted successfully!', 'Close', { duration: 7000 });
         this.resetTestState();
         this.router.navigate(['/test'], { state: { points: totalPoints } });
       },
       error => {
         console.error('Error submitting test:', error);
-
-        // Show error notification
-        this.snackBar.open('Failed to submit the test. Please try again.', 'Close', {
-          duration: 7000,
-        });
+        this.snackBar.open('Failed to submit the test. Please try again.', 'Close', { duration: 7000 });
       }
     );
+  }
+
+  calculateExerciseScore(exercise: any): number {
+    const basePoints = exercise.points;
+    const hintPenalty = 2; // points to deduct per hint used
+    const hintsUsed = exercise.hintsRevealed || 0;
+    const bonusPoints = (this.timeLeft / this.convertTimeToSeconds(this.timeLimit)) * 5; // Scale bonus as needed
+    return Math.max(0, Math.round(basePoints - hintsUsed * hintPenalty + bonusPoints));
   }
 }

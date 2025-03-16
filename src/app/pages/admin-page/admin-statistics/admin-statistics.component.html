@@ -36,3 +36,13 @@
     [xaxis]="avgPointsChartOptions.xaxis || {}"
     [yaxis]="avgPointsChartOptions.yaxis || {}"></apx-chart>
 </div>
+
+<div class="section">
+  <h2>Leaderboard</h2>
+  <p>Users sorted by their overall total points.</p>
+  <apx-chart
+    [series]="leaderboardChartOptions.series || []"
+    [chart]="leaderboardChartOptions.chart || { type: 'bar' }"
+    [xaxis]="leaderboardChartOptions.xaxis || {}"
+    [yaxis]="leaderboardChartOptions.yaxis || {}"></apx-chart>
+</div>
