@@ -1,6 +1,8 @@
 <div class="container">
   <div *ngIf="data && data.length > 0">
     <!-- Display exercises fetched from the database -->
+    <div *ngIf="gamificationEnabled" class="score-board" [ngClass]="{ 'score-animation': animateScore }">Current Score: {{ currentScore }}</div>
+
     <div *ngIf="data.length > 0">
       <div class="exerciseModal" *ngIf="currentExercise">
         <div class="exercise-buttons">
@@ -8,8 +10,11 @@
             id="exerciseNavButton"
             *ngFor="let exercise of data; let i = index"
             (click)="jumpToExercise(i)"
-            [class.selected]="i === currentExerciseIndex"
-            [class.answered]="exercise.userAnswer !== undefined && exercise.userAnswer !== ''">
+            [ngClass]="{
+              selected: i === currentExerciseIndex,
+              answered: exercise.userAnswer !== undefined && exercise.userAnswer !== '',
+              correct: exercise.isCorrect,
+            }">
             {{ i + 1 }}
           </button>
         </div>
@@ -25,14 +30,13 @@
         </p>
 
         <!-- Hints Section -->
-        <mat-card class="hints-container" *ngIf="currentExercise.hints && currentExercise.hints.length">
+        <mat-card class="hints-container" *ngIf="gamificationEnabled && currentExercise.hints && currentExercise.hints.length">
           <mat-card-content>
             <button
               mat-stroked-button
               color="primary"
               (click)="revealHint()"
               [disabled]="currentExercise.hintsRevealed >= currentExercise.hints.length">
-              <!-- Button label changes when out of hints -->
               {{
                 currentExercise.hintsRevealed < currentExercise.hints.length ? 'Reveal Hint ' + (currentExercise.hintsRevealed + 1) : 'No More Hints'
               }}

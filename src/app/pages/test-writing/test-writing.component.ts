@@ -26,6 +26,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   testId: number = 1; // Replace with actual test ID
 
   gamificationEnabled: boolean = false;
+  currentScore: number = 0;
+  animateScore: boolean = false; // Used to trigger score animation
 
   // New property to track how many hints have been revealed
   hintsRevealed: number = 0;
@@ -193,10 +195,53 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   }
 
   toggleAnswerLock(): void {
-    if (this.currentExercise) {
-      this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
-      this.saveUserAnswers();
+    if (!this.currentExercise) {
+      console.error('No current exercise available.');
+      return;
     }
+
+    console.log('Toggling answer lock for:', this.currentExercise);
+    // Toggle the locked state
+    this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
+    console.log('New answerLocked state:', this.currentExercise.answerLocked);
+
+    if (this.currentExercise.answerLocked) {
+      // Retrieve user answer and correct answer safely.
+      const userAns = (this.userAnswer || '').trim();
+      // Try to read from either "answer" or "correct_answer"
+      const correctAns = (this.currentExercise.answer || this.currentExercise.correct_answer || '').trim();
+
+      console.log('User Answer:', userAns, 'Correct Answer:', correctAns);
+
+      if (this.gamificationEnabled) {
+        if (userAns === correctAns && userAns !== '') {
+          console.log('Answer is correct.');
+          this.currentExercise.isCorrect = true; // This flag will be used to turn the nav button green.
+          this.answerMessage = 'Correct!';
+          // Calculate and update score
+          const exerciseScore = this.calculateExerciseScore(this.currentExercise);
+          this.currentScore += exerciseScore;
+          console.log('Exercise score:', exerciseScore, 'Updated currentScore:', this.currentScore);
+          // Play sound effect
+          this.playSound('/assets/sounds/correct.mp3');
+        } else {
+          console.log('Answer is incorrect.');
+          this.currentExercise.isCorrect = false;
+          this.answerMessage = 'Incorrect. Try again.';
+        }
+      } else {
+        console.log('Gamification disabled: skipping correctness check.');
+        // When gamification is disabled, we simply lock without marking correct.
+        this.currentExercise.isCorrect = false;
+        this.answerMessage = '';
+      }
+    } else {
+      console.log('Answer unlocked, resetting correctness flag.');
+      this.currentExercise.isCorrect = false;
+      this.answerMessage = '';
+    }
+
+    this.saveUserAnswers();
   }
 
   // New method to reveal the next hint
@@ -217,8 +262,27 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
       if (this.userAnswer.trim() === this.currentExercise.answer.trim()) {
         this.answerMessage = 'Correct!';
+
+        if (this.gamificationEnabled) {
+          // Mark exercise as correct so that the button turns green
+          this.currentExercise.isCorrect = true;
+
+          // Calculate points earned for this exercise
+          const exerciseScore = this.calculateExerciseScore(this.currentExercise);
+          // Update current score
+          this.currentScore += exerciseScore;
+          // Trigger score animation (set flag true then false after a short timeout)
+          this.animateScore = true;
+          setTimeout(() => (this.animateScore = false), 1000);
+
+          // Play sound effect
+          this.playSound('/assets/sounds/correct.mp3');
+        } else {
+          this.currentExercise.isCorrect = false;
+        }
       } else {
         this.answerMessage = 'Incorrect. Try again.';
+        this.currentExercise.isCorrect = false;
       }
       this.answerChecked = true;
       this.saveUserAnswers();
@@ -264,7 +328,13 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     const basePoints = exercise.points;
     const hintPenalty = 2; // points to deduct per hint used
     const hintsUsed = exercise.hintsRevealed || 0;
-    const bonusPoints = (this.timeLeft / this.convertTimeToSeconds(this.timeLimit)) * 5; // Scale bonus as needed
+    const bonusPoints = this.gamificationEnabled ? (this.timeLeft / this.convertTimeToSeconds(this.timeLimit)) * 5 : 0;
     return Math.max(0, Math.round(basePoints - hintsUsed * hintPenalty + bonusPoints));
+  }
+
+  playSound(soundUrl: string): void {
+    //TODO: Implement sound playback
+    const audio = new Audio(soundUrl);
+    audio.play();
   }
 }
