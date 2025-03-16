@@ -14,6 +14,7 @@
               selected: i === currentExerciseIndex,
               answered: exercise.userAnswer !== undefined && exercise.userAnswer !== '',
               correct: exercise.isCorrect,
+              wrong: exercise.isWrong,
             }">
             {{ i + 1 }}
           </button>

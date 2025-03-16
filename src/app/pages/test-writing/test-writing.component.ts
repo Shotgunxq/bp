@@ -195,53 +195,45 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   }
 
   toggleAnswerLock(): void {
-    if (!this.currentExercise) {
-      console.error('No current exercise available.');
-      return;
-    }
+    if (this.currentExercise) {
+      // Toggle the answer lock state
+      this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
 
-    console.log('Toggling answer lock for:', this.currentExercise);
-    // Toggle the locked state
-    this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
-    console.log('New answerLocked state:', this.currentExercise.answerLocked);
+      if (this.currentExercise.answerLocked) {
+        // Force values to string before trimming
+        const userAns = String(this.userAnswer || '').trim();
+        const correctAns = String(this.currentExercise.answer || this.currentExercise.correct_answer || '').trim();
 
-    if (this.currentExercise.answerLocked) {
-      // Retrieve user answer and correct answer safely.
-      const userAns = (this.userAnswer || '').trim();
-      // Try to read from either "answer" or "correct_answer"
-      const correctAns = (this.currentExercise.answer || this.currentExercise.correct_answer || '').trim();
-
-      console.log('User Answer:', userAns, 'Correct Answer:', correctAns);
-
-      if (this.gamificationEnabled) {
-        if (userAns === correctAns && userAns !== '') {
-          console.log('Answer is correct.');
-          this.currentExercise.isCorrect = true; // This flag will be used to turn the nav button green.
-          this.answerMessage = 'Correct!';
-          // Calculate and update score
-          const exerciseScore = this.calculateExerciseScore(this.currentExercise);
-          this.currentScore += exerciseScore;
-          console.log('Exercise score:', exerciseScore, 'Updated currentScore:', this.currentScore);
-          // Play sound effect
-          this.playSound('/assets/sounds/correct.mp3');
+        if (this.gamificationEnabled) {
+          if (userAns === correctAns && userAns !== '') {
+            // Correct answer: mark as correct and clear wrong flag
+            this.currentExercise.isCorrect = true;
+            this.currentExercise.isWrong = false;
+            this.answerMessage = 'Correct!';
+            const exerciseScore = this.calculateExerciseScore(this.currentExercise);
+            this.currentScore += exerciseScore;
+            this.playSound('/assets/sounds/correct.mp3');
+          } else {
+            // Incorrect answer: mark as wrong
+            this.currentExercise.isCorrect = false;
+            this.currentExercise.isWrong = true;
+            this.answerMessage = 'Incorrect. Try again.';
+          }
         } else {
-          console.log('Answer is incorrect.');
+          // Gamification disabled: no check is performed
           this.currentExercise.isCorrect = false;
-          this.answerMessage = 'Incorrect. Try again.';
+          this.currentExercise.isWrong = false;
+          this.answerMessage = '';
         }
       } else {
-        console.log('Gamification disabled: skipping correctness check.');
-        // When gamification is disabled, we simply lock without marking correct.
+        // When unlocking, reset flags and message
         this.currentExercise.isCorrect = false;
+        this.currentExercise.isWrong = false;
         this.answerMessage = '';
       }
-    } else {
-      console.log('Answer unlocked, resetting correctness flag.');
-      this.currentExercise.isCorrect = false;
-      this.answerMessage = '';
-    }
 
-    this.saveUserAnswers();
+      this.saveUserAnswers();
+    }
   }
 
   // New method to reveal the next hint

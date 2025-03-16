@@ -62,6 +62,11 @@
 #exerciseNavButton.correct {
   background-color: rgb(41, 218, 41) !important;
 }
+
+#exerciseNavButton.wrong {
+  background-color: rgb(237, 62, 62) !important;
+}
+
 .timer {
   margin-top: 30%;
   font-size: 1.2em;
