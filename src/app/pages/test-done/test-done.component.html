@@ -1,9 +1,24 @@
 <div class="container">
   <!-- Header Row -->
   <div class="sort-buttons header-row">
-    <button mat-raised-button (click)="sortData('testId')">Sort by Test ID</button>
-    <button mat-raised-button (click)="sortData('points')">Sort by Points</button>
-    <button mat-raised-button (click)="sortData('date')">Sort by Date</button>
+    <button mat-raised-button (click)="sortData('testId')">
+      Sort by Test ID
+      <mat-icon *ngIf="currentSortColumn === 'testId'">
+        {{ sortDirection === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}
+      </mat-icon>
+    </button>
+    <button mat-raised-button (click)="sortData('points')">
+      Sort by Points
+      <mat-icon *ngIf="currentSortColumn === 'points'">
+        {{ sortDirection === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}
+      </mat-icon>
+    </button>
+    <button mat-raised-button (click)="sortData('date')">
+      Sort by Date
+      <mat-icon *ngIf="currentSortColumn === 'date'">
+        {{ sortDirection === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}
+      </mat-icon>
+    </button>
   </div>
 
   <!-- Accordion for Test Submissions -->
@@ -57,9 +72,9 @@
     (page)="onPageChange($event)"
     aria-label="Select page of test submissions"></mat-paginator>
 
-  <p *ngIf="userOverallPercentile">
+  <div class="percentile-card" *ngIf="userOverallPercentile">
     Your overall performance is in the
     <strong>{{ userOverallPercentile | number: '1.0-2' }}%</strong>
     percentile.
-  </p>
+  </div>
 </div>

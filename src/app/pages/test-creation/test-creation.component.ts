@@ -26,6 +26,7 @@ export class TestCreationComponent implements OnInit {
   easyCount: number = 0;
   mediumCount: number = 0;
   hardCount: number = 0;
+  totalExerciseCount: number = 0;
 
   themes: { theme_id: number; theme_name: string; selected: boolean }[] = [];
   exercises: any[] = [];
@@ -71,8 +72,12 @@ export class TestCreationComponent implements OnInit {
   }
 
   validateTotalExerciseCount(): boolean {
-    const total = this.easyCount + this.mediumCount + this.hardCount;
-    return total > 0;
+    // If the user hasn’t set any value yet, don’t show an error
+    if (this.totalExerciseCount === 0) {
+      return true;
+    }
+    const specificTotal = this.easyCount + this.mediumCount + this.hardCount;
+    return this.totalExerciseCount === specificTotal;
   }
 
   getSelectedThemeIds(): number[] {

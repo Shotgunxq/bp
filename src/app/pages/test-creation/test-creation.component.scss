@@ -19,6 +19,7 @@
   background-color: lightgray;
   border-radius: 20px;
   padding: 1%;
+  padding-bottom: 2%;
 }
 
 .toggle-section {
@@ -81,3 +82,11 @@ span {
 //     min-height: 100vh; /* Ensure it takes the full viewport height */
 //   }
 // }
+
+input {
+  border-radius: 8px;
+}
+
+::ng-deep #timeSelect .mat-select-trigger {
+  border-radius: 8px !important;
+}

@@ -38,7 +38,7 @@
               [disabled]="!isEasyEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <mat-slide-toggle type="checkbox" [(ngModel)]="isEasyEnabled" />
+              <mat-slide-toggle color="primary" type="checkbox" [(ngModel)]="isEasyEnabled" />
               Enable
             </label>
           </div>
@@ -51,7 +51,7 @@
               [disabled]="!isMediumEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <mat-slide-toggle type="checkbox" [(ngModel)]="isMediumEnabled" />
+              <mat-slide-toggle color="primary" type="checkbox" [(ngModel)]="isMediumEnabled" />
               Enable
             </label>
           </div>
@@ -64,7 +64,7 @@
               [disabled]="!isHardEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <mat-slide-toggle type="checkbox" [(ngModel)]="isHardEnabled" />
+              <mat-slide-toggle color="primary" type="checkbox" [(ngModel)]="isHardEnabled" />
               Enable
             </label>
           </div>
@@ -86,7 +86,7 @@
         <button mat-raised-button color="primary" (click)="generateStatisticsPDF()">Export do PDF</button>
         <button mat-raised-button color="primary" (click)="printStatistics()">Tlačiť</button>
       </div>
-      <div class="table-container" *ngIf="tests.length">
+      <!-- <div class="table-container" *ngIf="tests.length">
         <table id="statisticsTable">
           <thead>
             <tr>
@@ -110,7 +110,7 @@
       </div>
       <div *ngIf="!tests || tests.length === 0">
         <p>Žiadne štatistiky nie sú k dispozícii.</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

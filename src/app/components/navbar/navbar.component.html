@@ -8,7 +8,7 @@
   <div class="typewriter" *ngIf="isMenuRoute">
     <div class="typewriter-wrapper">
       <span>Welcome</span>
-      <span *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
+      <span #animatedUsername *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
     </div>
   </div>
 
