@@ -331,24 +331,26 @@ app.listen(PORT, () => {
 // POST /exercises - Create a new exercise with auto-assigned theme_id
 app.post('/admin/exercises', async (req, res) => {
   try {
-    // Destructure theme_id along with the other fields from the request body.
-    const { theme_id, difficulty_level, description, image, points, correct_answer } = req.body;
+    // Destructure fields from the request body.
+    const { theme_id, difficulty_level, description, points, correct_answer, hints } = req.body;
 
-    // Validate required fields including theme_id.
+    // Validate required fields.
     if (!theme_id || !difficulty_level || !description || points === undefined || !correct_answer) {
       return res.status(400).json({ error: 'Missing required fields: theme_id, difficulty_level, description, points, correct_answer' });
     }
 
     // Process image: if the image field is falsy, set to null.
     const imageValue = image ? image : null;
+    // Process hints: if hints is not provided, set it to an empty array (stringified) so that the jsonb column gets a valid JSON.
+    const hintsValue = hints ? hints : JSON.stringify([]);
 
-    // Build the INSERT query using the provided theme_id.
+    // Build the INSERT query including the image and hints fields.
     const insertQuery = `
-      INSERT INTO exercises (theme_id, difficulty_level, description, image, points, correct_answer)
+      INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-    const values = [theme_id, difficulty_level, description, imageValue, points, correct_answer];
+    const values = [theme_id, difficulty_level, description, imageValue, points, correct_answer, hintsValue];
 
     const result = await db.query(insertQuery, values);
     res.status(201).json({ exercise: result.rows[0] });

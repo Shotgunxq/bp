@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../../../services/adminServices';
@@ -9,16 +9,21 @@ import { ApiService } from '../../../../services/apiServices';
   templateUrl: './admin-new-exercise.component.html',
   styleUrls: ['./admin-new-exercise.component.scss'],
 })
-export class AdminNewExerciseComponent implements OnInit {
+export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
   exerciseForm: FormGroup;
   themes: any[] = [];
 
-  // Define difficulty options
+  // Define difficulty options.
   difficultyLevels = [
     { value: 'easy', viewValue: 'Easy' },
     { value: 'medium', viewValue: 'Medium' },
     { value: 'hard', viewValue: 'Hard' },
   ];
+
+  // For MathQuill integration.
+  MQ: any = null;
+  mathField: any;
+  @ViewChild('mathFieldContainer') mathFieldContainer!: ElementRef;
 
   constructor(
     public dialogRef: MatDialogRef<AdminNewExerciseComponent>,
@@ -27,7 +32,7 @@ export class AdminNewExerciseComponent implements OnInit {
     private apiService: ApiService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    // Build form with theme_id dropdown
+    // Build form with all necessary fields.
     this.exerciseForm = this.fb.group({
       theme_id: [null, Validators.required],
       difficulty_level: ['', Validators.required],
@@ -35,11 +40,12 @@ export class AdminNewExerciseComponent implements OnInit {
       image: [false],
       points: [0, [Validators.required, Validators.min(0)]],
       correct_answer: ['', Validators.required],
+      hints: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    // Load available themes from the API
+    // Load available themes.
     this.apiService.getThemes().subscribe(
       (themes: any[]) => {
         this.themes = themes;
@@ -49,39 +55,58 @@ export class AdminNewExerciseComponent implements OnInit {
       }
     );
   }
+
+  ngAfterViewInit(): void {
+    // Initialize MathQuill for the description field.
+    this.MQ = (window as any).MathQuill.getInterface(2);
+    this.mathField = this.MQ.MathField(this.mathFieldContainer.nativeElement, {
+      spaceBehavesLikeTab: false,
+      supSubsRequireOperand: true,
+      maxDepth: 1,
+      handlers: {
+        edit: (fieldInstance: any) => {
+          // Update the form control with the current LaTeX.
+          this.exerciseForm.patchValue({ description: fieldInstance.latex() });
+        },
+      },
+    });
+  }
+
+  // Convert plain text into a multiline LaTeX string.
+  // This splits the input into sentences and joins them with LaTeX line-breaks.
   private convertToMultiline(input: string): string {
-    // Split the input text at sentence-ending punctuation (. ? !) followed by a space.
-    const sentences = input.split(/(?<=[.!?])\s+/);
-    // Remove any empty lines
-    const filtered = sentences.filter(sentence => sentence.trim() !== '');
-    // Format each sentence with an ampersand and wrap it with \text{...}
-    const formattedLines = filtered.map(sentence => `& \\text{${sentence.trim()}}`);
-    // Wrap all lines in the aligned environment, joining with LaTeX's line break command (\\)
-    return `\\begin{aligned}\n${formattedLines.join(' \\\\\n')}\n\\end{aligned}`;
+    const sentences = input.split(/(?<=[.!?])\s+/).filter(sentence => sentence.trim() !== '');
+    return sentences.join(' \\\\\n');
   }
 
   onConfirm(): void {
     if (this.exerciseForm.valid) {
-      // Get form values
       const newExercise = this.exerciseForm.value;
 
-      // Automatically convert the description to the multiline LaTeX format
+      // Automatically convert the description to multiline LaTeX format.
       newExercise.description = this.convertToMultiline(newExercise.description);
 
-      // If image checkbox is false, set image to null
+      // Process hints: split by newline, trim, filter out empty lines,
+      // then stringify the array so it is stored as valid JSON.
+      const hintsArray = newExercise.hints
+        .split('\n')
+        .map((hint: string) => hint.trim())
+        .filter((hint: string) => hint.length > 0);
+      newExercise.hints = JSON.stringify(hintsArray);
+
+      // If the image checkbox is false, set image to null.
       if (!newExercise.image) {
         newExercise.image = null;
       }
-      // Call the admin service to create a new exercise
+
+      // Create the new exercise.
       this.adminService.createExercise(newExercise).subscribe(
         response => {
           console.log('Exercise created successfully:', response);
-          // Close the dialog and pass the response back
           this.dialogRef.close(response);
         },
         error => {
           console.error('Error creating exercise:', error);
-          // Optionally show an error message to the user
         }
       );
     }
