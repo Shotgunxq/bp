@@ -1,12 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router'; // Import Router
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { ApiService } from '../../../services/apiServices';
 import { navbarService } from '../../../services/navbarService';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-login-modal',
   templateUrl: './login-modal.component.html',
@@ -27,7 +24,8 @@ export class LoginModalComponent {
     private http: HttpClient,
     private router: Router,
     private apiService: ApiService,
-    private navbarService: navbarService
+    private navbarService: navbarService,
+    private cd: ChangeDetectorRef
   ) {}
 
   login() {
@@ -44,6 +42,7 @@ export class LoginModalComponent {
       error => {
         console.error(error);
         this.errorMessage = 'Invalid username or password';
+        this.cd.markForCheck();
       }
     );
   }
