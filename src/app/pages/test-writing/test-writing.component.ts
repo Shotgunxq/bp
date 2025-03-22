@@ -64,6 +64,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.data.forEach(exercise => {
         exercise.answerLocked = exercise.answerLocked || false;
         exercise.points = exercise.points || 0;
+        exercise.scoreAwarded = exercise.scoreAwarded || false; // New flag for scoring
+
         // Initialize hintsRevealed if not present
         if (exercise.hintsRevealed === undefined) {
           exercise.hintsRevealed = 0;
@@ -200,33 +202,33 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
 
       if (this.currentExercise.answerLocked) {
-        // Force values to string before trimming
         const userAns = String(this.userAnswer || '').trim();
         const correctAns = String(this.currentExercise.answer || this.currentExercise.correct_answer || '').trim();
 
         if (this.gamificationEnabled) {
           if (userAns === correctAns && userAns !== '') {
-            // Correct answer: mark as correct and clear wrong flag
             this.currentExercise.isCorrect = true;
             this.currentExercise.isWrong = false;
             this.answerMessage = 'Correct!';
-            const exerciseScore = this.calculateExerciseScore(this.currentExercise);
-            this.currentScore += exerciseScore;
-            this.playSound();
+            // Only add points if they haven't been awarded already
+            if (!this.currentExercise.scoreAwarded) {
+              const exerciseScore = this.calculateExerciseScore(this.currentExercise);
+              this.currentScore += exerciseScore;
+              this.currentExercise.scoreAwarded = true; // Mark as scored
+              this.playSound();
+            }
           } else {
-            // Incorrect answer: mark as wrong
             this.currentExercise.isCorrect = false;
             this.currentExercise.isWrong = true;
             this.answerMessage = 'Incorrect. Try again.';
           }
         } else {
-          // Gamification disabled: no check is performed
           this.currentExercise.isCorrect = false;
           this.currentExercise.isWrong = false;
           this.answerMessage = '';
         }
       } else {
-        // When unlocking, reset flags and message
+        // When unlocking, reset flags and message but do not reset scoreAwarded
         this.currentExercise.isCorrect = false;
         this.currentExercise.isWrong = false;
         this.answerMessage = '';
@@ -256,19 +258,16 @@ export class TestWritingComponent implements OnInit, OnDestroy {
         this.answerMessage = 'Correct!';
 
         if (this.gamificationEnabled) {
-          // Mark exercise as correct so that the button turns green
           this.currentExercise.isCorrect = true;
-
-          // Calculate points earned for this exercise
-          const exerciseScore = this.calculateExerciseScore(this.currentExercise);
-          // Update current score
-          this.currentScore += exerciseScore;
-          // Trigger score animation (set flag true then false after a short timeout)
-          this.animateScore = true;
-          setTimeout(() => (this.animateScore = false), 1000);
-
-          // Play sound effect
-          this.playSound();
+          // Only add points if they haven't been awarded already
+          if (!this.currentExercise.scoreAwarded) {
+            const exerciseScore = this.calculateExerciseScore(this.currentExercise);
+            this.currentScore += exerciseScore;
+            this.currentExercise.scoreAwarded = true; // Mark as scored
+            this.animateScore = true;
+            setTimeout(() => (this.animateScore = false), 1000);
+            this.playSound();
+          }
         } else {
           this.currentExercise.isCorrect = false;
         }
