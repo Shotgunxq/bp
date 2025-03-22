@@ -34,7 +34,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MathjaxModule } from 'mathjax-angular';
 
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -43,7 +42,6 @@ import { DistributionComponent } from './components/graphs/distribution/distribu
 import { PoissonComponent } from './components/graphs/poisson/poisson.component';
 import { StudentovoComponent } from './components/graphs/studentovo/studentovo.component';
 import { ChikvadrantComponent } from './components/graphs/chikvadrant/chikvadrant.component';
-import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
@@ -76,7 +74,6 @@ import { ExportPageComponent } from './pages/export-page/export-page.component';
     PoissonComponent,
     StudentovoComponent,
     ChikvadrantComponent,
-    SidenavComponent,
     AdminPageComponent,
     ConfirmDialogComponent,
     EditDialogComponent,
@@ -98,7 +95,6 @@ import { ExportPageComponent } from './pages/export-page/export-page.component';
     MatExpansionModule,
     MatDividerModule,
     NgbModule,
-    MatSidenavModule,
     AppRoutingModule,
     FormsModule, // Add FormsModule to imports
     HttpClientModule, // Add HttpClientModule to imports
@@ -114,7 +110,6 @@ import { ExportPageComponent } from './pages/export-page/export-page.component';
     MatFormFieldModule,
     MatStepperModule,
     NgApexchartsModule,
-    MatSidenavModule,
     MatTabsModule,
     MatDialogActions,
     MatDialogContent,

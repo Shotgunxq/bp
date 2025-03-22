@@ -11,7 +11,6 @@ import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.s
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-  @Output() toggleSidenav = new EventEmitter<void>();
   @Output() openExerciseDialogEvent = new EventEmitter<void>(); // NEW event emitter
 
   username: string | null = '';
@@ -53,10 +52,6 @@ export class NavbarComponent {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.isStatisticsPage = event.urlAfterRedirects === '/admin/statistics';
     });
-  }
-
-  toggleSidenavMenu() {
-    this.toggleSidenav.emit();
   }
 
   goBack() {

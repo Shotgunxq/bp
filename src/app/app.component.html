@@ -4,19 +4,8 @@
     <router-outlet></router-outlet>
 </body> -->
 <body class="mat-typography">
-  <mat-sidenav-container class="sidenav-container">
-    <!-- Main content -->
-    <mat-sidenav-content>
-      <app-navbar [hidden]="!showNavbar" (sidenavToggled)="sidenav.toggleSidenav()"></app-navbar>
-      <app-sidenav #sidenav>
-        <p>Extra Content Here</p>
-      </app-sidenav>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
+  <!-- Main content -->
+  <app-navbar [hidden]="!showNavbar"></app-navbar>
 
-    <!-- Sidenav on the right side -->
-    <mat-sidenav #drawer mode="over" position="end" [@slideMenu]="isOpen ? 'open' : 'closed'">
-      <p>Tu budu nastavenia</p>
-    </mat-sidenav>
-  </mat-sidenav-container>
+  <router-outlet></router-outlet>
 </body>
