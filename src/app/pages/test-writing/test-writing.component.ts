@@ -212,7 +212,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
             this.answerMessage = 'Correct!';
             const exerciseScore = this.calculateExerciseScore(this.currentExercise);
             this.currentScore += exerciseScore;
-            this.playSound('/assets/sounds/correct.mp3');
+            this.playSound();
           } else {
             // Incorrect answer: mark as wrong
             this.currentExercise.isCorrect = false;
@@ -268,7 +268,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
           setTimeout(() => (this.animateScore = false), 1000);
 
           // Play sound effect
-          this.playSound('/assets/sounds/correct.mp3');
+          this.playSound();
         } else {
           this.currentExercise.isCorrect = false;
         }
@@ -324,9 +324,10 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     return Math.max(0, Math.round(basePoints - hintsUsed * hintPenalty + bonusPoints));
   }
 
-  playSound(soundUrl: string): void {
-    //TODO: Implement sound playback
-    const audio = new Audio(soundUrl);
+  playSound(): void {
+    const audio = new Audio();
+    audio.src = '../../assets/sounds/correct.mp3';
+    audio.load();
     audio.play();
   }
 }
