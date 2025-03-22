@@ -198,24 +198,32 @@ app.put('/exercises/:exercise_id', async (req, res) => {
     }
 
     // Extract fields to update from the request body
-    const { description, correct_answer, points } = req.body;
+    const { description, correct_answer, points, hints, difficulty_level } = req.body;
 
-    // Optionally validate that at least one field is provided
-    if (description === undefined && correct_answer === undefined && points === undefined) {
+    // Validate that at least one field is provided for update.
+    if (description === undefined && correct_answer === undefined && points === undefined && hints === undefined && difficulty_level === undefined) {
       return res.status(400).json({ error: 'At least one field must be provided for update.' });
     }
 
-    // Construct the UPDATE query using COALESCE to update only the provided fields
+    // Convert hints array to a valid JSON string if provided.
+    let hintsJson = hints;
+    if (hints !== undefined) {
+      hintsJson = JSON.stringify(hints);
+    }
+
+    // Construct the UPDATE query using COALESCE.
     const updateQuery = `
       UPDATE exercises
       SET 
         description = COALESCE($1, description),
         correct_answer = COALESCE($2, correct_answer),
-        points = COALESCE($3, points)
-      WHERE exercise_id = $4
+        points = COALESCE($3, points),
+        hints = COALESCE($4::jsonb, hints),
+        difficulty_level = COALESCE($5, difficulty_level)
+      WHERE exercise_id = $6
       RETURNING *;
     `;
-    const values = [description, correct_answer, points, exercise_id];
+    const values = [description, correct_answer, points, hintsJson, difficulty_level, exercise_id];
 
     const updateResult = await db.query(updateQuery, values);
 
