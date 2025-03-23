@@ -72,5 +72,9 @@ function calculateProbability(n: number, k: number, p: number): number {
 function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
   // console.log(`n=${n}, k=${k}, p=${p}`);
-  return `Aká je pravdepodobnosť získania presne ${k} úspechov pri ${n} pokusoch experimentu s pravdepodobnosťou úspechu ${p}?\nZaokrúhlite na 3 desatinné miesta.`;
+  return `\\begin{aligned}
+  & \\text{Aká je pravdepodobnosť získania presne } ${k} \\text{ úspechov pri } ${n} \\text{ pokusoch experimentu} \\\\
+  & \\text{s pravdepodobnosťou úspechu } ${p}\\text{?} \\\\
+  & \\text{Zaokrúhlite na 3 desatinné miesta.}
+  \\end{aligned}`;
 }

@@ -24,11 +24,10 @@
           <div class="timer">Time left: {{ formatTime(timeLeft) }}</div>
         </div>
 
-        <p class="exerciseDesc">
-          Znenie úlohy:
-          <br />
-          {{ currentExercise.description }}
-        </p>
+        <div class="exerciseDesc">
+          <p>Znenie úlohy:</p>
+          <div class="mathjax-content" [mathjax]="'$$' + currentExercise.description + '$$'"></div>
+        </div>
 
         <!-- Hints Section -->
         <mat-card class="hints-container" *ngIf="gamificationEnabled && currentExercise.hints && currentExercise.hints.length">
