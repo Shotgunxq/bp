@@ -70,7 +70,7 @@ export class PoissonComponent {
       },
       xaxis: {
         type: 'numeric',
-        title: { text: 'x (Occurrences)' },
+        title: { text: 'x (Výskyty)' },
         tickAmount: 20,
         labels: {
           formatter: val => parseFloat(val).toFixed(0),

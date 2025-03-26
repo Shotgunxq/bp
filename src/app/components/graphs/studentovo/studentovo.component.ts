@@ -52,7 +52,11 @@ export class StudentovoComponent {
       xaxis: {
         type: 'numeric',
         title: { text: 't' },
-        tickAmount: 10,
+        min: -4,
+        max: 4,
+        // Setting tickAmount to 9 makes the interval (4 - (-4)) / (9 - 1) = 1 exactly,
+        // so ticks appear at -4, -3, ..., 3, 4.
+        tickAmount: 9,
         labels: {
           formatter: val => parseFloat(val).toFixed(1),
         },
@@ -72,6 +76,12 @@ export class StudentovoComponent {
             x: this.rangeB,
             borderColor: '#775DD0',
             label: { text: `b = ${this.rangeB}` },
+          },
+          {
+            x: this.rangeA,
+            x2: this.rangeB,
+            fillColor: 'rgba(0, 123, 255, 0.2)',
+            opacity: 0.5,
           },
         ],
       },
