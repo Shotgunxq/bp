@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
 import { ApiService } from '../../services/apiServices';
-
+import { TimeUpDialogComponent } from '../../components/Modals/Dialog/time-up-dialog/time-up-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
@@ -25,18 +26,33 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   userId: number = 1; // Replace with actual user ID from authentication
   testId: number = 1; // Replace with actual test ID
 
+  gamificationEnabled: boolean = false;
+  currentScore: number = 0;
+  animateScore: boolean = false; // Used to trigger score animation
+
+  // New property to track how many hints have been revealed
+  hintsRevealed: number = 0;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
-    private snackBar: MatSnackBar // Inject MatSnackBar
+    private snackBar: MatSnackBar, // Inject MatSnackBar
+    private dialog: MatDialog // <-- Inject MatDialog
   ) {}
 
   ngOnInit(): void {
     const stateData = history.state.data;
     this.data = stateData || [];
+    this.gamificationEnabled = history.state.gamification || false;
 
-    this.timeLimit = history.state.timeLimit || '00:30:00'; // Default time limit
+    if (!this.gamificationEnabled) {
+      // Disable gamification effects:
+      // - Skip playing sounds
+      // - Skip visual animations (or use static styles)
+      // - Set points calculation to zero if desired
+    }
+    this.timeLimit = history.state.timeLimit || '00:30:00';
     const savedTimeLeft = localStorage.getItem(this.timerKey);
 
     if (savedTimeLeft) {
@@ -46,14 +62,28 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     }
 
     if (this.data.length > 0) {
-      this.data.forEach((exercise) => {
+      // Initialize each exercise
+      this.data.forEach(exercise => {
         exercise.answerLocked = exercise.answerLocked || false;
-        exercise.points = exercise.points || 0; // Default points if missing
+        exercise.points = exercise.points || 0;
+        exercise.scoreAwarded = exercise.scoreAwarded || false; // New flag for scoring
+
+        // Initialize hintsRevealed if not present
+        if (exercise.hintsRevealed === undefined) {
+          exercise.hintsRevealed = 0;
+        }
       });
 
       const savedExercises = localStorage.getItem(this.exercisesKey);
       if (savedExercises) {
         this.data = JSON.parse(savedExercises);
+
+        // Ensure we still have hintsRevealed even after reloading from local storage
+        this.data.forEach(exercise => {
+          if (exercise.hintsRevealed === undefined) {
+            exercise.hintsRevealed = 0;
+          }
+        });
       }
 
       this.currentExercise = this.data[0];
@@ -84,10 +114,15 @@ export class TestWritingComponent implements OnInit, OnDestroy {
         this.timeLeft = 0;
         this.stopTimer();
         localStorage.removeItem(this.timerKey);
-        this.snackBar.open('Time is up! The test has been cleared.', 'Close', {
-          duration: 5000,
+
+        // Open the time-up modal dialog
+        const dialogRef = this.dialog.open(TimeUpDialogComponent);
+
+        dialogRef.afterClosed().subscribe(() => {
+          // Once the user clicks OK, reset test state and redirect to the menu
+          this.resetTestState();
+          this.router.navigate(['/menu']); // Update route if needed
         });
-        this.resetTestState();
       }
     }, 1000);
   }
@@ -122,6 +157,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   saveUserAnswers(): void {
     if (this.currentExercise) {
       this.data[this.currentExerciseIndex].userAnswer = this.userAnswer;
+      // Make sure we keep the updated hintsRevealed
+      this.data[this.currentExerciseIndex].hintsRevealed = this.currentExercise.hintsRevealed;
       localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
     }
   }
@@ -141,6 +178,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
       this.currentExerciseIndex--;
       this.currentExercise = this.data[this.currentExerciseIndex];
+      // DO NOT reset hintsRevealed here
       this.loadUserAnswer();
     }
   }
@@ -150,6 +188,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
       this.currentExerciseIndex++;
       this.currentExercise = this.data[this.currentExerciseIndex];
+      // DO NOT reset hintsRevealed here
       this.loadUserAnswer();
     }
   }
@@ -159,14 +198,62 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
       this.currentExerciseIndex = index;
       this.currentExercise = this.data[index];
+      // DO NOT reset hintsRevealed here
       this.loadUserAnswer();
     }
   }
 
   toggleAnswerLock(): void {
     if (this.currentExercise) {
+      // Toggle the answer lock state
       this.currentExercise.answerLocked = !this.currentExercise.answerLocked;
+
+      if (this.currentExercise.answerLocked) {
+        const userAns = String(this.userAnswer || '').trim();
+        const correctAns = String(this.currentExercise.answer || this.currentExercise.correct_answer || '').trim();
+
+        if (this.gamificationEnabled) {
+          if (userAns === correctAns && userAns !== '') {
+            this.currentExercise.isCorrect = true;
+            this.currentExercise.isWrong = false;
+            this.answerMessage = 'Correct!';
+            // Only add points if they haven't been awarded already
+            if (!this.currentExercise.scoreAwarded) {
+              const exerciseScore = this.calculateExerciseScore(this.currentExercise);
+              this.currentScore += exerciseScore;
+              this.currentExercise.scoreAwarded = true; // Mark as scored
+              this.playCorrectSound();
+            }
+          } else {
+            this.currentExercise.isCorrect = false;
+            this.currentExercise.isWrong = true;
+            this.answerMessage = 'Incorrect. Try again.';
+          }
+        } else {
+          this.currentExercise.isCorrect = false;
+          this.currentExercise.isWrong = false;
+          this.answerMessage = '';
+        }
+      } else {
+        // When unlocking, reset flags and message but do not reset scoreAwarded
+        this.currentExercise.isCorrect = false;
+        this.currentExercise.isWrong = false;
+        this.answerMessage = '';
+      }
+
       this.saveUserAnswers();
+    }
+  }
+
+  // New method to reveal the next hint
+  revealHint(): void {
+    if (this.currentExercise && this.currentExercise.hints) {
+      const totalHints = this.currentExercise.hints.length;
+      if (this.currentExercise.hintsRevealed < totalHints) {
+        this.currentExercise.hintsRevealed++;
+        // Save to localStorage so it’s remembered
+        localStorage.setItem(this.exercisesKey, JSON.stringify(this.data));
+      }
     }
   }
 
@@ -176,8 +263,24 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
       if (this.userAnswer.trim() === this.currentExercise.answer.trim()) {
         this.answerMessage = 'Correct!';
+
+        if (this.gamificationEnabled) {
+          this.currentExercise.isCorrect = true;
+          // Only add points if they haven't been awarded already
+          if (!this.currentExercise.scoreAwarded) {
+            const exerciseScore = this.calculateExerciseScore(this.currentExercise);
+            this.currentScore += exerciseScore;
+            this.currentExercise.scoreAwarded = true; // Mark as scored
+            this.animateScore = true;
+            setTimeout(() => (this.animateScore = false), 1000);
+            this.playCorrectSound();
+          }
+        } else {
+          this.currentExercise.isCorrect = false;
+        }
       } else {
         this.answerMessage = 'Incorrect. Try again.';
+        this.currentExercise.isCorrect = false;
       }
       this.answerChecked = true;
       this.saveUserAnswers();
@@ -186,42 +289,51 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
   submitTest(): void {
     let totalPoints = 0;
-
-    this.data.forEach((exercise) => {
+    let totalHintsUsed = 0;
+    this.data.forEach(exercise => {
       if (exercise.userAnswer === exercise.answer) {
-        totalPoints += exercise.points || 0; // Add points for correct answers
+        const exerciseScore = this.calculateExerciseScore(exercise);
+        totalPoints += exerciseScore;
       }
+      totalHintsUsed += exercise.hintsRevealed || 0;
     });
 
-    const body = {
+    const submissionBody = {
       user_id: this.userId,
       test_id: this.testId,
       points: totalPoints,
+      total_hints_used: totalHintsUsed, // additional info for gamification
       timestamp: new Date().toISOString(),
     };
 
-    console.log('Submitting test score with body:', body);
+    console.log('Submitting test score with body:', submissionBody);
 
-    this.apiService.submitTestScore(this.userId, this.testId, totalPoints).subscribe(
-      (response) => {
+    this.apiService.submitTestScore(this.userId, this.testId, totalPoints, totalHintsUsed).subscribe(
+      response => {
         console.log('Test submitted successfully:', response);
-
-        // Show success notification
-        this.snackBar.open('Test submitted successfully!', 'Close', {
-          duration: 7000,
-        });
-
+        this.snackBar.open('Test odovzdaný úspešne!', 'Close', { duration: 7000 });
         this.resetTestState();
         this.router.navigate(['/test'], { state: { points: totalPoints } });
       },
-      (error) => {
+      error => {
         console.error('Error submitting test:', error);
-
-        // Show error notification
-        this.snackBar.open('Failed to submit the test. Please try again.', 'Close', {
-          duration: 7000,
-        });
+        this.snackBar.open('Failed to submit the test. Please try again.', 'Close', { duration: 7000 });
       }
     );
+  }
+
+  calculateExerciseScore(exercise: any): number {
+    const basePoints = exercise.points;
+    const hintPenalty = 2; // points to deduct per hint used
+    const hintsUsed = exercise.hintsRevealed || 0;
+    const bonusPoints = this.gamificationEnabled ? (this.timeLeft / this.convertTimeToSeconds(this.timeLimit)) * 5 : 0;
+    return Math.max(0, Math.round(basePoints - hintsUsed * hintPenalty + bonusPoints));
+  }
+
+  playCorrectSound(): void {
+    const audio = new Audio();
+    audio.src = '../../assets/sounds/correct.mp3';
+    audio.load();
+    audio.play();
   }
 }

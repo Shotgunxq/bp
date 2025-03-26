@@ -34,7 +34,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MathjaxModule } from 'mathjax-angular';
 
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -43,7 +42,6 @@ import { DistributionComponent } from './components/graphs/distribution/distribu
 import { PoissonComponent } from './components/graphs/poisson/poisson.component';
 import { StudentovoComponent } from './components/graphs/studentovo/studentovo.component';
 import { ChikvadrantComponent } from './components/graphs/chikvadrant/chikvadrant.component';
-import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
@@ -56,6 +54,11 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatOption } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { StatisticsComponent } from './components/tables/admin-stats-table/admin-stats-table.component';
+import { MatCardModule } from '@angular/material/card';
+import { AdminStatisticsComponent } from './pages/admin-page/admin-statistics/admin-statistics.component';
+import { ExportPageComponent } from './pages/export-page/export-page.component';
+import { TimeUpDialogComponent } from './components/Modals/Dialog/time-up-dialog/time-up-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -72,14 +75,17 @@ import { StatisticsComponent } from './components/tables/admin-stats-table/admin
     PoissonComponent,
     StudentovoComponent,
     ChikvadrantComponent,
-    SidenavComponent,
     AdminPageComponent,
     ConfirmDialogComponent,
     EditDialogComponent,
     AdminNewExerciseComponent,
     StatisticsComponent,
+    AdminStatisticsComponent,
+    ExportPageComponent,
+    TimeUpDialogComponent,
   ],
   imports: [
+    MatCardModule,
     MathjaxModule.forRoot(),
     MatSnackBarModule,
     MatCheckboxModule,
@@ -91,7 +97,6 @@ import { StatisticsComponent } from './components/tables/admin-stats-table/admin
     MatExpansionModule,
     MatDividerModule,
     NgbModule,
-    MatSidenavModule,
     AppRoutingModule,
     FormsModule, // Add FormsModule to imports
     HttpClientModule, // Add HttpClientModule to imports
@@ -107,7 +112,6 @@ import { StatisticsComponent } from './components/tables/admin-stats-table/admin
     MatFormFieldModule,
     MatStepperModule,
     NgApexchartsModule,
-    MatSidenavModule,
     MatTabsModule,
     MatDialogActions,
     MatDialogContent,

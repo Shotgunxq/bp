@@ -6,6 +6,7 @@ export interface binomialExercise {
   description: string;
   answer: number;
   points: number;
+  hints?: string[];
 }
 
 // Function to generate exercises with random values
@@ -30,8 +31,10 @@ export function binomialProbabilityRandom(): binomialExercise[] {
     // Calculate answer
     const answer: number = calculateAnswer(n, k, p);
 
+    const hints: string[] = [`Pravdepodobnosť úspechu je ${p}.`, `Počet pokusov je ${n}.`, `Počet úspechov je ${k}.`];
+
     // Push exercise to exercises array
-    exercises.push({ n, k, p, probability, description, answer, points: 1 });
+    exercises.push({ n, k, p, probability, description, answer, points: 3, hints });
   }
 
   // Return array of exercises
@@ -72,5 +75,9 @@ function calculateProbability(n: number, k: number, p: number): number {
 function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
   // console.log(`n=${n}, k=${k}, p=${p}`);
-  return `Aká je pravdepodobnosť získania presne ${k} úspechov pri ${n} pokusoch experimentu s pravdepodobnosťou úspechu ${p}?\nZaokrúhlite na 3 desatinné miesta.`;
+  return `\\begin{aligned}
+  & \\text{Aká je pravdepodobnosť získania presne } ${k} \\text{ úspechov pri } ${n} \\text{ pokusoch experimentu} \\\\
+  & \\text{s pravdepodobnosťou úspechu } ${p}\\text{?} \\\\
+  & \\text{Zaokrúhlite na 3 desatinné miesta.}
+  \\end{aligned}`;
 }

@@ -7,18 +7,18 @@
   <!-- Typewriter Animation -->
   <div class="typewriter" *ngIf="isMenuRoute">
     <div class="typewriter-wrapper">
-      <span>Welcome</span>
-      <span *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
+      <span>Výtaj</span>
+      <span #animatedUsername *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
     </div>
   </div>
 
   <div class="admin-buttons" *ngIf="isAdminRoute">
+    <button *ngIf="!isStatisticsPage" mat-button routerLink="/admin/statistics">Štatistika</button>
     <button mat-button (click)="triggerExerciseDialog()">Pridať novú úlohu</button>
   </div>
 
   <!-- Logout and Settings Buttons -->
   <div class="holder">
-    <button id="logout" mat-button (click)="logout()">Logout</button>
-    <img id="settings" src="../../../assets/pictures/settings.png" alt="Settings" class="settings-image" (click)="toggleSidenav.emit()" />
+    <button id="logout" mat-button (click)="logout()">Odhlásenie</button>
   </div>
 </mat-toolbar>

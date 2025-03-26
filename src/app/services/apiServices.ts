@@ -55,18 +55,31 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/tests`, { exercises, cas_na_pisanie });
   }
 
-  submitTestScore(userId: number, testId: number, points: number): Observable<any> {
+  submitTestScore(userId: number, testId: number, points: number, totalHintsUsed: number): Observable<any> {
     const body = {
       user_id: userId,
       test_id: testId,
       points: points,
+      total_hints_used: totalHintsUsed,
       timestamp: new Date().toISOString(),
     };
-    console.log('Request body:', body); // Debug log
+    console.log('Request body:', body);
     return this.http.post(`${this.baseUrl}/submit`, body);
   }
 
   fetchTestData(testId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/api/test/${testId}`);
+  }
+
+  getStatistics(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/statistics/${userId}`);
+  }
+
+  getAllScoresForTest(testId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/api/all-scores/${testId}`);
+  }
+
+  getOverallPercentile(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/percentile/overall/${userId}`);
   }
 }

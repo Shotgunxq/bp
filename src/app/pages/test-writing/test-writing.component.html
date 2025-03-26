@@ -1,6 +1,8 @@
 <div class="container">
   <div *ngIf="data && data.length > 0">
     <!-- Display exercises fetched from the database -->
+    <div *ngIf="gamificationEnabled" class="score-board" [ngClass]="{ 'score-animation': animateScore }">Current Score: {{ currentScore }}</div>
+
     <div *ngIf="data.length > 0">
       <div class="exerciseModal" *ngIf="currentExercise">
         <div class="exercise-buttons">
@@ -8,41 +10,71 @@
             id="exerciseNavButton"
             *ngFor="let exercise of data; let i = index"
             (click)="jumpToExercise(i)"
-            [class.selected]="i === currentExerciseIndex"
-            [class.answered]="exercise.userAnswer !== undefined && exercise.userAnswer !== ''">
+            [ngClass]="{
+              selected: i === currentExerciseIndex,
+              answered: exercise.userAnswer !== undefined && exercise.userAnswer !== '',
+              correct: exercise.isCorrect,
+              wrong: exercise.isWrong,
+            }">
             {{ i + 1 }}
           </button>
         </div>
+
         <div class="timer-container">
-          <div class="timer">Time left: {{ formatTime(timeLeft) }}</div>
+          <div class="timer">Zostávajúci čas: {{ formatTime(timeLeft) }}</div>
         </div>
-        <p class="exerciseDesc">
-          Znenie úlohy:
-          <br />
-          {{ currentExercise.description }}
-        </p>
+
+        <div class="exerciseDesc">
+          <p>Znenie úlohy:</p>
+          <div class="mathjax-content" [mathjax]="'$$' + currentExercise.description + '$$'"></div>
+        </div>
+
+        <!-- Hints Section -->
+        <mat-card class="hints-container" *ngIf="gamificationEnabled && currentExercise.hints && currentExercise.hints.length">
+          <mat-card-content>
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="revealHint()"
+              [disabled]="currentExercise.hintsRevealed >= currentExercise.hints.length">
+              {{
+                currentExercise.hintsRevealed < currentExercise.hints.length ? 'Reveal Hint ' + (currentExercise.hintsRevealed + 1) : 'No More Hints'
+              }}
+            </button>
+
+            <div class="hint" *ngFor="let hint of currentExercise.hints | slice: 0 : currentExercise.hintsRevealed">
+              <mat-card class="hint-card">
+                {{ hint }}
+              </mat-card>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
         <div class="answer-lock">
           <input
             matInput
             type="text"
             [(ngModel)]="userAnswer"
-            placeholder="Enter your answer"
+            placeholder="Odpoveď"
             [disabled]="currentExercise.answerLocked"
             [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
           <button mat-flat-button color="primary" id="answerCheck" (click)="toggleAnswerLock()">
-            {{ currentExercise.answerLocked ? 'Unlock Answer' : 'Lock Answer' }}
+            {{ currentExercise.answerLocked ? 'Skusiť znova' : 'Odpovedať' }}
           </button>
           <p *ngIf="answerChecked">{{ answerMessage }}</p>
         </div>
       </div>
+
       <div *ngIf="!currentExercise">
         <p>No exercises available</p>
       </div>
+
       <div class="submit-but">
-        <button mat-flat-button color="Warning" (click)="submitTest()">Submit test</button>
+        <button mat-flat-button color="Warning" (click)="submitTest()">Odoslať test</button>
       </div>
     </div>
   </div>
+
   <div *ngIf="!data || data.length === 0">
     <p>No data available</p>
   </div>

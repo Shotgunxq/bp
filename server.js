@@ -198,24 +198,32 @@ app.put('/exercises/:exercise_id', async (req, res) => {
     }
 
     // Extract fields to update from the request body
-    const { description, correct_answer, points } = req.body;
+    const { description, correct_answer, points, hints, difficulty_level } = req.body;
 
-    // Optionally validate that at least one field is provided
-    if (description === undefined && correct_answer === undefined && points === undefined) {
+    // Validate that at least one field is provided for update.
+    if (description === undefined && correct_answer === undefined && points === undefined && hints === undefined && difficulty_level === undefined) {
       return res.status(400).json({ error: 'At least one field must be provided for update.' });
     }
 
-    // Construct the UPDATE query using COALESCE to update only the provided fields
+    // Convert hints array to a valid JSON string if provided.
+    let hintsJson = hints;
+    if (hints !== undefined) {
+      hintsJson = JSON.stringify(hints);
+    }
+
+    // Construct the UPDATE query using COALESCE.
     const updateQuery = `
       UPDATE exercises
       SET 
         description = COALESCE($1, description),
         correct_answer = COALESCE($2, correct_answer),
-        points = COALESCE($3, points)
-      WHERE exercise_id = $4
+        points = COALESCE($3, points),
+        hints = COALESCE($4::jsonb, hints),
+        difficulty_level = COALESCE($5, difficulty_level)
+      WHERE exercise_id = $6
       RETURNING *;
     `;
-    const values = [description, correct_answer, points, exercise_id];
+    const values = [description, correct_answer, points, hintsJson, difficulty_level, exercise_id];
 
     const updateResult = await db.query(updateQuery, values);
 
@@ -323,24 +331,24 @@ app.listen(PORT, () => {
 // POST /exercises - Create a new exercise with auto-assigned theme_id
 app.post('/admin/exercises', async (req, res) => {
   try {
-    // Destructure theme_id along with the other fields from the request body.
-    const { theme_id, difficulty_level, description, image, points, correct_answer } = req.body;
+    // Destructure fields from the request body.
+    const { theme_id, difficulty_level, description, points, correct_answer, hints } = req.body;
 
-    // Validate required fields including theme_id.
+    // Validate required fields.
     if (!theme_id || !difficulty_level || !description || points === undefined || !correct_answer) {
       return res.status(400).json({ error: 'Missing required fields: theme_id, difficulty_level, description, points, correct_answer' });
     }
 
-    // Process image: if the image field is falsy, set to null.
-    const imageValue = image ? image : null;
+    // Process hints: if hints is not provided, set it to an empty array (stringified) so that the jsonb column gets a valid JSON.
+    const hintsValue = hints ? hints : JSON.stringify([]);
 
-    // Build the INSERT query using the provided theme_id.
+    // Build the INSERT query including the image and hints fields.
     const insertQuery = `
-      INSERT INTO exercises (theme_id, difficulty_level, description, image, points, correct_answer)
+      INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-    const values = [theme_id, difficulty_level, description, imageValue, points, correct_answer];
+    const values = [theme_id, difficulty_level, description, points, correct_answer, hintsValue];
 
     const result = await db.query(insertQuery, values);
     res.status(201).json({ exercise: result.rows[0] });
@@ -353,7 +361,7 @@ app.post('/admin/exercises', async (req, res) => {
 app.get('/admin/statistics', async (req, res) => {
   try {
     const query = `
-       SELECT 
+        SELECT 
   CONCAT(u.first_name, ' ', u.last_name) AS full_name,
   ts.points_scored,
   ts.submitted_at AS submission_date,
@@ -371,6 +379,149 @@ ORDER BY ts.submitted_at DESC;
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/statistics/:user_id', async (req, res) => {
+  try {
+    // Retrieve and parse the user_id from the URL parameter
+    const userId = parseInt(req.params.user_id, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid user_id parameter' });
+    }
+    const query = `
+      SELECT
+      ts.test_id,
+        ts.points_scored,
+        ts.submitted_at AS submission_date,
+        t.exercises AS test_exercises,
+        COALESCE((
+          SELECT SUM((ex ->> 'points')::int)
+          FROM jsonb_array_elements(t.exercises) ex
+        ), 0) AS max_points
+      FROM test_submissions ts
+      JOIN tests t ON ts.test_id = t.test_id
+      WHERE ts.user_id = $1
+      ORDER BY ts.submitted_at DESC;
+    `;
+
+    const result = await db.query(query, [userId]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics for user:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/admin/submissions-over-time', async (req, res) => {
+  try {
+    const query = `
+SELECT 
+    DATE(submitted_at) AS submission_date,
+    COUNT(*) AS total_submissions
+FROM test_submissions
+GROUP BY DATE(submitted_at)
+ORDER BY submission_date;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/admin/avg-percentage-scores', async (req, res) => {
+  try {
+    const query = `
+SELECT 
+    t.test_id,
+    AVG(ts.points_scored) AS avg_points
+FROM test_scores ts
+JOIN tests t ON t.test_id = ts.test_id
+GROUP BY t.test_id
+ORDER BY t.test_id;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/admin/avg-points-per-exercise', async (req, res) => {
+  try {
+    const query = `
+SELECT 
+    ts.points_scored,
+    COUNT(*) AS frequency
+FROM test_scores ts
+GROUP BY ts.points_scored
+ORDER BY ts.points_scored;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/percentile/overall/:userId', async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid userId parameter' });
+    }
+
+    // Aggregate total points for each user from test_submissions.
+    const aggregateQuery = `
+      SELECT user_id, SUM(points_scored) AS total_points
+      FROM test_submissions
+      GROUP BY user_id;
+    `;
+    const result = await db.query(aggregateQuery);
+    const totals = result.rows;
+
+    if (totals.length === 0) {
+      return res.status(404).json({ error: 'No submissions found' });
+    }
+
+    // Find the total points for the current user.
+    const userRecord = totals.find(record => parseInt(record.user_id) === userId);
+    if (!userRecord) {
+      return res.status(404).json({ error: 'User has no submissions' });
+    }
+    const userTotal = parseInt(userRecord.total_points, 10);
+
+    // Count how many users have total_points less than or equal to the user's total.
+    const countBelowOrEqual = totals.filter(record => parseInt(record.total_points, 10) <= userTotal).length;
+
+    // Calculate the percentile rank.
+    const percentile = (countBelowOrEqual / totals.length) * 100;
+
+    res.json({ percentile: percentile });
+  } catch (error) {
+    console.error('Error computing overall percentile:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const query = `
+      SELECT u.email, SUM(ts.points_scored) AS total_points
+FROM test_submissions ts
+JOIN Users u ON ts.user_id = u.user_id
+GROUP BY u.email
+ORDER BY total_points DESC;
+    `;
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

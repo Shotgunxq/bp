@@ -1,21 +1,22 @@
 <div class="container">
   <div class="section">
-    <h1 id="pocetuloh">Počet úloh celkovo</h1>
+    <h1 id="pocetuloh">Celkový počet úloh</h1>
     <input
       id="totalExerciseCount"
       matInput
       type="number"
       placeholder="Počet úloh"
+      [(ngModel)]="totalExerciseCount"
       (input)="preventNegativeValue($event)"
       [ngClass]="{
         'valid-input': validateTotalExerciseCount(),
-        'invalid-input': !validateTotalExerciseCount()
+        'invalid-input': !validateTotalExerciseCount(),
       }" />
   </div>
 
   <div class="section">
     <h1>Výber tém</h1>
-    <mat-checkbox *ngFor="let theme of themes" [(ngModel)]="theme.selected">
+    <mat-checkbox color="primary" *ngFor="let theme of themes" [(ngModel)]="theme.selected">
       {{ theme.theme_name }}
     </mat-checkbox>
   </div>
@@ -27,7 +28,7 @@
         <div class="toggle-section">
           <div class="toggle">
             <span>Ľahké</span>
-            <mat-slide-toggle [(ngModel)]="isEasyEnabled"></mat-slide-toggle>
+            <mat-slide-toggle color="primary" [(ngModel)]="isEasyEnabled"></mat-slide-toggle>
           </div>
           <div class="input">
             <input
@@ -46,7 +47,7 @@
         <div class="toggle-section">
           <div class="toggle">
             <span>Stredné</span>
-            <mat-slide-toggle [(ngModel)]="isMediumEnabled"></mat-slide-toggle>
+            <mat-slide-toggle color [(ngModel)]="isMediumEnabled"></mat-slide-toggle>
           </div>
           <div class="input">
             <input
@@ -65,7 +66,7 @@
         <div class="toggle-section">
           <div class="toggle">
             <span>Ťažké</span>
-            <mat-slide-toggle [(ngModel)]="isHardEnabled"></mat-slide-toggle>
+            <mat-slide-toggle color [(ngModel)]="isHardEnabled"></mat-slide-toggle>
           </div>
           <div class="input">
             <input
@@ -84,11 +85,14 @@
 
   <div class="section">
     <mat-form-field id="timeSelect" appearance="fill">
-      <mat-label>Časový limit</mat-label>
+      <mat-label>časový limit</mat-label>
       <mat-select [(value)]="selectedTime">
         <mat-option *ngFor="let time of times" [value]="time">{{ time }} minút</mat-option>
       </mat-select>
     </mat-form-field>
+    <br />
+    <!-- Gamification Toggle -->
+    <mat-slide-toggle color [(ngModel)]="isGamificationEnabled">Gamifikácia</mat-slide-toggle>
     <br />
     <button mat-raised-button color="primary" (click)="getData()">Generovať</button>
   </div>

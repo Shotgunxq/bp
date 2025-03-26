@@ -9,6 +9,8 @@ import { MaterialsPageComponent } from './pages/materials-page/materials-page.co
 import { TestWritingComponent } from './pages/test-writing/test-writing.component';
 import { AuthGuard } from './auth.guard';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { AdminStatisticsComponent } from './pages/admin-page/admin-statistics/admin-statistics.component';
+import { ExportPageComponent } from './pages/export-page/export-page.component';
 
 const routes: Routes = [
   { component: LoginModalComponent, path: '' },
@@ -18,7 +20,9 @@ const routes: Routes = [
   { component: TestDoneComponent, path: 'done', canActivate: [AuthGuard] },
   { component: MaterialsPageComponent, path: 'mats', canActivate: [AuthGuard] },
   { component: TestWritingComponent, path: 'test-writing', canActivate: [AuthGuard] },
+  { component: ExportPageComponent, path: 'export', canActivate: [AuthGuard] },
   { component: AdminPageComponent, path: 'admin' },
+  { component: AdminStatisticsComponent, path: 'admin/statistics' },
   { path: '**', redirectTo: '' },
 ];
 

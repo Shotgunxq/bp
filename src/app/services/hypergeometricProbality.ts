@@ -8,6 +8,7 @@ export interface hypergeometricExercises {
   description: string;
   answer: number;
   points: number;
+  hints: string[];
 }
 
 // Function to generate exercises with random values
@@ -29,8 +30,10 @@ export function hypergeometricProbabilityRandom(): hypergeometricExercises[] {
     // Calculate answer
     const answer = probability;
 
+    const hints: string[] = [`Počet úspechov v populácii je ${K}.`, `Počet úspechov vo vzorke je ${k}.`, `Veľkosť populácie je ${N}.`];
+
     // Push exercise to exercises array
-    exercises.push({ N, K, n, k, probability, description, answer, points: 1 });
+    exercises.push({ N, K, n, k, probability, description, answer, points: 3, hints });
   }
 
   // Return array of exercises
@@ -63,5 +66,9 @@ function calculateHypergeometricProbability(K: number, N: number, n: number, k: 
 
 // Function to generate description
 function generateDescription(N: number, K: number, n: number, k: number): string {
-  return `Aká je pravdepodobnosť vybrať presne ${k} úspechov zo vzorky veľkosti ${n} z populácie s ${N} položkami, z ktorých ${K} sú úspechy?\nZaokrúhlte na 3 desatinné miesta.`;
+  return `\\begin{aligned}
+  \\text{Aká je pravdepodobnosť vybrať presne } ${k} \\text{ úspechov zo vzorky veľkosti } ${n} \\text{ z populácie s } ${N}\\
+  \\text{ položkami, z ktorých } ${K} \\text{ sú úspechy?} \\\\
+  \\text{Zaokrúhlite na 3 desatinné miesta.}
+  \\end{aligned}`;
 }

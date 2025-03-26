@@ -201,17 +201,17 @@
     </mat-expansion-panel>
 
     <mat-expansion-panel>
-      <mat-expansion-panel-header>Distribucna</mat-expansion-panel-header>
+      <mat-expansion-panel-header>Distribučná funkcia</mat-expansion-panel-header>
       <graph-distribution></graph-distribution>
     </mat-expansion-panel>
 
     <mat-expansion-panel>
-      <mat-expansion-panel-header>Hustota</mat-expansion-panel-header>
+      <mat-expansion-panel-header>Funkcia hustoty</mat-expansion-panel-header>
       <graph-density></graph-density>
     </mat-expansion-panel>
     <mat-expansion-panel (opened)="loadPoisson()">
       <mat-expansion-panel-header>
-        <mat-panel-title>Poisson Distribution</mat-panel-title>
+        <mat-panel-title>Poissonovo rozdelenie</mat-panel-title>
       </mat-expansion-panel-header>
       <div *ngIf="showPoisson">
         <graph-poisson></graph-poisson>
@@ -221,7 +221,7 @@
     <!-- Student's t-Distribution -->
     <mat-expansion-panel (opened)="loadStudentT()">
       <mat-expansion-panel-header>
-        <mat-panel-title>Student's t-Distribution</mat-panel-title>
+        <mat-panel-title>Studentovo rozdelenie</mat-panel-title>
       </mat-expansion-panel-header>
       <div *ngIf="showStudentT">
         <graph-studentovo></graph-studentovo>
@@ -231,7 +231,7 @@
     <!-- Chi-Squared Distribution -->
     <mat-expansion-panel (opened)="loadChiSquared()">
       <mat-expansion-panel-header>
-        <mat-panel-title>Chi-Squared Distribution</mat-panel-title>
+        <mat-panel-title>Chí-kvadrát rozdelenie</mat-panel-title>
       </mat-expansion-panel-header>
       <div *ngIf="showChiSquared">
         <graph-chikvadrant></graph-chikvadrant>

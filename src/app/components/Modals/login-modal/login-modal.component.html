@@ -1,4 +1,3 @@
-
 <div class="modal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -7,23 +6,20 @@
         <p *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</p>
 
         <div class="input-group mb-3">
-          <input required 
-            type="text"
-            class="form-control"
-            placeholder="Username"
-            aria-label="Username"
-            [(ngModel)]="username" /> <!-- Bind username input -->
+          <input required type="text" class="form-control" placeholder="Prihlasovacie meno ais" aria-label="Username" [(ngModel)]="username" />
+          <!-- Bind username input -->
         </div>
 
         <div class="input-group mb-3">
-          <input matInput [type]="hide() ? 'password' : 'text'"
+          <input
+            matInput
+            [type]="hide() ? 'password' : 'text'"
             class="form-control password-input"
-            placeholder="Password"
+            placeholder="Heslo"
             aria-label="Password"
             id="passwordInput"
             [(ngModel)]="password"
-            required
-          />
+            required />
           <span class="input-group-append">
             <button
               mat-icon-button
@@ -32,30 +28,19 @@
               [attr.aria-label]="'Hide password'"
               [attr.aria-pressed]="hide()"
               tabindex="-1"
-              class="visibility-button"
-            >
-              <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+              class="visibility-button">
+              <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
           </span>
         </div>
-        
-
       </div>
       <div class="modal-footer">
         <!-- Button to trigger login -->
-        <button type="button" class="btn btn-primary" (click)="login()">Login</button>
-        <br />
-        <!-- Menu button (as an alternative route) -->
-        <button routerLink="menu" type="button" class="btn btn-secondary">Menu</button>
+        <button type="button" class="btn btn-primary" (click)="login()">Prihlásiť sa</button>
       </div>
     </div>
     <div id="logoHolder">
-      <img
-        src="../assets/pictures/stu_fei_logo.png"
-        alt="STU FEI logo"
-        class="img-fluid"
-        id="logo"
-      />
+      <img src="../assets/pictures/stu_fei_logo.png" alt="STU FEI logo" class="img-fluid" id="logo" />
     </div>
   </div>
 </div>

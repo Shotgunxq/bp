@@ -89,3 +89,11 @@ mjx-container * {
   overflow-wrap: break-word !important;
   word-break: break-all !important;
 }
+.full-width-math {
+  width: 100%;
+}
+
+.full-width-math .mathjax-content,
+.full-width-math mjx-container {
+  width: 100% !important;
+}

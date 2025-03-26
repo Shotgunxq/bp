@@ -6,24 +6,40 @@ import { AdminService } from '../../../services/adminServices';
 @Component({
   selector: 'app-edit-dialog',
   template: `
-    <h2 mat-dialog-title>Edit Exercise</h2>
+    <h2 mat-dialog-title>Upraviť úlohu</h2>
     <mat-dialog-content [formGroup]="editForm">
       <!-- MathQuill Editor for Description (outside of mat-form-field) -->
       <div style="margin-bottom: 16px;">
-        <label style="display: block; font-weight: 500; margin-bottom: 4px;">Description</label>
+        <label style="display: block; font-weight: 500; margin-bottom: 4px;">Znenie úlohy</label>
         <div #mathFieldContainer style="min-height: 40px; border: 1px solid rgba(0,0,0,0.38); padding: 8px; cursor: text;"></div>
       </div>
 
       <!-- Standard field for Answer -->
       <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Answer</mat-label>
+        <mat-label>Spravná odpoveď</mat-label>
         <textarea matInput formControlName="correct_answer"></textarea>
       </mat-form-field>
 
       <!-- Field for Points -->
       <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Points</mat-label>
+        <mat-label>Body</mat-label>
         <textarea matInput formControlName="points"></textarea>
+      </mat-form-field>
+
+      <!-- Field for Difficulty Level -->
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Obtiažnosť</mat-label>
+        <mat-select formControlName="difficulty_level">
+          <mat-option value="easy">Easy</mat-option>
+          <mat-option value="medium">Medium</mat-option>
+          <mat-option value="hard">Hard</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Field for Hints -->
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Nápoveď (jeden na riadok)</mat-label>
+        <textarea matInput formControlName="hints" rows="5"></textarea>
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
@@ -46,37 +62,43 @@ export class EditDialogComponent implements AfterViewInit {
     private fb: FormBuilder,
     private adminService: AdminService
   ) {
-    // Initialize the form with the current exercise details
+    // Convert the hints array to a newline-separated string.
+    const hintsString = data.exercise.hints && Array.isArray(data.exercise.hints) ? data.exercise.hints.join('\n') : '';
+
+    // Initialize the form with current exercise details.
+    // Note the new "difficulty_level" control. We default to 'easy' if none is provided.
     this.editForm = this.fb.group({
       description: [data.exercise.description, Validators.required],
       correct_answer: [data.exercise.correct_answer, Validators.required],
       points: [data.exercise.points, Validators.required],
+      difficulty_level: [data.exercise.difficulty_level || 'easy', Validators.required],
+      hints: [hintsString, Validators.required],
     });
   }
 
   ngAfterViewInit(): void {
     // Get MathQuill's interface (version 2)
     this.MQ = (window as any).MathQuill.getInterface(2);
-    // Prepare the description text fetched from the API
+
     let description = this.data.exercise.description || '';
-    // If the description doesn't start with "\text{", wrap it in \text{...}
-    if (!description.trim().startsWith('\\text{')) {
-      description = `\\text{${description}}`;
+
+    if (description.includes('\\begin{aligned}') && description.includes('\\end{aligned}')) {
+      description = description.replace(/\\begin\{aligned\}/g, '').replace(/\\end\{aligned\}/g, '');
+      description = description.replace(/\\\\/g, ' ');
+      description = description.replace(/&/g, ' ');
     }
-    // Initialize the MathQuill field on the container element
+
     this.mathField = this.MQ.MathField(this.mathFieldContainer.nativeElement, {
       spaceBehavesLikeTab: false,
       supSubsRequireOperand: true,
       maxDepth: 1,
       handlers: {
         edit: (fieldInstance: any) => {
-          // When the MathQuill field is edited, update the form control.
-          // You might want to remove the \text{...} wrapper before saving, depending on your use case.
           this.editForm.patchValue({ description: fieldInstance.latex() });
         },
       },
     });
-    // Set the initial LaTeX value in the MathQuill field
+
     this.mathField.latex(description);
   }
 
@@ -85,9 +107,16 @@ export class EditDialogComponent implements AfterViewInit {
   }
 
   onConfirm(): void {
+    const formValues = this.editForm.value;
+    const hintsArray = formValues.hints
+      .split('\n')
+      .map((hint: string) => hint.trim())
+      .filter((hint: string) => hint.length > 0);
+
     const updatedExercise = {
       ...this.data.exercise,
-      ...this.editForm.value,
+      ...formValues,
+      hints: hintsArray,
     };
 
     this.adminService.updateExercise(updatedExercise).subscribe(

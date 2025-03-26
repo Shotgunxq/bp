@@ -11,13 +11,13 @@ import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.s
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-  @Output() toggleSidenav = new EventEmitter<void>();
   @Output() openExerciseDialogEvent = new EventEmitter<void>(); // NEW event emitter
 
   username: string | null = '';
   isMenuRoute = false;
   showBackButton = false;
   isAdminRoute = false;
+  isStatisticsPage: boolean = false;
 
   constructor(
     private navbarService: navbarService,
@@ -47,14 +47,19 @@ export class NavbarComponent {
         this.username = name;
       }
     });
-  }
 
-  toggleSidenavMenu() {
-    this.toggleSidenav.emit();
+    // Subscribe to router events to determine if the current page is the statistics page
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      this.isStatisticsPage = event.urlAfterRedirects === '/admin/statistics';
+    });
   }
 
   goBack() {
-    this.router.navigate(['/menu']); // Always navigate to /menu
+    if (this.router.url === '/admin/statistics') {
+      this.router.navigate(['/admin']);
+    } else {
+      this.router.navigate(['/menu']); // Always navigate to /menu
+    }
   }
 
   logout() {

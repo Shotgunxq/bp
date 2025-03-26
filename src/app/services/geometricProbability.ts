@@ -7,6 +7,7 @@ export interface geometricExercise {
   description: string;
   answer: number;
   points: number;
+  hints: string[];
 }
 
 // Function to generate exercises with random values
@@ -33,8 +34,14 @@ export function geometricProbabilityRandom(): geometricExercise[] {
     // Calculate answer
     const answer = 1 - Math.pow(1 - p, k);
 
+    const hints: string[] = [
+      `Pravdepodobnosť úspechu je ${p}.`,
+      `Počet pokusov je ${k}.`,
+      `Počet pokusov na dosiahnutie prvého úspechu je ${numberOfTrials}.`,
+    ];
+
     // Push exercise to exercises array
-    exercises.push({ n: numberOfTrials, k, p, probability, description, answer, points: 1 });
+    exercises.push({ n: numberOfTrials, k, p, probability, description, answer, points: 3, hints });
   }
 
   // Return array of exercises
@@ -43,7 +50,10 @@ export function geometricProbabilityRandom(): geometricExercise[] {
 
 // Function to generate description
 function generateDescription(k: number, p: number): string {
-  return `Aká je pravdepodobnosť potreby najviac ${k} pokusov na dosiahnutie prvého úspechu v experimente s pravdepodobnosťou úspechu ${p}?`;
+  return `\\begin{aligned}
+  \\text{Aká je pravdepodobnosť potreby najviac } ${k} \\text{ pokusov na dosiahnutie prvého úspechu v experimente}\\
+  \\text{s pravdepodobnosťou úspechu } ${p}\\text{?}
+  \\end{aligned}`;
 }
 
 // Function to generate geometric distribution

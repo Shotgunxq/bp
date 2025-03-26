@@ -1,12 +1,67 @@
 .container {
-  //   display: flex;
-  padding-top: 5%;
-  padding: auto;
+  margin-top: 1.8%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  background-color: white;
+  width: 80%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 #table {
   border-radius: 12%;
 }
 
 .mat-elevation-z8 {
   border-radius: 12%;
+}
+
+table.mat-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/* New styles for the accordion header and rows */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 60px; /* 1rem top and bottom, 60px left and right */
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.header-cell {
+  margin-right: 2rem;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 60px; /* Equal padding on both sides */
+}
+
+.data-cell {
+  margin-right: 2rem;
+}
+
+.exercise-detail {
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.percentile-card {
+  margin-top: 20px;
+  background-color: #e0f7fa; /* Light cyan background */
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #00796b; /* Darker teal text */
 }

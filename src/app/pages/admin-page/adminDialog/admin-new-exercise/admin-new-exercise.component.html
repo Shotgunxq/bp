@@ -1,17 +1,18 @@
 <h2 mat-dialog-title>Pridanie novej úlohy</h2>
 <mat-dialog-content>
   <form [formGroup]="exerciseForm">
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Téma</mat-label>
-      <mat-select formControlName="theme_id">
-        <mat-option *ngFor="let theme of themes" [value]="theme.theme_id">
-          {{ theme.theme_name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-row full-width">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Téma</mat-label>
+        <mat-select formControlName="theme_id">
+          <mat-option *ngFor="let theme of themes" [value]="theme.theme_id">
+            {{ theme.theme_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-    <!-- Difficulty Level Dropdown -->
-    <div class="form-row">
+    <div class="form-row full-width">
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Ťažkosť</mat-label>
         <mat-select formControlName="difficulty_level">
@@ -22,29 +23,28 @@
       </mat-form-field>
     </div>
 
-    <!-- Description Input -->
-    <div class="form-row">
+    <!-- MathQuill Editor for Description -->
+    <div class="form-row full-width">
+      <label class="full-width" style="font-weight: 500; margin-bottom: 4px; display: block">Popis úlohy</label>
+      <div #mathFieldContainer class="full-width" style="min-height: 100px; border: 1px solid rgba(0, 0, 0, 0.38); padding: 8px; cursor: text"></div>
+    </div>
+
+    <!-- Hints Input -->
+    <div class="form-row full-width">
       <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Popis úlohy</mat-label>
-        <textarea matInput formControlName="description" rows="5"></textarea>
+        <mat-label>Nápovedy (jedna na riadok)</mat-label>
+        <textarea matInput formControlName="hints" rows="5" class="full-width"></textarea>
       </mat-form-field>
     </div>
 
-    <!-- Image Checkbox -->
-    <div class="form-row">
-      <mat-checkbox formControlName="image">Obsahuje obrázok?</mat-checkbox>
-    </div>
-
-    <!-- Points Input -->
-    <div class="form-row">
+    <div class="form-row full-width">
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Body</mat-label>
         <input matInput formControlName="points" type="number" />
       </mat-form-field>
     </div>
 
-    <!-- Correct Answer Input -->
-    <div class="form-row">
+    <div class="form-row full-width">
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Správna odpoveď</mat-label>
         <input matInput formControlName="correct_answer" />

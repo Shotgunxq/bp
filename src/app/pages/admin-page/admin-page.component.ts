@@ -7,7 +7,7 @@ import { AdminService } from '../../services/adminServices';
 import { ConfirmDialogComponent } from './adminDialog/confirm-dialog.component';
 import { EditDialogComponent } from './adminDialog/edit-dialog.component';
 import { AdminNewExerciseComponent } from './adminDialog/admin-new-exercise/admin-new-exercise.component';
-import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service'; // <-- Import the service
+import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service';
 
 declare var MathJax: any;
 
@@ -27,7 +27,7 @@ interface Theme {
 })
 export class AdminPageComponent implements OnInit, AfterViewInit {
   themes: Theme[] = [];
-  displayedColumns: string[] = ['description', 'correct_answer', 'points', 'actions'];
+  displayedColumns: string[] = ['description', 'correct_answer', 'difficulty_level', 'points', 'actions'];
 
   @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
 
@@ -35,7 +35,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
     private apiService: ApiService,
     private adminService: AdminService,
     private dialog: MatDialog,
-    private adminExerciseDialogService: AdminExerciseDialogService // <-- Inject here
+    private adminExerciseDialogService: AdminExerciseDialogService
   ) {}
 
   ngOnInit(): void {
@@ -48,21 +48,12 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.sorts.changes.subscribe((sorts: QueryList<MatSort>) => {
-      this.assignSorts(sorts);
-    });
-
-    // MathJax.Hub.Config({
-    //   tex2jax: {
-    //     inlineMath: [
-    //       ['$', '$'],
-    //       ['\\(', '\\)'],
-    //     ],
-    //   },
-    //   CommonHTML: { linebreaks: { automatic: true } },
-    //   'HTML-CSS': { linebreaks: { automatic: true } },
-    //   SVG: { linebreaks: { automatic: true } },
-    // });
+    setTimeout(() => {
+      const container = document.querySelector('.mathjax-content');
+      if (container) {
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, container]);
+      }
+    }, 3000);
   }
 
   assignSorts(sorts: QueryList<MatSort>): void {
@@ -73,6 +64,12 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
           theme.exercises.sort = sortInstance;
         }
       }
+      setTimeout(() => {
+        const container = document.querySelector('.mathjax-content');
+        if (container) {
+          MathJax.Hub.Queue(['Typeset', MathJax.Hub, container]);
+        }
+      }, 2000);
     });
   }
 
@@ -103,6 +100,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
           if (sortInstance) {
             theme.exercises.sort = sortInstance;
           }
+          // Set flag so MathJax will typeset in ngAfterViewChecked.
         },
         error => {
           console.error('Error fetching exercises:', error);
@@ -131,6 +129,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
             data[index] = result;
             theme.exercises!.data = data;
             theme.exercises!._updateChangeSubscription();
+            // Mark that new content has been rendered.
           }
         }
       }
@@ -140,7 +139,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
   onDelete(exercise: any, theme: Theme): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
-      data: { message: 'Are you sure you want to delete this exercise?' },
+      data: { message: 'Ste si istý, že chcete vymazať toto cvičenie?' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -172,7 +171,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
   openExerciseDialog(): void {
     const dialogRef = this.dialog.open(AdminNewExerciseComponent, {
       width: '800px',
-      data: { theme_id: /* you can pass the current theme id if needed */ '' },
+      data: { theme_id: '' },
     });
 
     dialogRef.afterClosed().subscribe(result => {

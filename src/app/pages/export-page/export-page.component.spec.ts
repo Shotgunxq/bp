@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SidenavComponent } from './sidenav.component';
+import { ExportPageComponent } from './export-page.component';
 
-describe('SidenavComponent', () => {
-  let component: SidenavComponent;
-  let fixture: ComponentFixture<SidenavComponent>;
+describe('ExportPageComponent', () => {
+  let component: ExportPageComponent;
+  let fixture: ComponentFixture<ExportPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SidenavComponent]
+      declarations: [ExportPageComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(SidenavComponent);
+
+    fixture = TestBed.createComponent(ExportPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
