@@ -339,8 +339,6 @@ app.post('/admin/exercises', async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields: theme_id, difficulty_level, description, points, correct_answer' });
     }
 
-    // Process image: if the image field is falsy, set to null.
-    const imageValue = image ? image : null;
     // Process hints: if hints is not provided, set it to an empty array (stringified) so that the jsonb column gets a valid JSON.
     const hintsValue = hints ? hints : JSON.stringify([]);
 
@@ -350,7 +348,7 @@ app.post('/admin/exercises', async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-    const values = [theme_id, difficulty_level, description, imageValue, points, correct_answer, hintsValue];
+    const values = [theme_id, difficulty_level, description, points, correct_answer, hintsValue];
 
     const result = await db.query(insertQuery, values);
     res.status(201).json({ exercise: result.rows[0] });

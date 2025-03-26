@@ -37,7 +37,6 @@ export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
       theme_id: [null, Validators.required],
       difficulty_level: ['', Validators.required],
       description: ['', Validators.required],
-      image: [false],
       points: [0, [Validators.required, Validators.min(0)]],
       correct_answer: ['', Validators.required],
       hints: ['', Validators.required],
@@ -93,11 +92,6 @@ export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
         .map((hint: string) => hint.trim())
         .filter((hint: string) => hint.length > 0);
       newExercise.hints = JSON.stringify(hintsArray);
-
-      // If the image checkbox is false, set image to null.
-      if (!newExercise.image) {
-        newExercise.image = null;
-      }
 
       // Create the new exercise.
       this.adminService.createExercise(newExercise).subscribe(
