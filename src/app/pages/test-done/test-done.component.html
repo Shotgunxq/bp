@@ -2,19 +2,19 @@
   <!-- Header Row -->
   <div class="sort-buttons header-row">
     <button mat-raised-button (click)="sortData('testId')">
-      Sort by Test ID
+      Zoradiť podľa Test ID
       <mat-icon *ngIf="currentSortColumn === 'testId'">
         {{ sortDirection === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}
       </mat-icon>
     </button>
     <button mat-raised-button (click)="sortData('points')">
-      Sort by Points
+      Zoradiť podľa Bodov
       <mat-icon *ngIf="currentSortColumn === 'points'">
         {{ sortDirection === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}
       </mat-icon>
     </button>
     <button mat-raised-button (click)="sortData('date')">
-      Sort by Date
+      Zoradiť podľa Dátumu
       <mat-icon *ngIf="currentSortColumn === 'date'">
         {{ sortDirection === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}
       </mat-icon>
@@ -27,8 +27,8 @@
       <mat-expansion-panel-header>
         <div class="data-row">
           <span class="data-cell">Test ID: {{ test.test_id }}</span>
-          <span class="data-cell">Points: {{ test.points_scored }} / {{ test.max_points }}</span>
-          <span class="data-cell">Date: {{ test.submission_date | date: 'short' }}</span>
+          <span class="data-cell">Získane body: {{ test.points_scored }} / {{ test.max_points }}</span>
+          <span class="data-cell">Dátum: {{ test.submission_date | date: 'short' }}</span>
         </div>
       </mat-expansion-panel-header>
 
@@ -36,27 +36,27 @@
       <ng-container *ngIf="test.test_exercises && test.test_exercises.length">
         <div *ngFor="let exercise of test.test_exercises" class="exercise-detail">
           <p>
-            <strong>Description:</strong>
+            <strong>Znenie úlohy:</strong>
             {{ exercise.description }}
           </p>
           <p>
-            <strong>Correct Answer:</strong>
+            <strong>Spravná odpoveď:</strong>
             {{ exercise.correct_answer }}
           </p>
           <p>
-            <strong>Points:</strong>
+            <strong>Počet bodov:</strong>
             {{ exercise.points }}
           </p>
           <p>
-            <strong>Difficulty:</strong>
+            <strong>Obtiažnosť:</strong>
             {{ exercise.difficulty_level }}
           </p>
           <p>
-            <strong>Your Answer:</strong>
+            <strong>Zadaná odpoveď:</strong>
             {{ exercise.userAnswer || 'N/A' }}
           </p>
           <p>
-            <strong>Hints Used:</strong>
+            <strong>Použité nápovedy:</strong>
             {{ exercise.hints_used || '0' }}
           </p>
         </div>
@@ -73,7 +73,7 @@
     aria-label="Select page of test submissions"></mat-paginator>
 
   <div class="percentile-card" *ngIf="userOverallPercentile">
-    Your overall performance is in the
+    Tvoj celkový výkon je v
     <strong>{{ userOverallPercentile | number: '1.0-2' }}%</strong>
     percentile.
   </div>

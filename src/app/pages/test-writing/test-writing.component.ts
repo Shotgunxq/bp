@@ -311,7 +311,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     this.apiService.submitTestScore(this.userId, this.testId, totalPoints, totalHintsUsed).subscribe(
       response => {
         console.log('Test submitted successfully:', response);
-        this.snackBar.open('Test submitted successfully!', 'Close', { duration: 7000 });
+        this.snackBar.open('Test odovzdaný úspešne!', 'Close', { duration: 7000 });
         this.resetTestState();
         this.router.navigate(['/test'], { state: { points: totalPoints } });
       },

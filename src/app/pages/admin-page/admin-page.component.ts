@@ -139,7 +139,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
   onDelete(exercise: any, theme: Theme): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
-      data: { message: 'Are you sure you want to delete this exercise?' },
+      data: { message: 'Ste si istý, že chcete vymazať toto cvičenie?' },
     });
 
     dialogRef.afterClosed().subscribe(result => {

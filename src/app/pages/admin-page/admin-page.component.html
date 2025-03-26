@@ -14,7 +14,7 @@
         <table mat-table [dataSource]="theme.exercises" matSort class="mat-elevation-z8">
           <!-- Description Column -->
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="description-col">Description</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="description-col">Popis úlohy</th>
             <td mat-cell *matCellDef="let element" class="description-col">
               <!-- <p class="mathjax-content" [mathjax]="'$$' + element.description + '$$'"></p> -->
               <div class="full-width-math">
@@ -25,24 +25,24 @@
 
           <!-- Correct Answer Column -->
           <ng-container matColumnDef="correct_answer">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Answers</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Spravná odpoveď</th>
             <td mat-cell *matCellDef="let element">{{ element.correct_answer }}</td>
           </ng-container>
 
           <ng-container matColumnDef="difficulty_level">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Difficulty</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Obtiažnosť</th>
             <td mat-cell *matCellDef="let element">{{ element.difficulty_level }}</td>
           </ng-container>
 
           <!-- Points Column -->
           <ng-container matColumnDef="points">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Points</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Body</th>
             <td mat-cell *matCellDef="let element">{{ element.points }}</td>
           </ng-container>
 
           <!-- Actions Column -->
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <th mat-header-cell *matHeaderCellDef>Akcie</th>
             <td mat-cell *matCellDef="let element">
               <div class="actions">
                 <button mat-icon-button (click)="onEdit(element, theme)" aria-label="Edit">

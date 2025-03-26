@@ -21,7 +21,7 @@
         </div>
 
         <div class="timer-container">
-          <div class="timer">Time left: {{ formatTime(timeLeft) }}</div>
+          <div class="timer">Zostávajúci čas: {{ formatTime(timeLeft) }}</div>
         </div>
 
         <div class="exerciseDesc">
@@ -55,11 +55,11 @@
             matInput
             type="text"
             [(ngModel)]="userAnswer"
-            placeholder="Enter your answer"
+            placeholder="Odpoveď"
             [disabled]="currentExercise.answerLocked"
             [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
           <button mat-flat-button color="primary" id="answerCheck" (click)="toggleAnswerLock()">
-            {{ currentExercise.answerLocked ? 'Unlock Answer' : 'Lock Answer' }}
+            {{ currentExercise.answerLocked ? 'Skusiť znova' : 'Odpovedať' }}
           </button>
           <p *ngIf="answerChecked">{{ answerMessage }}</p>
         </div>
@@ -70,7 +70,7 @@
       </div>
 
       <div class="submit-but">
-        <button mat-flat-button color="Warning" (click)="submitTest()">Submit test</button>
+        <button mat-flat-button color="Warning" (click)="submitTest()">Odoslať test</button>
       </div>
     </div>
   </div>

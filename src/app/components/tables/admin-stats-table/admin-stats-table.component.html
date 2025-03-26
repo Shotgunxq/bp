@@ -1,15 +1,15 @@
 <!-- Search Bar -->
 <div>
   <mat-form-field appearance="fill">
-    <mat-label>Search by name or date</mat-label>
+    <mat-label>Vyhľadávanie</mat-label>
     <input matInput placeholder="Search" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
   </mat-form-field>
 </div>
 <!-- Header Row -->
 <div class="header-row">
-  <span id="header-name" class="header-cell">Full Name</span>
-  <span id="header-points" class="header-cell">Points</span>
-  <span id="header-date" class="header-cell">Date</span>
+  <span id="header-name" class="header-cell">Celé meno</span>
+  <span id="header-points" class="header-cell">Počet bodov</span>
+  <span id="header-date" class="header-cell">Dátum</span>
 </div>
 <!-- Accordion with paged data -->
 <mat-accordion>
@@ -26,15 +26,15 @@
     <ng-container *ngIf="row.test_exercises?.length">
       <div *ngFor="let exercise of row.test_exercises" class="exercise-detail">
         <p>
-          <strong>Description:</strong>
+          <strong>Znenie úlohy:</strong>
           {{ exercise.description }}
         </p>
         <p>
-          <strong>Correct Answer:</strong>
+          <strong>Spravná odpoveď:</strong>
           {{ exercise.answer }}
         </p>
         <p>
-          <strong>User Answer:</strong>
+          <strong>Odpoveď zadaný:</strong>
           {{ exercise.userAnswer || 'N/A' }}
         </p>
         <hr />

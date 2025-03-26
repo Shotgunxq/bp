@@ -6,29 +6,29 @@ import { AdminService } from '../../../services/adminServices';
 @Component({
   selector: 'app-edit-dialog',
   template: `
-    <h2 mat-dialog-title>Edit Exercise</h2>
+    <h2 mat-dialog-title>Upraviť úlohu</h2>
     <mat-dialog-content [formGroup]="editForm">
       <!-- MathQuill Editor for Description (outside of mat-form-field) -->
       <div style="margin-bottom: 16px;">
-        <label style="display: block; font-weight: 500; margin-bottom: 4px;">Description</label>
+        <label style="display: block; font-weight: 500; margin-bottom: 4px;">Znenie úlohy</label>
         <div #mathFieldContainer style="min-height: 40px; border: 1px solid rgba(0,0,0,0.38); padding: 8px; cursor: text;"></div>
       </div>
 
       <!-- Standard field for Answer -->
       <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Answer</mat-label>
+        <mat-label>Spravná odpoveď</mat-label>
         <textarea matInput formControlName="correct_answer"></textarea>
       </mat-form-field>
 
       <!-- Field for Points -->
       <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Points</mat-label>
+        <mat-label>Body</mat-label>
         <textarea matInput formControlName="points"></textarea>
       </mat-form-field>
 
       <!-- Field for Difficulty Level -->
       <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Difficulty Level</mat-label>
+        <mat-label>Obtiažnosť</mat-label>
         <mat-select formControlName="difficulty_level">
           <mat-option value="easy">Easy</mat-option>
           <mat-option value="medium">Medium</mat-option>
@@ -38,7 +38,7 @@ import { AdminService } from '../../../services/adminServices';
 
       <!-- Field for Hints -->
       <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Hints (one per line)</mat-label>
+        <mat-label>Nápoveď (jeden na riadok)</mat-label>
         <textarea matInput formControlName="hints" rows="5"></textarea>
       </mat-form-field>
     </mat-dialog-content>

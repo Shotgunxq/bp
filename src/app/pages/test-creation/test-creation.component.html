@@ -85,14 +85,14 @@
 
   <div class="section">
     <mat-form-field id="timeSelect" appearance="fill">
-      <mat-label>Časový limit</mat-label>
+      <mat-label>časový limit</mat-label>
       <mat-select [(value)]="selectedTime">
         <mat-option *ngFor="let time of times" [value]="time">{{ time }} minút</mat-option>
       </mat-select>
     </mat-form-field>
     <br />
     <!-- Gamification Toggle -->
-    <mat-slide-toggle color [(ngModel)]="isGamificationEnabled">Enable Gamification</mat-slide-toggle>
+    <mat-slide-toggle color [(ngModel)]="isGamificationEnabled">Gamifikácia</mat-slide-toggle>
     <br />
     <button mat-raised-button color="primary" (click)="getData()">Generovať</button>
   </div>
