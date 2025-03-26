@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
 import { ApiService } from '../../services/apiServices';
-
+import { TimeUpDialogComponent } from '../../components/Modals/Dialog/time-up-dialog/time-up-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
@@ -36,7 +37,8 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
-    private snackBar: MatSnackBar // Inject MatSnackBar
+    private snackBar: MatSnackBar, // Inject MatSnackBar
+    private dialog: MatDialog // <-- Inject MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -112,10 +114,15 @@ export class TestWritingComponent implements OnInit, OnDestroy {
         this.timeLeft = 0;
         this.stopTimer();
         localStorage.removeItem(this.timerKey);
-        this.snackBar.open('Time is up! The test has been cleared.', 'Close', {
-          duration: 5000,
+
+        // Open the time-up modal dialog
+        const dialogRef = this.dialog.open(TimeUpDialogComponent);
+
+        dialogRef.afterClosed().subscribe(() => {
+          // Once the user clicks OK, reset test state and redirect to the menu
+          this.resetTestState();
+          this.router.navigate(['/menu']); // Update route if needed
         });
-        this.resetTestState();
       }
     }, 1000);
   }
@@ -215,7 +222,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
               const exerciseScore = this.calculateExerciseScore(this.currentExercise);
               this.currentScore += exerciseScore;
               this.currentExercise.scoreAwarded = true; // Mark as scored
-              this.playSound();
+              this.playCorrectSound();
             }
           } else {
             this.currentExercise.isCorrect = false;
@@ -266,7 +273,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
             this.currentExercise.scoreAwarded = true; // Mark as scored
             this.animateScore = true;
             setTimeout(() => (this.animateScore = false), 1000);
-            this.playSound();
+            this.playCorrectSound();
           }
         } else {
           this.currentExercise.isCorrect = false;
@@ -323,7 +330,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     return Math.max(0, Math.round(basePoints - hintsUsed * hintPenalty + bonusPoints));
   }
 
-  playSound(): void {
+  playCorrectSound(): void {
     const audio = new Audio();
     audio.src = '../../assets/sounds/correct.mp3';
     audio.load();

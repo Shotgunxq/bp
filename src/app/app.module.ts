@@ -57,6 +57,7 @@ import { StatisticsComponent } from './components/tables/admin-stats-table/admin
 import { MatCardModule } from '@angular/material/card';
 import { AdminStatisticsComponent } from './pages/admin-page/admin-statistics/admin-statistics.component';
 import { ExportPageComponent } from './pages/export-page/export-page.component';
+import { TimeUpDialogComponent } from './components/Modals/Dialog/time-up-dialog/time-up-dialog.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { ExportPageComponent } from './pages/export-page/export-page.component';
     StatisticsComponent,
     AdminStatisticsComponent,
     ExportPageComponent,
+    TimeUpDialogComponent,
   ],
   imports: [
     MatCardModule,
