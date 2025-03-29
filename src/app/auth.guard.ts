@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { ApiService } from './services/apiServices';
 
 @Injectable({
@@ -11,12 +11,24 @@ export class AuthGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(): boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    // Retrieve the logged-in user from storage
     const user = this.apiService.getUserFromStorage();
+
     if (!user) {
-      this.router.navigate(['/login']); // Redirect to login if not authenticated
+      // Redirect to login if not authenticated
+      this.router.navigate(['/']);
       return false;
     }
+
+    // Check for role restrictions using the 'expectedEmployeeType' key from route data.
+    const expectedEmployeeType = route.data['expectedEmployeeType'];
+    if (expectedEmployeeType && user.employeeType !== expectedEmployeeType) {
+      // If the user does not match the expected type, redirect them (e.g., to the menu page)
+      this.router.navigate(['/menu']);
+      return false;
+    }
+
     return true;
   }
 }

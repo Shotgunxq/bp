@@ -4,14 +4,22 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
 
-  <!-- Typewriter Animation -->
-  <div class="typewriter" *ngIf="isMenuRoute">
-    <div class="typewriter-wrapper">
-      <span>Výtaj</span>
-      <span #animatedUsername *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
-    </div>
+  <!-- For admin users: show a button to go to /admin -->
+  <div *ngIf="isAdmin; else regularUser">
+    <button mat-button routerLink="/admin">Administrátorský panel</button>
   </div>
 
+  <!-- For non-admin users: show the typewriter greeting -->
+  <ng-template #regularUser>
+    <div class="typewriter" *ngIf="isMenuRoute">
+      <div class="typewriter-wrapper">
+        <span>Výtaj</span>
+        <span #animatedUsername *ngIf="username" class="username animate-typewriter">{{ username }}!</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Admin buttons for admin functionalities if already on an admin route -->
   <div class="admin-buttons" *ngIf="isAdminRoute">
     <button *ngIf="!isStatisticsPage" mat-button routerLink="/admin/statistics">Štatistika</button>
     <button mat-button (click)="triggerExerciseDialog()">Pridať novú úlohu</button>
