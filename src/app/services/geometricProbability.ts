@@ -5,7 +5,7 @@ export interface geometricExercise {
   p: number;
   probability: number;
   description: string;
-  answer: number;
+  correct_answer: number;
   points: number;
   hints: string[];
 }
@@ -31,8 +31,8 @@ export function geometricProbabilityRandom(): geometricExercise[] {
     // Calculate probability
     const probability = geometricProbabilityMoreThanOrEqual(k, p);
 
-    // Calculate answer
-    const answer = 1 - Math.pow(1 - p, k);
+    // Calculate correct_answer
+    const correct_answer = 1 - Math.pow(1 - p, k);
 
     const hints: string[] = [
       `Pravdepodobnosť úspechu je ${p}.`,
@@ -41,7 +41,7 @@ export function geometricProbabilityRandom(): geometricExercise[] {
     ];
 
     // Push exercise to exercises array
-    exercises.push({ n: numberOfTrials, k, p, probability, description, answer, points: 3, hints });
+    exercises.push({ n: numberOfTrials, k, p, probability, description, correct_answer, points: 3, hints });
   }
 
   // Return array of exercises

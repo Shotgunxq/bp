@@ -6,7 +6,7 @@ export interface hypergeometricExercises {
   k: number;
   probability: number;
   description: string;
-  answer: number;
+  correct_answer: number;
   points: number;
   hints: string[];
 }
@@ -27,13 +27,13 @@ export function hypergeometricProbabilityRandom(): hypergeometricExercises[] {
     // Generate description
     const description: string = generateDescription(N, K, n, k);
 
-    // Calculate answer
-    const answer = probability;
+    // Calculate correct_answer
+    const correct_answer = probability;
 
     const hints: string[] = [`Počet úspechov v populácii je ${K}.`, `Počet úspechov vo vzorke je ${k}.`, `Veľkosť populácie je ${N}.`];
 
     // Push exercise to exercises array
-    exercises.push({ N, K, n, k, probability, description, answer, points: 3, hints });
+    exercises.push({ N, K, n, k, probability, description, correct_answer, points: 3, hints });
   }
 
   // Return array of exercises

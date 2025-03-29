@@ -55,16 +55,9 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/tests`, { exercises, cas_na_pisanie });
   }
 
-  submitTestScore(userId: number, testId: number, points: number, totalHintsUsed: number): Observable<any> {
-    const body = {
-      user_id: userId,
-      test_id: testId,
-      points: points,
-      total_hints_used: totalHintsUsed,
-      timestamp: new Date().toISOString(),
-    };
-    console.log('Request body:', body);
-    return this.http.post(`${this.baseUrl}/submit`, body);
+  submitTestScore(submissionBody: any): Observable<any> {
+    console.log('Request body:', submissionBody);
+    return this.http.post(`${this.baseUrl}/submit`, submissionBody);
   }
 
   fetchTestData(testId: number): Observable<any[]> {

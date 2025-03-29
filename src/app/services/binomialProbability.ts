@@ -4,7 +4,7 @@ export interface binomialExercise {
   p: number;
   probability: number;
   description: string;
-  answer: number;
+  correct_answer: number;
   points: number;
   hints?: string[];
 }
@@ -28,24 +28,24 @@ export function binomialProbabilityRandom(): binomialExercise[] {
     // Generate description
     const description: string = generateDescription(n, k, p);
 
-    // Calculate answer
-    const answer: number = calculateAnswer(n, k, p);
+    // Calculate correct_answer
+    const correct_answer: number = calculateAnswer(n, k, p);
 
     const hints: string[] = [`Pravdepodobnosť úspechu je ${p}.`, `Počet pokusov je ${n}.`, `Počet úspechov je ${k}.`];
 
     // Push exercise to exercises array
-    exercises.push({ n, k, p, probability, description, answer, points: 3, hints });
+    exercises.push({ n, k, p, probability, description, correct_answer, points: 3, hints });
   }
 
   // Return array of exercises
   return exercises;
 }
 
-// Function to calculate the answer
+// Function to calculate the correct_answer
 function calculateAnswer(n: number, k: number, p: number): number {
-  // Calculate answer using the formula
-  const answer = calculateProbability(n, k, p);
-  return answer;
+  // Calculate correct_answer using the formula
+  const correct_answer = calculateProbability(n, k, p);
+  return correct_answer;
 }
 
 // Function to calculate binomial probability

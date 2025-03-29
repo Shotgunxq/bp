@@ -23,9 +23,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   timerKey: string = 'test-writing-timer';
   exercisesKey: string = 'test-writing-exercises';
 
-  userId: number = 1; // Replace with actual user ID from authentication
-  testId: number = 1; // Replace with actual test ID
-
+  userId: string = '1'; // Placeholder user ID
   gamificationEnabled: boolean = false;
   currentScore: number = 0;
   animateScore: boolean = false; // Used to trigger score animation
@@ -42,6 +40,14 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const userString = sessionStorage.getItem('user');
+    if (userString) {
+      const userObj = JSON.parse(userString);
+      this.userId = userObj.userId;
+    } else {
+      this.userId = '';
+    }
+
     const stateData = history.state.data;
     this.data = stateData || [];
     this.gamificationEnabled = history.state.gamification || false;
@@ -286,29 +292,42 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
     }
   }
-
   submitTest(): void {
     let totalPoints = 0;
     let totalHintsUsed = 0;
+
+    // 1) Update each exercise with finalPoints & hintsUsed
     this.data.forEach(exercise => {
-      if (exercise.userAnswer === exercise.answer) {
-        const exerciseScore = this.calculateExerciseScore(exercise);
-        totalPoints += exerciseScore;
+      // Calculate the final points for this single exercise
+      const finalPoints = this.calculateExerciseScore(exercise);
+
+      // Store the final points in the exercise object
+      exercise.finalPoints = finalPoints;
+      // Also store the user’s used hints in a consistent field
+      exercise.hintsUsed = exercise.hintsRevealed || 0;
+
+      // Tally into the test’s totals
+      // Only add to totalPoints if user’s answer is correct & not blank
+      if (exercise.userAnswer && exercise.userAnswer.trim() !== '' && exercise.userAnswer === (exercise.correct_answer || exercise.answer)) {
+        totalPoints += finalPoints;
       }
-      totalHintsUsed += exercise.hintsRevealed || 0;
+
+      totalHintsUsed += exercise.hintsUsed;
     });
 
+    // 2) Build the submission body
     const submissionBody = {
       user_id: this.userId,
-      test_id: this.testId,
-      points: totalPoints,
-      total_hints_used: totalHintsUsed, // additional info for gamification
+      points: totalPoints, // total final points for the entire test
+      total_hints_used: totalHintsUsed, // total hints used for the entire test
       timestamp: new Date().toISOString(),
+      exercises: this.data, // store the *entire* array, which now has finalPoints & hintsUsed
     };
 
     console.log('Submitting test score with body:', submissionBody);
 
-    this.apiService.submitTestScore(this.userId, this.testId, totalPoints, totalHintsUsed).subscribe(
+    // 3) Send everything to your API
+    this.apiService.submitTestScore(submissionBody).subscribe(
       response => {
         console.log('Test submitted successfully:', response);
         this.snackBar.open('Test odovzdaný úspešne!', 'Close', { duration: 7000 });
@@ -326,7 +345,11 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     const basePoints = exercise.points;
     const hintPenalty = 2; // points to deduct per hint used
     const hintsUsed = exercise.hintsRevealed || 0;
-    const bonusPoints = this.gamificationEnabled ? (this.timeLeft / this.convertTimeToSeconds(this.timeLimit)) * 5 : 0;
+
+    // Only apply bonus if the user provided an answer
+    const hasAnswered = exercise.userAnswer && exercise.userAnswer.trim() !== '';
+    const bonusPoints = this.gamificationEnabled && hasAnswered ? (this.timeLeft / this.convertTimeToSeconds(this.timeLimit)) * 5 : 0;
+
     return Math.max(0, Math.round(basePoints - hintsUsed * hintPenalty + bonusPoints));
   }
 

@@ -27,7 +27,7 @@
       <mat-expansion-panel-header>
         <div class="data-row">
           <span class="data-cell">Test ID: {{ test.test_id }}</span>
-          <span class="data-cell">Získane body: {{ test.points_scored }} / {{ test.max_points }}</span>
+          <span class="data-cell">Získané body: {{ test.points_scored }} / {{ test.max_points }}</span>
           <span class="data-cell">Dátum: {{ test.submission_date | date: 'short' }}</span>
         </div>
       </mat-expansion-panel-header>
@@ -45,7 +45,7 @@
           </p>
           <p>
             <strong>Počet bodov:</strong>
-            {{ exercise.points }}
+            {{ exercise.finalPoints || exercise.points || '-' }}
           </p>
           <p>
             <strong>Obtiažnosť:</strong>
@@ -57,7 +57,7 @@
           </p>
           <p>
             <strong>Použité nápovedy:</strong>
-            {{ exercise.hints_used || '0' }}
+            {{ exercise.hintsUsed || '0' }}
           </p>
         </div>
       </ng-container>
@@ -71,6 +71,9 @@
     [pageSizeOptions]="[5, 10, 25]"
     (page)="onPageChange($event)"
     aria-label="Select page of test submissions"></mat-paginator>
+
+  <!-- New informational paragraph -->
+  <p class="info-text">Nižšie nájdete podrobné štatistiky a informácie o všetkých odovzdaných testoch vrátane témy každej úlohy.</p>
 
   <div class="percentile-card" *ngIf="userOverallPercentile">
     Tvoj celkový výkon je v

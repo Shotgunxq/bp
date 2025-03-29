@@ -27,7 +27,7 @@ export class TestDoneComponent implements OnInit {
   sortDirection: 'asc' | 'desc' = 'asc';
 
   userOverallPercentile: number = 0;
-  userId = 1;
+  userId = '';
 
   constructor(
     private apiService: ApiService,
@@ -35,8 +35,15 @@ export class TestDoneComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const userString = sessionStorage.getItem('user');
+    if (userString) {
+      const userObj = JSON.parse(userString);
+      this.userId = userObj.userId;
+    } else {
+      this.userId = '';
+    }
     this.fetchDataFromDatabase();
-    this.apiService.getOverallPercentile(this.userId).subscribe(
+    this.apiService.getOverallPercentile(Number(this.userId)).subscribe(
       (response: any) => {
         this.userOverallPercentile = response.percentile;
       },
@@ -47,11 +54,16 @@ export class TestDoneComponent implements OnInit {
   }
 
   fetchDataFromDatabase(): void {
-    // Hardcode userId=1 for now (replace with your actual logic as needed)
-    this.apiService.getStatistics(this.userId).subscribe(
+    const userString = sessionStorage.getItem('user');
+    if (userString) {
+      const userObj = JSON.parse(userString);
+      this.userId = userObj.userId;
+    } else {
+      this.userId = '';
+    }
+    this.apiService.getStatistics(Number(this.userId)).subscribe(
       (data: any[]) => {
-        console.log('Test data:', data[0].testId);
-        // Backend already returns tests for the correct user, so no need to filter here
+        console.log('Test data:', data[0]);
         this.tests = data;
         this.filteredTests = [...this.tests];
         this.setPagedTests();
