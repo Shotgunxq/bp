@@ -30,16 +30,48 @@ export class StudentovoComponent {
   updateTChart() {
     const tData = this.calculateTDistribution(this.degreesOfFreedom);
 
-    // Calculate the area under the curve
+    // Calculate the area under the curve between rangeA and rangeB
     this.calculatedArea = this.calculateAreaUnderCurve(tData, this.rangeA, this.rangeB);
 
+    // Define annotations for the vertical lines only (remove the rectangle annotation)
+    const annotations = [
+      {
+        x: this.rangeA,
+        borderColor: '#00E396',
+        label: { text: `a = ${this.rangeA}` },
+      },
+      {
+        x: this.rangeB,
+        borderColor: '#775DD0',
+        label: { text: `b = ${this.rangeB}` },
+      },
+    ];
+
+    // Full t‑distribution series (line)
+    const mainSeries = {
+      name: 't-Distribution',
+      type: 'line',
+      data: tData.map(point => ({ x: point.x, y: point.y })),
+    };
+
+    // Highlighted area series (only include data points between rangeA and rangeB)
+    const highlightedData = tData.filter(point => point.x >= this.rangeA && point.x <= this.rangeB);
+    const highlightSeries = {
+      name: 'Highlighted Area',
+      type: 'area',
+      data: highlightedData.map(point => ({ x: point.x, y: point.y })),
+      fill: {
+        type: 'solid',
+        opacity: 0.25,
+      },
+      stroke: {
+        width: 0,
+      },
+    };
+
+    // Update the chart options with two series and the annotations
     this.tChartOptions = {
-      series: [
-        {
-          name: 't-Distribution',
-          data: tData.map(point => ({ x: point.x, y: point.y })),
-        },
-      ],
+      series: [mainSeries, highlightSeries],
       chart: {
         height: 350,
         type: 'line',
@@ -54,8 +86,6 @@ export class StudentovoComponent {
         title: { text: 't' },
         min: -4,
         max: 4,
-        // Setting tickAmount to 9 makes the interval (4 - (-4)) / (9 - 1) = 1 exactly,
-        // so ticks appear at -4, -3, ..., 3, 4.
         tickAmount: 9,
         labels: {
           formatter: val => parseFloat(val).toFixed(1),
@@ -66,24 +96,7 @@ export class StudentovoComponent {
         min: 0,
       },
       annotations: {
-        xaxis: [
-          {
-            x: this.rangeA,
-            borderColor: '#00E396',
-            label: { text: `a = ${this.rangeA}` },
-          },
-          {
-            x: this.rangeB,
-            borderColor: '#775DD0',
-            label: { text: `b = ${this.rangeB}` },
-          },
-          {
-            x: this.rangeA,
-            x2: this.rangeB,
-            fillColor: 'rgba(0, 123, 255, 0.2)',
-            opacity: 0.5,
-          },
-        ],
+        xaxis: annotations,
       },
     };
   }

@@ -30,9 +30,10 @@ export class PoissonComponent {
   updatePoissonChart() {
     const poissonData = this.calculatePoissonData(this.lambda);
 
-    // Calculate area between rangeA and rangeB
+    // Calculate the area between rangeA and rangeB
     this.calculatedArea = this.calculateAreaUnderCurve(poissonData, this.rangeA, this.rangeB);
 
+    // Define annotations for the vertical lines only (remove the rectangle annotation)
     const annotations = [
       {
         x: this.rangeA,
@@ -44,21 +45,33 @@ export class PoissonComponent {
         borderColor: '#775DD0',
         label: { text: `b = ${this.rangeB}` },
       },
-      {
-        x: this.rangeA,
-        x2: this.rangeB,
-        fillColor: 'rgba(0, 123, 255, 0.2)', // Highlight area under the curve
-        opacity: 0.5,
-      },
     ];
 
+    // Full Poisson distribution series as a line chart
+    const mainSeries = {
+      name: 'P(X = x)',
+      type: 'line',
+      data: poissonData.map(point => ({ x: point.x, y: point.y })),
+    };
+
+    // Highlighted area series for data between rangeA and rangeB
+    const highlightedData = poissonData.filter(point => point.x >= this.rangeA && point.x <= this.rangeB);
+    const highlightSeries = {
+      name: 'Highlighted Area',
+      type: 'area',
+      data: highlightedData.map(point => ({ x: point.x, y: point.y })),
+      fill: {
+        type: 'solid',
+        opacity: 0.25,
+      },
+      stroke: {
+        width: 0,
+      },
+    };
+
+    // Update chart options with both series and the annotations
     this.poissonChartOptions = {
-      series: [
-        {
-          name: 'P(X = x)',
-          data: poissonData.map(point => ({ x: point.x, y: point.y })),
-        },
-      ],
+      series: [mainSeries, highlightSeries],
       chart: {
         height: 350,
         type: 'line',
@@ -80,7 +93,7 @@ export class PoissonComponent {
         title: { text: 'P(X = x)' },
         min: 0,
         labels: {
-          formatter: value => value.toFixed(3), // Round to 3 decimals
+          formatter: value => value.toFixed(3),
         },
       },
       annotations: {

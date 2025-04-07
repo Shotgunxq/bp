@@ -39,6 +39,7 @@ export class ChikvadrantComponent {
 
     this.calculatedArea = this.calculateAreaUnderCurve(chiData, this.rangeA, this.rangeB);
 
+    // Vertical lines only
     const annotations = [
       {
         x: this.rangeA,
@@ -50,21 +51,40 @@ export class ChikvadrantComponent {
         borderColor: '#775DD0',
         label: { text: `b = ${this.rangeB}` },
       },
-      {
-        x: this.rangeA,
-        x2: this.rangeB,
-        fillColor: 'rgba(0, 123, 255, 0.2)',
-        opacity: 0.5,
-      },
+      // Remove or comment out the rectangle annotation:
+      // {
+      //   x: this.rangeA,
+      //   x2: this.rangeB,
+      //   fillColor: 'rgba(0, 123, 255, 0.2)',
+      //   opacity: 0.5,
+      // },
     ];
 
+    // Main (full) distribution
+    const mainSeries = {
+      name: 'Chi-Squared Distribution',
+      type: 'line',
+      data: chiData.map(point => ({ x: point.x, y: point.y })),
+    };
+
+    // Highlighted portion (area) from a to b
+    const highlightedData = chiData.filter(point => point.x >= this.rangeA && point.x <= this.rangeB);
+
+    const highlightSeries = {
+      name: 'Highlighted Area',
+      type: 'area',
+      data: highlightedData.map(point => ({ x: point.x, y: point.y })),
+      fill: {
+        type: 'solid',
+        opacity: 0.25,
+      },
+      stroke: {
+        width: 0,
+      },
+    };
+
     this.chiChartOptions = {
-      series: [
-        {
-          name: 'Chi-Squared Distribution',
-          data: chiData.map(point => ({ x: point.x, y: point.y })),
-        },
-      ],
+      series: [mainSeries, highlightSeries],
       chart: {
         height: 350,
         type: 'line',
