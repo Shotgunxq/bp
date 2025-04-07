@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from './adminDialog/confirm-dialog.component';
 import { EditDialogComponent } from './adminDialog/edit-dialog.component';
 import { AdminNewExerciseComponent } from './adminDialog/admin-new-exercise/admin-new-exercise.component';
 import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 declare var MathJax: any;
 
@@ -35,7 +36,8 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
     private apiService: ApiService,
     private adminService: AdminService,
     private dialog: MatDialog,
-    private adminExerciseDialogService: AdminExerciseDialogService
+    private adminExerciseDialogService: AdminExerciseDialogService,
+    private snackBar: MatSnackBar // Inject MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -153,6 +155,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
                 data.splice(index, 1);
                 theme.exercises!.data = data;
                 theme.exercises!._updateChangeSubscription();
+                this.snackBar.open('Úloha vymazaná!', 'Close', { duration: 7000 });
               }
             }
           },

@@ -290,12 +290,12 @@ export class ExportPageComponent implements OnInit {
           { text: `Test ID: ${test.test_id}`, style: 'testHeader' },
           {
             columns: [
-              { text: `Score: ${test.points_scored}`, style: 'subHeader' },
-              { text: `Max Points: ${test.max_points}`, style: 'subHeader', alignment: 'right' },
+              { text: `Dosiahnuté body: ${test.points_scored}`, style: 'subHeader' },
+              { text: `Max počet bodov: ${test.max_points}`, style: 'subHeader', alignment: 'right' },
             ],
             margin: [0, 5, 0, 5],
           },
-          { text: `Submission Date: ${new Date(test.submission_date).toLocaleDateString()}`, style: 'subHeader', margin: [0, 0, 0, 15] },
+          { text: `Dátum odovzdania: ${new Date(test.submission_date).toLocaleDateString()}`, style: 'subHeader', margin: [0, 0, 0, 15] },
         ],
       });
 
@@ -316,7 +316,7 @@ export class ExportPageComponent implements OnInit {
           ) => {
             // Optionally, add an exercise header
             content.push({
-              text: `Exercise ${exIndex + 1}`,
+              text: `Úloha ${exIndex + 1}`,
               style: 'exerciseHeader',
               margin: [0, 10, 0, 5],
             });
@@ -328,27 +328,23 @@ export class ExportPageComponent implements OnInit {
                 widths: ['auto', '*'],
                 body: [
                   [
-                    { text: 'Field', style: 'tableHeader' },
-                    { text: 'Value', style: 'tableHeader' },
-                  ],
-                  [
-                    { text: 'Description', style: 'tableField' },
+                    { text: 'Znenie úlohy', style: 'tableField' },
                     { text: removeLatexCommands(ex.description) || '-', style: 'tableValue' },
                   ],
                   [
-                    { text: 'Difficulty Level', style: 'tableField' },
+                    { text: 'Obtiažnosť', style: 'tableField' },
                     { text: ex.difficulty_level || '-', style: 'tableValue' },
                   ],
                   [
-                    { text: 'Correct Answer', style: 'tableField' },
+                    { text: 'Spravná odpoveď', style: 'tableField' },
                     { text: ex.correct_answer || '-', style: 'tableValue' },
                   ],
                   [
-                    { text: 'User Answer', style: 'tableField' },
+                    { text: 'Zadaná odpoveď', style: 'tableField' },
                     { text: ex.userAnswer || '-', style: 'tableValue' },
                   ],
                   [
-                    { text: 'Hints Used', style: 'tableField' },
+                    { text: 'Použité nápovedy', style: 'tableField' },
                     { text: ex.hints_used !== undefined ? ex.hints_used.toString() : '0', style: 'tableValue' },
                   ],
                 ],

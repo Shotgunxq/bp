@@ -2,6 +2,7 @@ import { Component, Inject, AfterViewInit, ViewChild, ElementRef } from '@angula
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AdminService } from '../../../services/adminServices';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-dialog',
@@ -60,7 +61,8 @@ export class EditDialogComponent implements AfterViewInit {
     public dialogRef: MatDialogRef<EditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { exercise: any },
     private fb: FormBuilder,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private snackBar: MatSnackBar // Inject MatSnackBar
   ) {
     // Convert the hints array to a newline-separated string.
     const hintsString = data.exercise.hints && Array.isArray(data.exercise.hints) ? data.exercise.hints.join('\n') : '';
@@ -121,6 +123,8 @@ export class EditDialogComponent implements AfterViewInit {
 
     this.adminService.updateExercise(updatedExercise).subscribe(
       response => {
+        this.snackBar.open('Úloha prepísaná!', 'Close', { duration: 7000 });
+
         this.dialogRef.close(response.updatedExercise || updatedExercise);
       },
       error => {

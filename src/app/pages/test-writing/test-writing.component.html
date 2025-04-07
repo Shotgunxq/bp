@@ -27,6 +27,7 @@
         <div class="exerciseDesc">
           <p>Znenie úlohy:</p>
           <div class="mathjax-content" [mathjax]="'$$' + currentExercise.description + '$$'"></div>
+          <mat-icon (click)="openInfoDialog()" style="cursor: pointer">info</mat-icon>
         </div>
 
         <!-- Hints Section -->
@@ -63,6 +64,7 @@
           <button mat-flat-button color="primary" id="answerCheck" (click)="toggleAnswerLock()">
             {{ currentExercise.answerLocked ? 'Skusiť znova' : 'Odpovedať' }}
           </button>
+
           <p *ngIf="answerChecked">{{ answerMessage }}</p>
         </div>
       </div>

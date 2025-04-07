@@ -22,8 +22,8 @@ const routes: Routes = [
   { path: 'test-writing', component: TestWritingComponent, canActivate: [AuthGuard] },
   { path: 'export', component: ExportPageComponent, canActivate: [AuthGuard] },
   // Admin routes: only accessible if employeeType is 'admin'
-  { path: 'admin', component: AdminPageComponent, canActivate: [AuthGuard], data: { expectedEmployeeType: 'teacher' } },
-  { path: 'admin/statistics', component: AdminStatisticsComponent, canActivate: [AuthGuard], data: { expectedEmployeeType: 'teacher' } },
+  { path: 'admin', component: AdminPageComponent, canActivate: [AuthGuard], data: { expectedEmployeeType: 'student' } },
+  { path: 'admin/statistics', component: AdminStatisticsComponent, canActivate: [AuthGuard], data: { expectedEmployeeType: 'student' } },
   { path: '**', redirectTo: '' },
 ];
 
