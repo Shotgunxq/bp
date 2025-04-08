@@ -35,10 +35,10 @@
       <!-- Details: List of Exercises -->
       <ng-container *ngIf="test.test_exercises && test.test_exercises.length">
         <div *ngFor="let exercise of test.test_exercises" class="exercise-detail">
-          <p>
+          <div>
             <strong>Znenie úlohy:</strong>
-            {{ exercise.description }}
-          </p>
+            <p class="mathjax-content" [mathjax]="'$' + exercise.description + '$'"></p>
+          </div>
           <p>
             <strong>Spravná odpoveď:</strong>
             {{ exercise.correct_answer }}
