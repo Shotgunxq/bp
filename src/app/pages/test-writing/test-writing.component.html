@@ -1,7 +1,7 @@
 <div class="container">
   <div *ngIf="data && data.length > 0">
     <!-- Display exercises fetched from the database -->
-    <div *ngIf="gamificationEnabled" class="score-board" [ngClass]="{ 'score-animation': animateScore }">Current Score: {{ currentScore }}</div>
+    <div *ngIf="gamificationEnabled" class="score-board" [ngClass]="{ 'score-animation': animateScore }">Aktuálne skóre: {{ currentScore }}</div>
 
     <div *ngIf="data.length > 0">
       <div class="exerciseModal" *ngIf="currentExercise">
@@ -27,6 +27,7 @@
         <div class="exerciseDesc">
           <p>Znenie úlohy:</p>
           <div class="mathjax-content" [mathjax]="'$$' + currentExercise.description + '$$'"></div>
+          <mat-icon (click)="openInfoDialog()" style="cursor: pointer">info</mat-icon>
         </div>
 
         <!-- Hints Section -->
@@ -38,7 +39,9 @@
               (click)="revealHint()"
               [disabled]="currentExercise.hintsRevealed >= currentExercise.hints.length">
               {{
-                currentExercise.hintsRevealed < currentExercise.hints.length ? 'Reveal Hint ' + (currentExercise.hintsRevealed + 1) : 'No More Hints'
+                currentExercise.hintsRevealed < currentExercise.hints.length
+                  ? 'Zobraziť nápovedu ' + (currentExercise.hintsRevealed + 1)
+                  : 'Žiadne ďalšie nápovedy'
               }}
             </button>
 
@@ -61,6 +64,7 @@
           <button mat-flat-button color="primary" id="answerCheck" (click)="toggleAnswerLock()">
             {{ currentExercise.answerLocked ? 'Skusiť znova' : 'Odpovedať' }}
           </button>
+
           <p *ngIf="answerChecked">{{ answerMessage }}</p>
         </div>
       </div>

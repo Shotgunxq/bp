@@ -35,6 +35,7 @@ export class DensityComponent {
   // Update density chart
   updateDensityChart() {
     const densityData = this.calculateNormalDensity(this.mean, this.stdDev);
+    const range = 4 * this.stdDev; // Display range ±4σ
 
     this.densityChartOptions = {
       series: [
@@ -59,16 +60,19 @@ export class DensityComponent {
       xaxis: {
         type: 'numeric', // Numeric x-axis for smooth distribution
         title: { text: 'x' },
-        tickAmount: 10, // Control x-axis ticks
+        min: this.mean - range,
+        max: this.mean + range,
+        // Setting tickAmount to 9 gives evenly spaced ticks (e.g., -4, -3, …, 3, 4 when mean = 0 and stdDev = 1)
+        tickAmount: 9,
         labels: {
-          formatter: val => parseFloat(val).toFixed(1), // Format x-axis values
+          formatter: val => parseFloat(val).toFixed(1),
         },
       },
       yaxis: {
         title: { text: 'f_X(x)' },
         min: 0,
         labels: {
-          formatter: value => value.toFixed(3), // Format y-axis values
+          formatter: value => value.toFixed(3),
         },
       },
     };

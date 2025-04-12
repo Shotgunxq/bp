@@ -39,12 +39,12 @@ export class DistributionComponent {
         toolbar: { show: false },
       },
       title: {
-        text: 'Binomial Distribution',
+        text: 'Binomické rozdelenie',
         align: 'center',
       },
       xaxis: {
         categories: binomialData.map(point => point.x.toString()),
-        title: { text: 'x (Successes)' },
+        title: { text: 'x (Úspechy)' },
       },
       yaxis: {
         title: { text: 'P(X = x)' },

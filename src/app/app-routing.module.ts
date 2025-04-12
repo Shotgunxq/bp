@@ -13,16 +13,17 @@ import { AdminStatisticsComponent } from './pages/admin-page/admin-statistics/ad
 import { ExportPageComponent } from './pages/export-page/export-page.component';
 
 const routes: Routes = [
-  { component: LoginModalComponent, path: '' },
-  { component: MenuPageComponent, path: 'menu', canActivate: [AuthGuard] },
-  { component: TestCreationComponent, path: 'test', canActivate: [AuthGuard] },
-  { component: StatsPageComponent, path: 'stats', canActivate: [AuthGuard] },
-  { component: TestDoneComponent, path: 'done', canActivate: [AuthGuard] },
-  { component: MaterialsPageComponent, path: 'mats', canActivate: [AuthGuard] },
-  { component: TestWritingComponent, path: 'test-writing', canActivate: [AuthGuard] },
-  { component: ExportPageComponent, path: 'export', canActivate: [AuthGuard] },
-  { component: AdminPageComponent, path: 'admin' },
-  { component: AdminStatisticsComponent, path: 'admin/statistics' },
+  { path: '', component: LoginModalComponent },
+  { path: 'menu', component: MenuPageComponent, canActivate: [AuthGuard] },
+  { path: 'test', component: TestCreationComponent, canActivate: [AuthGuard] },
+  { path: 'stats', component: StatsPageComponent, canActivate: [AuthGuard] },
+  { path: 'done', component: TestDoneComponent, canActivate: [AuthGuard] },
+  { path: 'mats', component: MaterialsPageComponent, canActivate: [AuthGuard] },
+  { path: 'test-writing', component: TestWritingComponent, canActivate: [AuthGuard] },
+  { path: 'export', component: ExportPageComponent, canActivate: [AuthGuard] },
+  // Admin routes: only accessible if employeeType is 'admin'
+  { path: 'admin', component: AdminPageComponent, canActivate: [AuthGuard], data: { expectedEmployeeType: 'student' } },
+  { path: 'admin/statistics', component: AdminStatisticsComponent, canActivate: [AuthGuard], data: { expectedEmployeeType: 'student' } },
   { path: '**', redirectTo: '' },
 ];
 

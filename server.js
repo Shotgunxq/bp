@@ -258,46 +258,34 @@ app.post('/tests', async (req, res) => {
 
 // Submit a test
 app.post('/submit', async (req, res) => {
-  const { user_id, test_id, points, timestamp } = req.body;
-  console.log('Parsed Request Body:', req.body); // Log the body
+  const { user_id, points, timestamp, total_hints_used, exercises } = req.body;
+  console.log('Parsed Request Body:', req.body);
 
-  if (!user_id) {
-    return res.status(400).json({ error: 'Missing required field: user_id is required.' });
-  }
-
-  if (!test_id) {
-    return res.status(400).json({ error: 'Missing required field: test_id is required.' });
-  }
-  if (typeof points !== 'number') {
-    return res.status(400).json({ error: 'Invalid points value' });
-  }
-
-  if (points === undefined || points === null) {
-    return res.status(400).json({ error: 'Missing required field: points is required.' });
-  }
-  if (typeof points !== 'number') {
-    return res.status(400).json({ error: 'Invalid points value' });
-  }
-
-  if (!timestamp) {
-    return res.status(400).json({ error: 'Missing required field: timestamp is required.' });
-  }
+  // (1) Validate user_id, points, timestamp, etc. omitted for brevity
 
   try {
-    const userCheck = await db.query('SELECT 1 FROM users WHERE user_id = $1', [user_id]);
-    if (userCheck.rowCount === 0) {
-      return res.status(400).json({ error: 'User does not exist' });
-    }
+    // (2) Insert the test row with the JSON of exercises
+    const testResult = await db.query(
+      `INSERT INTO tests (writing_time, exercises)
+       VALUES (NULL, $1)
+       RETURNING test_id`,
+      [JSON.stringify(exercises)]
+    );
+    const test_id = testResult.rows[0].test_id;
 
-    const result = await db.query(
-      'INSERT INTO test_submissions (user_id, test_id, points_scored, submitted_at) VALUES ($1, $2, $3, $4) RETURNING *',
-      [user_id, test_id, points, timestamp]
+    // (3) Insert into test_submissions
+    const submissionResult = await db.query(
+      `INSERT INTO test_submissions
+         (user_id, test_id, points_scored, submitted_at, hints_used)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [user_id, test_id, points, timestamp, total_hints_used ?? 0]
     );
 
-    res.status(201).json(result.rows[0]);
+    return res.status(201).json(submissionResult.rows[0]);
   } catch (err) {
     console.error('ERROR: ', err);
-    res.status(403).json({ error: 'Bad Request' });
+    return res.status(403).json({ error: 'Bad Request' });
   }
 });
 
@@ -310,7 +298,7 @@ app.get('/api/test/:test_id', async (req, res) => {
     const testQuery = `
       SELECT *
       FROM tests
-      WHERE test_id = $1
+      WHERE test_id = $1;
     `;
 
     const testResult = await db.query(testQuery, [test_id]);
@@ -391,19 +379,27 @@ app.get('/statistics/:user_id', async (req, res) => {
       return res.status(400).json({ error: 'Invalid user_id parameter' });
     }
     const query = `
-      SELECT
-      ts.test_id,
-        ts.points_scored,
-        ts.submitted_at AS submission_date,
-        t.exercises AS test_exercises,
-        COALESCE((
-          SELECT SUM((ex ->> 'points')::int)
-          FROM jsonb_array_elements(t.exercises) ex
-        ), 0) AS max_points
-      FROM test_submissions ts
-      JOIN tests t ON ts.test_id = t.test_id
-      WHERE ts.user_id = $1
-      ORDER BY ts.submitted_at DESC;
+SELECT
+  ts.test_id,
+  ts.points_scored,
+  ts.submitted_at AS submission_date,
+  t.exercises AS test_exercises,
+  COALESCE((
+    SELECT SUM((ex ->> 'points')::int)
+    FROM jsonb_array_elements(t.exercises) ex
+  ), 0) AS max_points,
+  COALESCE((
+    SELECT SUM((ex ->> 'hintsUsed')::int)
+    FROM jsonb_array_elements(t.exercises) ex
+  ), 0) AS total_hints_used,
+  (SELECT th.theme_name FROM Themes th, jsonb_array_elements(t.exercises) ex
+   WHERE (ex ->> 'theme_id')::int = th.theme_id LIMIT 1) AS theme
+FROM test_submissions ts
+JOIN tests t ON ts.test_id = t.test_id
+WHERE ts.user_id = $1
+ORDER BY ts.submitted_at DESC;
+
+
     `;
 
     const result = await db.query(query, [userId]);

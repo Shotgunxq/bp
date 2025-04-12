@@ -72,7 +72,7 @@
       </div>
 
       <div class="buttons">
-        <button mat-raised-button color="primary" (click)="getData()">Generovať ulohy</button>
+        <button mat-raised-button color="primary" (click)="getData()">Generovať úlohy do PDF</button>
         <button mat-raised-button color="primary" (click)="generateExercisesPDF()" *ngIf="exercises.length">Export do PDF</button>
       </div>
     </div>
@@ -81,36 +81,10 @@
 
     <!-- User Statistics Section -->
     <div class="section user-statistics">
-      <h1>Štatistiky používateľa</h1>
+      <h1>Napisané testy používateľa</h1>
       <div class="buttons">
         <button mat-raised-button color="primary" (click)="generateStatisticsPDF()">Export do PDF</button>
-        <button mat-raised-button color="primary" (click)="printStatistics()">Tlačiť</button>
       </div>
-      <!-- <div class="table-container" *ngIf="tests.length">
-        <table id="statisticsTable">
-          <thead>
-            <tr>
-              <th>Test ID</th>
-              <th>Skóre</th>
-              <th>Dátum odoslania</th>
-              <th>Cvičenia</th>
-              <th>Max body</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let test of tests">
-              <td>{{ test.test_id }}</td>
-              <td>{{ test.points_scored }}</td>
-              <td>{{ test.submission_date | date: 'shortDate' }}</td>
-              <td>{{ test.test_exercises | json }}</td>
-              <td>{{ test.max_points }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div *ngIf="!tests || tests.length === 0">
-        <p>Žiadne štatistiky nie sú k dispozícii.</p>
-      </div> -->
     </div>
   </div>
 </div>

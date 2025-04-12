@@ -25,10 +25,10 @@
     </mat-expansion-panel-header>
     <ng-container *ngIf="row.test_exercises?.length">
       <div *ngFor="let exercise of row.test_exercises" class="exercise-detail">
-        <p>
+        <div>
           <strong>Znenie úlohy:</strong>
-          {{ exercise.description }}
-        </p>
+          <p class="mathjax-content" [mathjax]="'$' + exercise.description + '$'"></p>
+        </div>
         <p>
           <strong>Spravná odpoveď:</strong>
           {{ exercise.answer }}
