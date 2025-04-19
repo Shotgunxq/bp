@@ -55,10 +55,12 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/tests`, { exercises, cas_na_pisanie });
   }
 
+  // …
   submitTestScore(submissionBody: any): Observable<any> {
-    console.log('Request body:', submissionBody);
-    return this.http.post(`${this.baseUrl}/submit`, submissionBody);
+    console.log('Submitting payload:', submissionBody);
+    return this.http.post<any>(`${this.baseUrl}/submit`, submissionBody);
   }
+  // …
 
   fetchTestData(testId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/api/test/${testId}`);

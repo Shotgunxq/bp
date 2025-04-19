@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE TABLE IF NOT EXISTS Themes (
     theme_id          SERIAL PRIMARY KEY,
     theme_name        VARCHAR UNIQUE NOT NULL,
-    theme_description TEXT
 );
 
 -- =========================================

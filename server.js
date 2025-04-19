@@ -257,35 +257,37 @@ app.post('/tests', async (req, res) => {
 });
 
 // Submit a test
-app.post('/submit', async (req, res) => {
-  const { user_id, points, timestamp, total_hints_used, exercises } = req.body;
-  console.log('Parsed Request Body:', req.body);
+// …earlier requires & middleware…
 
-  // (1) Validate user_id, points, timestamp, etc. omitted for brevity
+// Submit a test
+app.post('/submit', async (req, res) => {
+  const {
+    user_id,
+    test_id,
+    submitted_at,
+    total_score,
+    total_hints,
+    answers, // ← the slim array
+  } = req.body;
+
+  if (!user_id || !test_id || !submitted_at || total_score == null || total_hints == null || !Array.isArray(answers)) {
+    return res.status(400).json({ error: 'Missing or invalid payload fields' });
+  }
 
   try {
-    // (2) Insert the test row with the JSON of exercises
-    const testResult = await db.query(
-      `INSERT INTO tests (writing_time, exercises)
-       VALUES (NULL, $1)
-       RETURNING test_id`,
-      [JSON.stringify(exercises)]
-    );
-    const test_id = testResult.rows[0].test_id;
-
-    // (3) Insert into test_submissions
-    const submissionResult = await db.query(
-      `INSERT INTO test_submissions
-         (user_id, test_id, points_scored, submitted_at, hints_used)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING *`,
-      [user_id, test_id, points, timestamp, total_hints_used ?? 0]
-    );
-
-    return res.status(201).json(submissionResult.rows[0]);
+    // Directly insert into test_submissions, including the JSONB answers
+    const insert = `
+      INSERT INTO test_submissions
+        (user_id, test_id, points_scored, submitted_at, hints_used, answers)
+      VALUES ($1, $2, $3, $4, $5, $6::jsonb)
+      RETURNING *;
+    `;
+    const values = [user_id, test_id, total_score, submitted_at, total_hints, JSON.stringify(answers)];
+    const result = await db.query(insert, values);
+    res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error('ERROR: ', err);
-    return res.status(403).json({ error: 'Bad Request' });
+    console.error('Error in /submit:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

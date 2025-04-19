@@ -127,10 +127,16 @@ export class TestCreationComponent implements OnInit {
         }
 
         const writingTime = `00:${this.selectedTime.toString().padStart(2, '0')}:00`;
+
         this.apiService.createTest(this.exercises, writingTime).subscribe(
           testResponse => {
             this.router.navigate(['/test-writing'], {
-              state: { data: this.exercises, timeLimit: writingTime, gamification: this.isGamificationEnabled },
+              state: {
+                testId: testResponse.test_id, // ← pass this in
+                data: this.exercises,
+                timeLimit: writingTime,
+                gamification: this.isGamificationEnabled,
+              },
             });
           },
           error => console.error('Error creating test:', error)
