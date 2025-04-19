@@ -267,7 +267,7 @@ app.post('/submit', async (req, res) => {
     submitted_at,
     total_score,
     total_hints,
-    answers, // ← the slim array
+    answers, // ← [ { exercise_id, user_answer }, … ]
   } = req.body;
 
   if (!user_id || !test_id || !submitted_at || total_score == null || total_hints == null || !Array.isArray(answers)) {
@@ -275,14 +275,15 @@ app.post('/submit', async (req, res) => {
   }
 
   try {
-    // Directly insert into test_submissions, including the JSONB answers
     const insert = `
       INSERT INTO test_submissions
-        (user_id, test_id, points_scored, submitted_at, hints_used, answers)
-      VALUES ($1, $2, $3, $4, $5, $6::jsonb)
+        (user_id, test_id, total_score, submitted_at, total_hints, answers)
+      VALUES
+        ($1, $2, $3, $4, $5, $6::jsonb)
       RETURNING *;
     `;
     const values = [user_id, test_id, total_score, submitted_at, total_hints, JSON.stringify(answers)];
+
     const result = await db.query(insert, values);
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -375,33 +376,34 @@ ORDER BY ts.submitted_at DESC;
 
 app.get('/statistics/:user_id', async (req, res) => {
   try {
-    // Retrieve and parse the user_id from the URL parameter
     const userId = parseInt(req.params.user_id, 10);
     if (isNaN(userId)) {
       return res.status(400).json({ error: 'Invalid user_id parameter' });
     }
+
     const query = `
-SELECT
-  ts.test_id,
-  ts.points_scored,
-  ts.submitted_at AS submission_date,
-  t.exercises AS test_exercises,
-  COALESCE((
-    SELECT SUM((ex ->> 'points')::int)
-    FROM jsonb_array_elements(t.exercises) ex
-  ), 0) AS max_points,
-  COALESCE((
-    SELECT SUM((ex ->> 'hintsUsed')::int)
-    FROM jsonb_array_elements(t.exercises) ex
-  ), 0) AS total_hints_used,
-  (SELECT th.theme_name FROM Themes th, jsonb_array_elements(t.exercises) ex
-   WHERE (ex ->> 'theme_id')::int = th.theme_id LIMIT 1) AS theme
-FROM test_submissions ts
-JOIN tests t ON ts.test_id = t.test_id
-WHERE ts.user_id = $1
-ORDER BY ts.submitted_at DESC;
-
-
+      SELECT
+        ts.test_id,
+        ts.total_score        AS points_scored,
+        ts.submitted_at       AS submission_date,
+        t.exercises           AS test_exercises,
+        COALESCE((
+          SELECT SUM((ex ->> 'points')::int)
+          FROM jsonb_array_elements(t.exercises) AS ex
+        ), 0)                  AS max_points,
+        ts.total_hints        AS total_hints_used,
+        (
+          SELECT th.theme_name
+          FROM themes th
+          , jsonb_array_elements(t.exercises) AS ex
+          WHERE (ex ->> 'theme_id')::int = th.theme_id
+          LIMIT 1
+        )                     AS theme
+      FROM test_submissions ts
+      JOIN tests t
+        ON t.test_id = ts.test_id
+      WHERE ts.user_id = $1
+      ORDER BY ts.submitted_at DESC;
     `;
 
     const result = await db.query(query, [userId]);
@@ -474,9 +476,9 @@ app.get('/api/percentile/overall/:userId', async (req, res) => {
       return res.status(400).json({ error: 'Invalid userId parameter' });
     }
 
-    // Aggregate total points for each user from test_submissions.
+    // Aggregate total_score for each user from test_submissions.
     const aggregateQuery = `
-      SELECT user_id, SUM(points_scored) AS total_points
+      SELECT user_id, SUM(total_score) AS total_points
       FROM test_submissions
       GROUP BY user_id;
     `;
@@ -487,20 +489,18 @@ app.get('/api/percentile/overall/:userId', async (req, res) => {
       return res.status(404).json({ error: 'No submissions found' });
     }
 
-    // Find the total points for the current user.
-    const userRecord = totals.find(record => parseInt(record.user_id) === userId);
+    // Find this user’s total
+    const userRecord = totals.find(r => parseInt(r.user_id, 10) === userId);
     if (!userRecord) {
       return res.status(404).json({ error: 'User has no submissions' });
     }
     const userTotal = parseInt(userRecord.total_points, 10);
 
-    // Count how many users have total_points less than or equal to the user's total.
-    const countBelowOrEqual = totals.filter(record => parseInt(record.total_points, 10) <= userTotal).length;
-
-    // Calculate the percentile rank.
+    // Count how many users are ≤ this total
+    const countBelowOrEqual = totals.filter(r => parseInt(r.total_points, 10) <= userTotal).length;
     const percentile = (countBelowOrEqual / totals.length) * 100;
 
-    res.json({ percentile: percentile });
+    res.json({ percentile });
   } catch (error) {
     console.error('Error computing overall percentile:', error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -298,35 +298,35 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
     }
   }
+
   submitTest(): void {
     let totalPoints = 0;
     let totalHints = 0;
 
-    // Build the minimal answers array
+    // only send each question's ID and the student's answer
     const answers = this.data.map(ex => {
+      // accumulate totals
       const pts = this.calculateExerciseScore(ex);
       const hints = ex.hintsRevealed || 0;
-
       if (ex.userAnswer?.trim() && ex.userAnswer === (ex.correct_answer || ex.answer)) {
         totalPoints += pts;
       }
       totalHints += hints;
 
+      // slim payload
       return {
         exercise_id: ex.exercise_id,
         user_answer: ex.userAnswer,
-        hints_used: hints,
-        points_scored: pts,
       };
     });
 
     const payload = {
       user_id: this.userId,
-      test_id: this.testId, // ← don’t forget to set this in ngOnInit
+      test_id: this.testId,
       submitted_at: new Date().toISOString(),
       total_score: totalPoints,
       total_hints: totalHints,
-      answers, // ← slim JSONB
+      answers, // ← [{ exercise_id, user_answer }, …]
     };
 
     this.apiService.submitTestScore(payload).subscribe(
