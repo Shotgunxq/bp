@@ -26,6 +26,7 @@ const insertUser = async user => {
 };
 
 module.exports = {
+  pool, // expose the PG pool for session store
   query: (text, params) => pool.query(text, params),
   findUserById,
   insertUser,

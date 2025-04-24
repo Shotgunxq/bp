@@ -3,23 +3,47 @@ const db = require('./db');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { authenticate } = require('ldap-authentication');
+const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
 
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
-app.use(express.json());
-const session = require('express-session');
-
-app.use(bodyParser.json());
+// Enable CORS with credentials for Angular dev server
 app.use(
-  session({
-    secret: '1', // Replace with a strong secret in production
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }, // Set to `true` if using HTTPS
+  cors({
+    origin: 'http://localhost:4200',
+    credentials: true,
   })
 );
+
+app.use(bodyParser.json());
+app.use(express.json());
+
+// Session store backed by Postgres
+app.use(
+  session({
+    store: new PgSession({
+      pool: db.pool, // your existing PG pool from ./db
+      tableName: 'user_sessions',
+    }),
+    secret: '1', // replace with strong secret in production
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      secure: false, // set to true if using HTTPS
+      httpOnly: true,
+      sameSite: 'lax',
+    },
+  })
+);
+
+// Middleware to protect routes
+function ensureLoggedIn(req, res, next) {
+  if (req.session.user) return next();
+  res.status(401).json({ error: 'Not authenticated' });
+}
 
 // LDAP authentication function
 async function ldapAuth(username, password) {
@@ -33,8 +57,7 @@ async function ldapAuth(username, password) {
       username: username,
     };
 
-    const user = await authenticate(options);
-    return user;
+    return await authenticate(options);
   } catch (error) {
     throw new Error('LDAP bind failed: ' + error.message);
   }
@@ -43,36 +66,48 @@ async function ldapAuth(username, password) {
 // User login route using LDAP authentication
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const user = await ldapAuth(username, password);
     const processedUser = {
-      userId: user.uisId, // Map uisId to userId
+      userId: user.uisId,
       employeeType: user.employeeType,
       givenName: user.givenName,
-      lastName: user.sn, // Map sn to lastName
+      lastName: user.sn,
       email: user.mailLocalAddress[1],
     };
 
+    // Insert into DB if new
     try {
-      const existingUser = await db.findUserById(processedUser.userId);
-      console.log('Existing user:', existingUser);
-      console.log('Processed user AIS ID:', processedUser.userId);
-      if (!existingUser) {
-        console.log('User not found in database, inserting new user...');
+      const existing = await db.findUserById(processedUser.userId);
+      if (!existing) {
         await db.insertUser(processedUser);
       }
-    } catch (dbError) {
-      console.error('Database operation failed:', dbError.message);
+    } catch (dbErr) {
+      console.error('DB error:', dbErr.message);
     }
 
-    res.status(200).json(processedUser); // Send processed user data
-    console.log('User authenticated:', processedUser);
-    // console.log('LDAP user data:', user);
-    // res.status(200).json(user);
-  } catch (error) {
-    res.status(401).send('Authentication failed: ' + error.message);
+    // Save user to session
+    req.session.user = processedUser;
+    res.status(200).json(processedUser);
+  } catch (err) {
+    res.status(401).json({ error: 'Authentication failed: ' + err.message });
   }
+});
+
+// Current user info
+app.get('/me', ensureLoggedIn, (req, res) => {
+  res.json(req.session.user);
+});
+
+// Logout
+app.post('/logout', ensureLoggedIn, (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    res.clearCookie('connect.sid');
+    res.json({ message: 'Logged out' });
+  });
 });
 
 // Basic hello route

@@ -1,40 +1,40 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:3000'; // Base URL of your Express backend
-  private userSubject = new BehaviorSubject<any>(this.getUserFromStorage());
+  private baseUrl = 'http://localhost:3000';
+  // initialize to null instead of this.getUserFromStorage()
+  private userSubject = new BehaviorSubject<any>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // on startup, hydrate from server if there's a valid cookie
+    this.http.get<any>(`${this.baseUrl}/me`, { withCredentials: true }).subscribe(
+      user => this.setUserSession(user),
+      () => this.clearUserSession()
+    );
+  }
 
   login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credentials);
+    return this.http.post<any>(`${this.baseUrl}/login`, credentials, { withCredentials: true }).pipe(tap(user => this.setUserSession(user)));
   }
 
   setUserSession(user: any): void {
-    console.log('Saving user to localStorage:', user);
-    sessionStorage.setItem('user', JSON.stringify(user));
-    this.userSubject.next(user); // Notify observers of the new user
+    this.userSubject.next(user);
   }
 
-  // Clear the user session
   clearUserSession(): void {
-    console.log('Clearing user session');
-    sessionStorage.removeItem('user');
-    this.userSubject.next(null); // Notify observers of the logout
+    this.userSubject.next(null);
   }
 
-  // Retrieve the user data from localStorage
+  // still returns something synchronously, just reading the BehaviorSubject
   getUserFromStorage(): any {
-    const user = sessionStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    return this.userSubject.value;
   }
 
-  // Observable to get the current user
   getCurrentUser(): Observable<any> {
     return this.userSubject.asObservable();
   }
