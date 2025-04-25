@@ -4,7 +4,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { authenticate } = require('ldap-authentication');
 const session = require('express-session');
-const PgSession = require('connect-pg-simple')(session);
 
 const app = express();
 const PORT = 3000;
@@ -20,19 +19,15 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.json());
 
-// Session store backed by Postgres
+// Session store: default in-memory (suitable for dev, not production)
 app.use(
   session({
-    store: new PgSession({
-      pool: db.pool, // your existing PG pool from ./db
-      tableName: 'user_sessions',
-    }),
     secret: '1', // replace with strong secret in production
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
-      secure: false, // set to true if using HTTPS
+      secure: false, // set to `true` if using HTTPS
       httpOnly: true,
       sameSite: 'lax',
     },
@@ -109,7 +104,6 @@ app.post('/logout', ensureLoggedIn, (req, res) => {
     res.json({ message: 'Logged out' });
   });
 });
-
 // Basic hello route
 app.get('/', (req, res) => {
   res.send('Hello World');
