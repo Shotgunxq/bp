@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { ApiService } from '../../services/apiServices';
-import { navbarService } from '../../services/navbarService';
+import { ApiService } from '../../services/api.services';
+import { navbarService } from '../../services/navbar.helper';
 import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service';
 
 @Component({

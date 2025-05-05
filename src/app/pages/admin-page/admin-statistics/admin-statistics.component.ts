@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../../../services/adminServices';
+import { AdminService } from '../../../services/admin.services';
 import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis } from 'ng-apexcharts';
 
 export type ChartOptions = {

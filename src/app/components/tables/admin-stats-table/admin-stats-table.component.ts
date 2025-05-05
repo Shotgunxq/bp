@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AdminService } from '../../../services/adminServices';
+import { AdminService } from '../../../services/admin.services';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({

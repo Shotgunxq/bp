@@ -2,8 +2,8 @@ import { Component, OnInit, AfterViewInit, QueryList, ViewChildren } from '@angu
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiService } from '../../services/apiServices';
-import { AdminService } from '../../services/adminServices';
+import { ApiService } from '../../services/api.services';
+import { AdminService } from '../../services/admin.services';
 import { ConfirmDialogComponent } from './adminDialog/confirm-dialog.component';
 import { EditDialogComponent } from './adminDialog/edit-dialog.component';
 import { AdminNewExerciseComponent } from './adminDialog/admin-new-exercise/admin-new-exercise.component';

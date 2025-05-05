@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router'; // Import Router
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ApiService } from '../../../services/apiServices';
-import { navbarService } from '../../../services/navbarService';
+import { ApiService } from '../../../services/api.services';
+import { navbarService } from '../../../services/navbar.helper';
 import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-login-modal',

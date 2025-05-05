@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ApiService } from '../../services/apiServices';
-import { AdminService } from '../../services/adminServices';
+import { ApiService } from '../../services/api.services';
+import { AdminService } from '../../services/admin.services';
 
 @Component({
   selector: 'app-test-done',

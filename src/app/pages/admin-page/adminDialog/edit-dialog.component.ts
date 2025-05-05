@@ -1,7 +1,7 @@
 import { Component, Inject, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AdminService } from '../../../services/adminServices';
+import { AdminService } from '../../../services/admin.services';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

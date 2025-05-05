@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { ApiService } from '../../services/apiServices';
-import { PdfService } from '../../services/pdf.service';
+import { ApiService } from '../../services/api.services';
+import { PdfService } from '../../services/pdf.helper';
 
 // Import your exercise generation functions
-import { binomialProbabilityRandom } from '../../services/binomialProbability';
-import { hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
-import { geometricProbabilityRandom } from '../../services/geometricProbability';
+import { binomialProbabilityRandom } from '../../services/binomialProbability.helper';
+import { hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality.helper';
+import { geometricProbabilityRandom } from '../../services/geometricProbability.helper';
 
 @Component({
   selector: 'app-export-page',

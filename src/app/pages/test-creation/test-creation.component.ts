@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ApiService } from '../../services/apiServices';
+import { ApiService } from '../../services/api.services';
 
-import { binomialExercise, binomialProbabilityRandom } from '../../services/binomialProbability';
-import { hypergeometricExercises, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
-import { geometricExercise, geometricProbabilityRandom } from '../../services/geometricProbability';
+import { binomialExercise, binomialProbabilityRandom } from '../../services/binomialProbability.helper';
+import { hypergeometricExercises, hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality.helper';
+import { geometricExercise, geometricProbabilityRandom } from '../../services/geometricProbability.helper';
 
 @Component({
   selector: 'app-test-creation',
