@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
-import { LoginModalComponent } from './components/Modals/login-modal/login-modal.component';
+import { LoginModalComponent } from './components/modals/login-modal/login-modal.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';

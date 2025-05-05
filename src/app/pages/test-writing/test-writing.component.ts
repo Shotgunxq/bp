@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
 import { ApiService } from '../../services/api.services';
-import { TimeUpDialogComponent } from '../../components/Modals/Dialog/time-up-dialog/time-up-dialog.component';
+import { TimeUpDialogComponent } from '../../components/modals/dialogs/time-up-dialog/time-up-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { InfoModalTestWritingComponent } from '../../components/Modals/Dialog/info-modal-test-writing/info-modal-test-writing.component';
+import { InfoModalTestWritingComponent } from '../../components/modals/dialogs/info-modal-test-writing/info-modal-test-writing.component';
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
