@@ -155,13 +155,11 @@ export class ExportPageComponent implements OnInit {
 
   // --- User Statistics Methods ---
   fetchDataFromDatabase(): void {
-    const userString = sessionStorage.getItem('user');
-    if (userString) {
-      const userObj = JSON.parse(userString);
-      this.userId = userObj.userId;
-    } else {
-      this.userId = '';
-    }
+    // Grab the logged-in user from the ApiService’s BehaviorSubject
+    const user = this.apiService.getUserFromStorage();
+    this.userId = user ? user.userId : '';
+
+    // Now call your stats endpoint as before
     this.apiService.getStatistics(Number(this.userId)).subscribe(
       (data: any[]) => {
         console.log('Test data:', data[0]?.testId);

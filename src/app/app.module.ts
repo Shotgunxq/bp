@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -59,7 +59,12 @@ import { AdminStatisticsComponent } from './pages/admin-page/admin-statistics/ad
 import { ExportPageComponent } from './pages/export-page/export-page.component';
 import { TimeUpDialogComponent } from './components/modals/dialogs/time-up-dialog/time-up-dialog.component';
 import { InfoModalTestWritingComponent } from './components/modals/dialogs/info-modal-test-writing/info-modal-test-writing.component';
+import { ApiService } from './services/api.services';
+import { take } from 'rxjs';
 
+export function initApp(api: ApiService) {
+  return () => api.getCurrentUser().pipe(take(1)).toPromise();
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -121,7 +126,14 @@ import { InfoModalTestWritingComponent } from './components/modals/dialogs/info-
     MatOption,
     MatDialogModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initApp,
+      deps: [ApiService],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

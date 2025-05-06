@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ApiService } from '../../services/api.services';
 import { AdminService } from '../../services/admin.services';
+import { filter, switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'app-test-done',
@@ -54,24 +55,24 @@ export class TestDoneComponent implements OnInit {
   }
 
   fetchDataFromDatabase(): void {
-    const userString = sessionStorage.getItem('user');
-    if (userString) {
-      const userObj = JSON.parse(userString);
-      this.userId = userObj.userId;
-    } else {
-      this.userId = '';
-    }
-    this.apiService.getStatistics(Number(this.userId)).subscribe(
-      (data: any[]) => {
-        console.log('Test data:', data[0]);
-        this.tests = data;
-        this.filteredTests = [...this.tests];
-        this.setPagedTests();
-      },
-      error => {
-        console.error('Error fetching data:', error);
-      }
-    );
+    this.apiService
+      .getCurrentUser()
+      .pipe(
+        filter(u => !!u), // skip null
+        take(1), // only the first non-null
+        switchMap(u => {
+          this.userId = u.userId;
+          return this.apiService.getStatistics(Number(this.userId));
+        })
+      )
+      .subscribe(
+        (data: any[]) => {
+          this.tests = data;
+          this.filteredTests = [...this.tests];
+          this.setPagedTests();
+        },
+        err => console.error('Error fetching data:', err)
+      );
   }
 
   // Called when the search input changes

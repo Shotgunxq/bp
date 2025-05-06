@@ -4,9 +4,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { authenticate } = require('ldap-authentication');
 const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
 
 const app = express();
 const PORT = 3000;
+app.disable('etag');
 
 // Enable CORS with credentials for Angular dev server
 app.use(
@@ -22,12 +24,17 @@ app.use(express.json());
 // Session store: default in-memory (suitable for dev, not production)
 app.use(
   session({
-    secret: '1', // replace with strong secret in production
+    store: new PgSession({
+      pool: db.pool, // your PG Pool
+      tableName: 'user_sessions',
+      createTableIfMissing: true, // ← will CREATE TABLE for you
+    }),
+    secret: '1', // use a strong secret in prod
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-      secure: false, // set to `true` if using HTTPS
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: false, // false on HTTP dev; true on HTTPS
       httpOnly: true,
       sameSite: 'lax',
     },
@@ -91,6 +98,7 @@ app.post('/login', async (req, res) => {
 
 // Current user info
 app.get('/me', ensureLoggedIn, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.json(req.session.user);
 });
 

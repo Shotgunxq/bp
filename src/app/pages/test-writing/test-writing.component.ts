@@ -5,6 +5,7 @@ import { ApiService } from '../../services/api.services';
 import { TimeUpDialogComponent } from '../../components/modals/dialogs/time-up-dialog/time-up-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { InfoModalTestWritingComponent } from '../../components/modals/dialogs/info-modal-test-writing/info-modal-test-writing.component';
+import { filter, take } from 'rxjs';
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
@@ -42,13 +43,13 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const userString = sessionStorage.getItem('user');
-    if (userString) {
-      const userObj = JSON.parse(userString);
-      this.userId = userObj.userId;
-    } else {
-      this.userId = '';
-    }
+    this.apiService
+      .getCurrentUser()
+      .pipe(
+        filter(u => !!u),
+        take(1)
+      )
+      .subscribe(u => (this.userId = u.userId));
 
     // ← PULL IN testId from state (or wherever you passed it)
     const nav = history.state || {};
@@ -300,46 +301,43 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   }
 
   submitTest(): void {
+    // 1) calculate totals & slim answers
     let totalPoints = 0;
     let totalHints = 0;
-
-    // only send each question's ID and the student's answer
     const answers = this.data.map(ex => {
-      // accumulate totals
       const pts = this.calculateExerciseScore(ex);
-      const hints = ex.hintsRevealed || 0;
       if (ex.userAnswer?.trim() && ex.userAnswer === (ex.correct_answer || ex.answer)) {
         totalPoints += pts;
       }
-      totalHints += hints;
-
-      // slim payload
+      totalHints += ex.hintsRevealed || 0;
       return {
         exercise_id: ex.exercise_id,
         user_answer: ex.userAnswer,
       };
     });
 
+    // 2) assemble payload
     const payload = {
       user_id: this.userId,
       test_id: this.testId,
       submitted_at: new Date().toISOString(),
       total_score: totalPoints,
       total_hints: totalHints,
-      answers, // ← [{ exercise_id, user_answer }, …]
+      answers,
     };
 
-    this.apiService.submitTestScore(payload).subscribe(
-      _ => {
+    // 3) one-shot API call
+    this.apiService.submitTestScore(payload).subscribe({
+      next: () => {
         this.snackBar.open('Test odovzdaný úspešne!', 'Close', { duration: 7000 });
         this.resetTestState();
         this.router.navigate(['/test'], { state: { points: totalPoints } });
       },
-      err => {
+      error: err => {
         console.error('Error submitting test:', err);
         this.snackBar.open('Failed to submit the test. Please try again.', 'Close', { duration: 7000 });
-      }
-    );
+      },
+    });
   }
 
   calculateExerciseScore(exercise: any): number {
