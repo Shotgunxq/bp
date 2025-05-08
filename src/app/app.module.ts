@@ -60,11 +60,20 @@ import { ExportPageComponent } from './pages/export-page/export-page.component';
 import { TimeUpDialogComponent } from './components/modals/dialogs/time-up-dialog/time-up-dialog.component';
 import { InfoModalTestWritingComponent } from './components/modals/dialogs/info-modal-test-writing/info-modal-test-writing.component';
 import { ApiService } from './services/api.services';
-import { take } from 'rxjs';
+import { catchError, of, take } from 'rxjs';
 
 export function initApp(api: ApiService) {
-  return () => api.getCurrentUser().pipe(take(1)).toPromise();
+  // call the real HTTP loader, and swallow any error into `null`
+  return () =>
+    api
+      .fetchCurrentUser() // a method that does `http.get('/me')`
+      .pipe(
+        catchError(() => of(null)), // <-- never throw, emit null instead
+        take(1)
+      )
+      .toPromise();
 }
+
 @NgModule({
   declarations: [
     AppComponent,

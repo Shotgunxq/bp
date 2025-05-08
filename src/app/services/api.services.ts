@@ -39,15 +39,8 @@ export class ApiService {
   getUserFromStorage(): any {
     return this.userSubject.value;
   }
-
   getCurrentUser(): Observable<any> {
-    if (!this.userSubject.value) {
-      return this.http.get(`${this.baseUrl}/me`, { withCredentials: true }).pipe(
-        tap(user => this.setUserSession(user)),
-        take(1)
-      );
-    }
-    return this.userSubject.asObservable().pipe(take(1));
+    return this.userSubject.asObservable();
   }
 
   // -- your existing endpoints, all withCredentials --
@@ -87,5 +80,9 @@ export class ApiService {
 
   getOverallPercentile(userId: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/api/percentile/overall/${userId}`, { withCredentials: true });
+  }
+
+  fetchCurrentUser(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/me`, { withCredentials: true }).pipe(tap(user => this.setUserSession(user)));
   }
 }
