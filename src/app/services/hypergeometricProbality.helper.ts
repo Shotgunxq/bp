@@ -67,8 +67,8 @@ function calculateHypergeometricProbability(K: number, N: number, n: number, k: 
 // Function to generate description
 function generateDescription(N: number, K: number, n: number, k: number): string {
   return `\\begin{aligned}
-  \\text{Aká je pravdepodobnosť vybrať presne } ${k} \\text{ úspechov zo vzorky veľkosti } ${n} \\text{ z populácie s } ${N}\\
-  \\text{ položkami, z ktorých } ${K} \\text{ sú úspechy?} \\\\
+  \\text{V škatuli je } ${N} \\text{ súšiastok, medzi nimi sú } ${K} \\text{ poškodené. Technik vyberie } ${n}\\
+  \\text{ súčiastok na kontrolu a to postupne jednu za druhou, bez vrátenia vybratých. Aká je pravdepodobnosť, že medzi nimi bude presne } ${k} \\text{ poškodená/é?} \\\\
   \\text{Zaokrúhlite na 3 desatinné miesta.}
   \\end{aligned}`;
 }

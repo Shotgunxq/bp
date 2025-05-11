@@ -76,8 +76,8 @@ function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
   // console.log(`n=${n}, k=${k}, p=${p}`);
   return `\\begin{aligned}
-  & \\text{Aká je pravdepodobnosť získania presne } ${k} \\text{ úspechov pri } ${n} \\text{ pokusoch experimentu} \\\\
-  & \\text{s pravdepodobnosťou úspechu } ${p}\\text{?} \\\\
+  & \\text{Softvérový tester vykonáva } ${n} \\text{ automatizovaných testov softvéru. Pravdepodobnosť úspešného prebehnutia jedného testu je } ${p} \\text{. } \\\\
+  & \\text{Aká je pravdepodobnosť, že presne } ${k}\\text{ testov skončí úspešne} \\\\
   & \\text{Zaokrúhlite na 3 desatinné miesta.}
   \\end{aligned}`;
 }

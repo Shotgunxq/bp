@@ -421,14 +421,15 @@ app.get('/statistics/:user_id', async (req, res) => {
     const query = `
       SELECT
         ts.test_id,
-        ts.total_score        AS points_scored,
-        ts.submitted_at       AS submission_date,
-        t.exercises           AS test_exercises,
+        ts.total_score      AS points_scored,
+        ts.submitted_at     AS submission_date,
+        ts.total_hints      AS total_hints_used,
+        ts.answers          AS submitted_answers,   -- ← our per‐exercise JSON
+        t.exercises         AS test_exercises,      -- template questions
         COALESCE((
           SELECT SUM((ex ->> 'points')::int)
           FROM jsonb_array_elements(t.exercises) AS ex
         ), 0)                  AS max_points,
-        ts.total_hints        AS total_hints_used,
         (
           SELECT th.theme_name
           FROM themes th
@@ -443,8 +444,8 @@ app.get('/statistics/:user_id', async (req, res) => {
       ORDER BY ts.submitted_at DESC;
     `;
 
-    const result = await db.query(query, [userId]);
-    res.json(result.rows);
+    const { rows } = await db.query(query, [userId]);
+    res.json(rows);
   } catch (error) {
     console.error('Error fetching statistics for user:', error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -58,8 +58,8 @@ export class TestDoneComponent implements OnInit {
     this.apiService
       .getCurrentUser()
       .pipe(
-        filter(u => !!u), // skip null
-        take(1), // only the first non-null
+        filter(u => !!u),
+        take(1),
         switchMap(u => {
           this.userId = u.userId;
           return this.apiService.getStatistics(Number(this.userId));
@@ -67,7 +67,34 @@ export class TestDoneComponent implements OnInit {
       )
       .subscribe(
         (data: any[]) => {
-          this.tests = data;
+          // For each test submission…
+          this.tests = data.map(test => {
+            // parse the submitted answers array
+            const answers: Array<{ exercise_id: number; user_answer: string; hints_used?: number }> = test.submitted_answers || [];
+
+            // build a map for quick lookup
+            const answerMap = new Map<number, { user_answer: string; hints_used?: number }>();
+            answers.forEach(a => answerMap.set(a.exercise_id, { user_answer: a.user_answer, hints_used: a.hints_used }));
+
+            // merge into each exercise in the template
+            const mergedExercises = (test.test_exercises || []).map((ex: any) => {
+              const ans = answerMap.get(ex.exercise_id) || { user_answer: null, hints_used: 0 };
+              return {
+                ...ex,
+                userAnswer: ans.user_answer,
+                hintsUsed: ans.hints_used ?? 0,
+                // if you computed per‐exercise points at submit time, you can pull them too:
+                // pointsScored: ans.points_scored
+              };
+            });
+
+            return {
+              ...test,
+              // swap in the merged array
+              test_exercises: mergedExercises,
+            };
+          });
+
           this.filteredTests = [...this.tests];
           this.setPagedTests();
         },

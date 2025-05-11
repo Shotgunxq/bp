@@ -51,8 +51,8 @@ export function geometricProbabilityRandom(): geometricExercise[] {
 // Function to generate description
 function generateDescription(k: number, p: number): string {
   return `\\begin{aligned}
-  \\text{Aká je pravdepodobnosť potreby najviac } ${k} \\text{ pokusov na dosiahnutie prvého úspechu v experimente}\\
-  \\text{s pravdepodobnosťou úspechu } ${p}\\text{?}
+  \\text{Mikrokontrolér opakovane odosiela dátový paket cez sériovú linku, pričom pravedepodobnosť úspešného prenosu paketu je } ${k} \\
+  \\text{. Aká je pravdepodobnosť, že prvý úspešný prenos nastane až na } ${p}\\text{. pokus?}
   \\end{aligned}`;
 }
 

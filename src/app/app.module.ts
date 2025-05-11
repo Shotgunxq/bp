@@ -59,6 +59,7 @@ import { AdminStatisticsComponent } from './pages/admin-page/admin-statistics/ad
 import { ExportPageComponent } from './pages/export-page/export-page.component';
 import { TimeUpDialogComponent } from './components/modals/dialogs/time-up-dialog/time-up-dialog.component';
 import { InfoModalTestWritingComponent } from './components/modals/dialogs/info-modal-test-writing/info-modal-test-writing.component';
+import { InfoModalTestCreationComponent } from './components/modals/dialogs/info-moda-test-creation/info-modal-test-creation';
 import { ApiService } from './services/api.services';
 import { catchError, of, take } from 'rxjs';
 
@@ -99,6 +100,7 @@ export function initApp(api: ApiService) {
     ExportPageComponent,
     TimeUpDialogComponent,
     InfoModalTestWritingComponent,
+    InfoModalTestCreationComponent,
   ],
   imports: [
     MatCardModule,
