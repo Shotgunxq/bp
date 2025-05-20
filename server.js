@@ -389,19 +389,20 @@ app.post('/admin/exercises', async (req, res) => {
 app.get('/admin/statistics', async (req, res) => {
   try {
     const query = `
-        SELECT 
-  CONCAT(u.first_name, ' ', u.last_name) AS full_name,
-  ts.points_scored,
-  ts.submitted_at AS submission_date,
-  t.exercises AS test_exercises,
+SELECT
+  CONCAT(u.first_name, ' ', u.last_name)        AS full_name,
+  ts.total_score                               AS points_scored,   -- ← use the real column name
+  ts.submitted_at                              AS submission_date,
+  t.exercises                                  AS test_exercises,
   COALESCE((
     SELECT SUM((ex ->> 'points')::int)
-    FROM jsonb_array_elements(t.exercises) AS ex
-  ), 0) AS max_points
-FROM Test_Submissions ts
-JOIN Users u ON ts.user_id = u.user_id
-JOIN Tests t ON ts.test_id = t.test_id
-ORDER BY ts.submitted_at DESC;
+    FROM   jsonb_array_elements(t.exercises) AS ex
+  ), 0)                                         AS max_points
+FROM   test_submissions ts
+  JOIN users u ON ts.user_id = u.user_id
+  JOIN tests t ON ts.test_id = t.test_id
+ORDER  BY ts.submitted_at DESC;
+
     `;
     const result = await db.query(query);
     res.json(result.rows);
@@ -473,13 +474,12 @@ ORDER BY submission_date;
 app.get('/admin/avg-percentage-scores', async (req, res) => {
   try {
     const query = `
-SELECT 
-    t.test_id,
-    AVG(ts.points_scored) AS avg_points
-FROM test_scores ts
-JOIN tests t ON t.test_id = ts.test_id
-GROUP BY t.test_id
-ORDER BY t.test_id;
+      SELECT
+        ts.test_id,
+        AVG(ts.total_score) AS avg_score
+      FROM test_submissions ts
+      GROUP BY ts.test_id
+      ORDER BY ts.test_id;
     `;
     const result = await db.query(query);
     res.json(result.rows);
@@ -492,17 +492,21 @@ ORDER BY t.test_id;
 app.get('/admin/avg-points-per-exercise', async (req, res) => {
   try {
     const query = `
-SELECT 
-    ts.points_scored,
-    COUNT(*) AS frequency
-FROM test_scores ts
-GROUP BY ts.points_scored
-ORDER BY ts.points_scored;
+      SELECT
+        ts.test_id,
+        -- divide each submission’s total_score by how many answers they gave
+        AVG( 
+          ts.total_score::float 
+          / NULLIF(jsonb_array_length(ts.answers),0)
+        ) AS avg_points_per_exercise
+      FROM test_submissions ts
+      GROUP BY ts.test_id
+      ORDER BY ts.test_id;
     `;
     const result = await db.query(query);
     res.json(result.rows);
   } catch (error) {
-    console.error('Error fetching statistics:', error);
+    console.error('Error fetching avg points/exercise:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -548,11 +552,14 @@ app.get('/api/percentile/overall/:userId', async (req, res) => {
 app.get('/api/leaderboard', async (req, res) => {
   try {
     const query = `
-      SELECT u.email, SUM(ts.points_scored) AS total_points
-FROM test_submissions ts
-JOIN Users u ON ts.user_id = u.user_id
-GROUP BY u.email
-ORDER BY total_points DESC;
+      SELECT
+        u.email        AS username,
+        SUM(ts.total_score)::float AS total_points
+      FROM test_submissions ts
+      JOIN users u
+        ON ts.user_id = u.user_id
+      GROUP BY u.email
+      ORDER BY total_points DESC;
     `;
     const result = await db.query(query);
     res.json(result.rows);

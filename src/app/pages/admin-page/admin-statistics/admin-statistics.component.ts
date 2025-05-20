@@ -48,45 +48,53 @@ export class AdminStatisticsComponent implements OnInit {
   loadAvgPercentageScores() {
     this.adminService.getAvgPercentageScores().subscribe(data => {
       // Expected format: [{ test_name: 'Test A', avg_percentage: 78.5 }, ...]
-      const chartData = data.map((item: { test_name: string; avg_percentage: number }) => ({
-        x: item.test_name,
-        y: item.avg_percentage,
+      const chartData = data.map((item: { test_id: any; avg_score: string }) => ({
+        // for now just use the id as the label
+        x: `Test ${item.test_id}`,
+        // convert the string to a number
+        y: parseFloat(item.avg_score),
       }));
       this.avgPercentageChartOptions = {
-        series: [{ name: 'Average % Score', data: chartData }],
+        series: [{ name: 'Average Score', data: chartData }],
         chart: { type: 'bar', height: 350 },
         xaxis: { title: { text: 'Test' } },
-        yaxis: { title: { text: 'Average % Score' } },
+        yaxis: { title: { text: 'Average Score' } },
       };
     });
   }
-
   loadAvgPointsPerExercise() {
-    this.adminService.getAvgPointsPerExercise().subscribe(data => {
-      // Expected format: [{ test_name: 'Test A', avg_points_per_exercise: 4.5 }, ...]
-      const chartData = data.map((item: { test_name: string; avg_points_per_exercise: number }) => ({
-        x: item.test_name,
-        y: item.avg_points_per_exercise,
-      }));
+    this.adminService.getAvgPointsPerExercise().subscribe(raw => {
+      const chartData = raw
+        // drop any tests where avg_points_per_exercise is null
+        .filter((item: { avg_points_per_exercise: null }) => item.avg_points_per_exercise !== null)
+        .map((item: { test_id: any; avg_points_per_exercise: any }) => ({
+          x: `Test ${item.test_id}`,
+          y: parseFloat(item.avg_points_per_exercise as any),
+        }));
+
       this.avgPointsChartOptions = {
         series: [{ name: 'Avg Points per Exercise', data: chartData }],
-        // Use a bar chart since we only have one numeric value per test
-        chart: { type: 'boxPlot', height: 350 },
+        chart: { type: 'bar', height: 350 },
         xaxis: { title: { text: 'Test' } },
-        yaxis: { title: { text: 'Average Points per Exercise' } },
+        yaxis: { title: { text: 'Avg Points/exercise' } },
       };
     });
   }
 
   loadLeaderboard() {
-    this.adminService.getLeaderboard().subscribe(data => {
-      // Expected format: [{ username: 'Alice', total_points: 120 }, { username: 'Bob', total_points: 100 }, ...]
-      const chartData = data.map((item: { username: string; total_points: number }) => ({
-        x: item.username,
-        y: item.total_points,
+    this.adminService.getLeaderboard().subscribe(raw => {
+      const chartData = raw.map(item => ({
+        x: item.username, // from `u.email AS username`
+        y: typeof item.total_points === 'string' ? parseFloat(item.total_points) : item.total_points,
       }));
+
       this.leaderboardChartOptions = {
-        series: [{ name: 'Total Points', data: chartData }],
+        series: [
+          {
+            name: 'Total Points',
+            data: chartData,
+          },
+        ],
         chart: { type: 'bar', height: 350 },
         xaxis: { title: { text: 'User' } },
         yaxis: { title: { text: 'Total Points' } },

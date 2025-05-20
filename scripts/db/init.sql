@@ -87,149 +87,138 @@ INSERT INTO themes (theme_id, theme_name) VALUES
 
 
 
--- =========================================
--- Tieto ulohy su z MOODLE
-
--- 1. Kombinatorika
-
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'medium',
-   '\\begin{aligned}
-    & \\text{Máme k dispozícii 10 vzoriek označených v1...v10.} \\\\
-    & \\text{Náhodne vyberieme 3 vzorky. Aká je pravdepodobnosť, že vyberieme }\\{v1, v3, v6\\}\\text{?} \\\\
+   '\begin{aligned}
+    & \text{Máme k dispozícii 10 vzoriek označených v1...v10.} \\
+    & \text{Náhodne vyberieme 3 vzorky. Aká je pravdepodobnosť, že vyberieme }\{v1, v3, v6\}\text{?} \\
     & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na štyri desatinné miesta.}
-   \\end{aligned}',
-   3, '0.0083', '["Spočítaj C(10,3)" , "Pravdepodobnosť = 1 / C(10,3).", "n!/(n-k)!k!]"');
+   \end{aligned}',
+   3, '0.0083', '["Spočítaj C(10,3)" , "Pravdepodobnosť = 1 / C(10,3).", "n!/(n-k)!k!"]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'easy',
-   '\\begin{aligned}
-    & \\text{Máme skupinu piatich študentov A=\\{Boris, Elena, Igor, Jana, Táňa\\}.} \\\\
-    & \\text{Koľko dvojíc z nich je možné zostaviť?}
-   \\end{aligned}',
+   '\begin{aligned}
+    & \text{Máme skupinu piatich študentov A=\{Boris, Elena, Igor, Jana, Táňa\}.} \\
+    & \text{Koľko dvojíc z nich je možné zostaviť?}
+   \end{aligned}',
    2, '10', '["Poradie nezálezí", "kombinácie, C(5,2)"]');
 
-INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES --TODO
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'hard',
-   '\\begin{aligned}
-    & \\text{V urne je 12 loptičiek: 5 označených \"1\", 2 označené \"2\" a 5 označených inak.} \\\\
-    & \\text{Aká je pravdepodobnosť, že pri postupnom ťahaní bez vrátenia vytiahneme v poradí }1,2,3\\text{?}
-   \\end{aligned}',
+   '\begin{aligned}
+    & \text{V urne je 12 loptičiek: 5 označených "1", 2 označené "2" a 5 označených inak.} \\
+    & \text{Aká je pravdepodobnosť, že pri postupnom ťahaní bez vrátenia vytiahneme v poradí }1,2,3\text{?}
+   \end{aligned}',
    4, '3.6075E-5', '[]');
-
--- 2. Teória pravdepodobnosti
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'easy',
-   '\\begin{aligned}
-    & \\text{Ak A, B sú náhodné udalosti a P je pravdepodobnosť, platí:} \\\\
-    & \\text{P(A \\cap B) = P(A) + P(B) - P(A \\cup B)} \\\\
+   '\begin{aligned}
+    & \text{Ak A, B sú náhodné udalosti a P je pravdepodobnosť, platí:} \\
+    & \text{P(A \cap B) = P(A) + P(B) - P(A \cup B)} \\
     & \textbf{Odpoveď: pravda / nepravda}
-   \\end{aligned}',
+   \end{aligned}',
    2, 'pravda', '["Rozbor inklúzia/exklklúza", "Preusporiadaj rovnosť"]');
 
-INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES --TODO
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
-   '\\begin{aligned}
-    & \\text{Nech }\\Omega=\\{1,2,3,4,5,6\\}. \\text{Ktoré zo systémov podmnožín tvorí algebru?} \\\\
-    & \\text{S1 = \\{\\emptyset,\\Omega\\}, S2 = \\{\\emptyset,\\{1\\},\\{2,3,4,5,6\\},\\Omega\\}, …}
-   \\end{aligned}',
-   3, 'S1, S4', '[Skontroluj prázdnu množinu a Omegu v systéme., Skontroluj uzáver k doplnkám aj zjednoteniam.]');
+   '\begin{aligned}
+    & \text{Nech }\Omega=\{1,2,3,4,5,6\}. \text{Ktoré zo systémov podmnožín tvorí algebru?} \\
+    & \text{S1 = \{\emptyset,\Omega\}, S2 = \{\emptyset,\{1\},\{2,3,4,5,6\},\Omega\}, ...}
+   \end{aligned}',
+   3, 'S1, S4', '["Skontroluj prázdnu množinu a Omegu v systéme.", "Skontroluj uzáver k doplnkám aj zjednoteniam."]');
 
-INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES --TODO
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
-   '\\begin{aligned}
-    & \\text{Prístupový kód: 5 rôznych znakov z \\{1,2,3,4,5,6\\}.} \\\\
-    & \\text{Aká je pravdepodobnosť, že ho uhádneme na prvýkrát?}
-   \\end{aligned}',
+   '\begin{aligned}
+    & \text{Prístupový kód: 5 rôznych znakov z \{1,2,3,4,5,6\}.} \\
+    & \text{Aká je pravdepodobnosť, že ho uhádneme na prvýkrát?}
+   \end{aligned}',
    3, '0.0013888', '[]');
-
--- 3. Podmienená pravdepodobnosť -- DONE
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (2, 'medium',
-   '\\begin{aligned}
-    & \\text{Dva závody vyrábajú okenné rámy: 45\\% a 55\\% produkcie.} \\\\
-    & \\text{Prvý: 90\\% I. kategórie, druhý: 95\\% I. kategórie.} \\\\
-    & \\text{Aká je pravdepodobnosť, že náhodne vybraný rám je I. kategórie?} \\\\
+   '\begin{aligned}
+    & \text{Dva závody vyrábajú okenné rámy: 45\% a 55\% produkcie.} \\
+    & \text{Prvý: 90\% I. kategórie, druhý: 95\% I. kategórie.} \\
+    & \text{Aká je pravdepodobnosť, že náhodne vybraný rám je I. kategórie?} \\
     & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na štyri desatinné miesta.}
-   \\end{aligned}',
+   \end{aligned}',
    3, '0.9275', '["Najprv vypočítaj príspevok prvého závodu k I. kategórii ako 0.45 * 0.90.",
    "Potom vypočítaj príspevok druhého závodu k I. kategórii ako 0.55 * 0.95.",
    "Spočítaj tieto dva príspevky, aby si dostal celkovú pravdepodobnosť I. kategórie."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (2, 'medium',
-   '\\begin{aligned}
-    & \\text{V lietadle je 20\\% cestujúcich zo SR. 60\\% SR pije pivo, 20\\% cudzinci.} \\\\
-    & \\text{Cestujúci si vypýtal pivo. Aká je pravdepodobnosť, že je to občan SR?} \\\\
+   '\begin{aligned}
+    & \text{V lietadle je 20\% cestujúcich zo SR. 60\% SR pije pivo, 20\% cudzinci.} \\
+    & \text{Cestujúci si vypýtal pivo. Aká je pravdepodobnosť, že je to občan SR?} \\
     & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na päť desatinné miesta.}
-   \\end{aligned}',
+   \end{aligned}',
    3, '0.42857', '["Najprv vypočítaj, akú časť všetkých cestujúcich predstavujú Slováci, ktorí pijú pivo: 0.20 * 0.60.",
    "Potom zistite, akú časť všetkých cestujúcich tvoria cudzinci, ktorí pijú pivo: 0.80 * 0.20.",
    "Spočítaj tieto dve hodnoty, aby si dostal celkovú pravdepodobnosť, že niekto pýta pivo.",
-   "Nakoniec vydel prienik Slovák–pivo celkovou pravdepodobnosťou piva, aby si dostal P(SR|PIVO)."
+   "Nakoniec vydel prienik Slovák-pivo celkovou pravdepodobnosťou piva, aby si dostal P(SR|PIVO)."
    ]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (2, 'easy',
-   '\\begin{aligned}
-    & \\text{V ročníku 100 študentov má 10 mien Jozef.} \\\\
-    & \\text{Aká je pravdepodobnosť, že náhodne vybraný študent sa volá Jozef?} \\\\
+   '\begin{aligned}
+    & \text{V ročníku 100 študentov má 10 mien Jozef.} \\
+    & \text{Aká je pravdepodobnosť, že náhodne vybraný študent sa volá Jozef?} \\
     & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na jedno desatinné miesto.}
-   \\end{aligned}',
+   \end{aligned}',
    2, '0.1', '["Vyjadri pravdepodobnosť ako pomer počtu Jozefov k celkovému počtu študentov: 10/100"]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (2, 'easy',
-   '\\begin{aligned}
-    & \\text{Krabica 1: 10 modrých, 5 červených balónov.} \\\\
-    & \\text{Krabica 2: 8 bielych, 12 modrých balónov.} \\\\
-    & \\text{Náhodne vyberieme krabicu a balón. Aká je pravdepodobnosť červeného?} \\\\
+   '\begin{aligned}
+    & \text{Krabica 1: 10 modrých, 5 červených balónov.} \\
+    & \text{Krabica 2: 8 bielych, 12 modrých balónov.} \\
+    & \text{Náhodne vyberieme krabicu a balón. Aká je pravdepodobnosť červeného?} \\
     & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na štyri desatinné miesta.}
-   \\end{aligned}',
+   \end{aligned}',
    2, '0.1667', '["Pre krabicu 1 spočítaj pravdepodobnosť červeného balónu: 1/2 * 5/(10+5).",
     "Pre krabicu 2 spočítaj pravdepodobnosť červeného balónu: 1/2 * 0/8+12.",
     "Oba výsledky spočítaj dokopy."
    ]');
 
--- 4. Náhodná premenná a rozdelenia
-
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
-   '\\begin{aligned}
-    & \\text{Rozdelenie X: }t=2,3,4,5,6; P(X=t)=0.1,0.3,0.3,0.2,0.1. \\\\
-    & \\text{Vypočítajte strednú hodnotu }E(X). \\\\
+   '\begin{aligned}
+    & \text{Rozdelenie X: }t=2,3,4,5,6; P(X=t)=0.1,0.3,0.3,0.2,0.1. \\
+    & \text{Vypočítajte strednú hodnotu }E(X). \\
     & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na jedno desatinné miesto.}
-   \\end{aligned}',
+   \end{aligned}',
    3, '3.9', '["Vynásob každú hodnotu t jej pravdepodobnosťou.", "Sčítaj tieto súčiny."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
-   '\\begin{aligned}
-    & \\text{Hádžeme štyrmi kockami. Náhodná premenná X = minimum z hodov.} \\\\
-    & \\text{Koľko výsledkov má množina \\{\\omega: X=2\\}?}
-   \\end{aligned}',
+   '\begin{aligned}
+    & \text{Hádžeme štyrmi kockami. Náhodná premenná X = minimum z hodov.} \\
+    & \text{Koľko výsledkov má množina \{\omega: X=2\}?}
+   \end{aligned}',
    3, '369', '["Pre X=2 platí, že v hodoch nie je žiadna 1 a aspoň jeden hod je 2.",
    "Počet sekvencií bez 1 je 5^4, bez 1 aj 2 je 4^4.",
    "Výsledok je rozdiel týchto dvoch hodnôot."
 ]');
 
-INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES --TODO
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'hard',
-   '\\begin{aligned}
-    & \\text{Hádžeme piatimi kockami. X = maximum z hodov.} \\\\
-    & \\text{Vypočítajte }P(X<3)\\text{ a }E(X).
-   \\end{aligned}',
+   '\begin{aligned}
+    & \text{Hádžeme piatimi kockami. X = maximum z hodov.} \\
+    & \text{Vypočítajte }P(X<3)\text{ a }E(X).
+   \end{aligned}',
    4, 'P(X<3)=0.9688; E(X)=4.67', '[]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'hard',
-   '\\begin{aligned}
-    & \\text{Náhodná premenná }X\\sim\\mathrm{Bi}(n=9,p=0.7). \\\\
-    & \\text{Vypočítajte }D(2X-1)\\text{, ak }E(X)=6.3, D(X)=1.89. \\\\
+   '\begin{aligned}
+    & \text{Náhodná premenná }X\sim\mathrm{Bi}(n=9,p=0.7). \\
+    & \text{Vypočítajte }D(2X-1)\text{, ak }E(X)=6.3, D(X)=1.89. \\
     & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na jedno desatinné miesto.}
-   \\end{aligned}',
+   \end{aligned}',
    4, '25.2', '["Skontroluj, akú hodnotu rozptylu D(X) uvádza zadanie - je to 6,3",
    "Pripomeň si, že pre lineárnu transformáciu Y = aX + b platí D(Y) = a^2 * D(X).",
    "Tu je a=2 takže D(2X - 1) = 2^2 * 6.3 = 4 * 6.3 = 25.2."
@@ -237,112 +226,107 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
-   '\\begin{aligned}
-    & \\text{Nech }X\\sim N(4,1). \\text{Nájdite }a\\text{ tak, že }P(2X+1\\le a)=0.9. \\\\
+   '\begin{aligned}
+    & \text{Nech }X\sim N(4,1). \text{Nájdite }a\text{ tak, že }P(2X+1\le a)=0.9. \\
     & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na štyri desatinné miesta.}
-   \\end{aligned}',
+   \end{aligned}',
    3, '11.5621', '["Najprv preveď udalosť 2X + 1 <= a na udalosť X <= (a-1)/2.",
    "Potom zisti pri akej hodnote x má X ∼ N(4,1) pravdepodobnosť 0.9.",
    "Nakoniec vyjadri a = 2(4 + 1.2816) + 1 = 11.5621."
    ]');
 
-
--- =========================================
--- Ulohy od Volauf
--- kombinatorika
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
-  -- a) na druhej minci padne znak
   (0, 'easy',
-    '\\begin{aligned}
-     &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
-     &\\text{Určte pravdepodobnosť, že na druhej minci padne znak.}  \\\\
+    '\begin{aligned}
+     &\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\
+     &\text{Určte pravdepodobnosť, že na druhej minci padne znak.}  \\
     &\textbf{Odpoveď zapíšte ako zlomok.}
-     \\end{aligned}',
+     \end{aligned}',
     1, '1/2', '[
   "Uvedom si, že každý hod mincou je nezávislý od ostatných.",
   "Pravdepodobnosť, že konkrétna (druhá) minca padne na znak, je 1/2.",
   "Ostatné hody (prvá, tretia, štvrtá) neovplyvňujú výsledok druhej mince."
-]'),
+]');
 
-  -- b) znak padne len na druhej minci 
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'easy', 
-    '\\begin{aligned}
-     &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
-     &\\text{Určte pravdepodobnosť, že znak padne len na druhej minci.}  \\\\
+    '\begin{aligned}
+     &\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\
+     &\text{Určte pravdepodobnosť, že znak padne len na druhej minci.}  \\
     &\textbf{Odpoveď zapíšte ako zlomok.}
-     \\end{aligned}',
-    1, '1/16', '["Každá minca má pravdepodobnosť 1/2 na znak aj orla.", "Potrebujeme, aby druhá minca padla na znak a ostatné tri na orla.", "Celková pravdepodobnosť je (1/2)^4 = 1/16."]'),
+     \end{aligned}',
+    1, '1/16', '["Každá minca má pravdepodobnosť 1/2 na znak aj orla.", "Potrebujeme, aby druhá minca padla na znak a ostatné tri na orla.", "Celková pravdepodobnosť je (1/2)^4 = 1/16."]');
 
-  -- c) na prvej a na tretej minci padne znak
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'easy',
-    '\\begin{aligned}
-     &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
-     &\\text{Určte pravdepodobnosť, že na prvej a na tretej minci padne znak.} \\\\
+    '\begin{aligned}
+     &\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\
+     &\text{Určte pravdepodobnosť, že na prvej a na tretej minci padne znak.} \\
     &\textbf{Odpoveď zapíšte ako zlomok.}
-     \\end{aligned}',
-    1, '1/4', '["Každá minca má pravdepodobnosť 1/2 na znak aj orla.", "Potrebujeme, aby prvá a tretia minca padli na znak – ostatné môžu padnúť akokoľvek.", "Výsledná pravdepodobnosť je (1/2)·(1/2) = 1/4."]'),
+     \end{aligned}',
+    1, '1/4', '["Každá minca má pravdepodobnosť 1/2 na znak aj orla.", "Potrebujeme, aby prvá a tretia minca padli na znak - ostatné môžu padnúť akokoľvek.", "Výsledná pravdepodobnosť je (1/2)·(1/2) = 1/4."]');
 
-  -- d) znak padne len na prvej a tretej minci
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'easy',
-    '\\begin{aligned}
-     &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
-     &\\text{Určte pravdepodobnosť, že znak padne len na prvej a tretej minci.} \\\\
+    '\begin{aligned}
+     &\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\
+     &\text{Určte pravdepodobnosť, že znak padne len na prvej a tretej minci.} \\
     &\textbf{Odpoveď zapíšte ako zlomok.}
-     \\end{aligned}',
-    1, '1/16', '["Každá minca padne na znak s pravdepodobnosťou 1/2.", "Potrebujeme, aby prvá a tretia padli na znak a druhá a štvrtá na opačnú stranu.", "Vynásob všetky štyri pravdepodobnosti: (1/2)^4 = 1/16."]'),
+     \end{aligned}',
+    1, '1/16', '["Každá minca padne na znak s pravdepodobnosťou 1/2.", "Potrebujeme, aby prvá a tretia padli na znak a druhá a štvrtá na opačnú stranu.", "Vynásob všetky štyri pravdepodobnosti: (1/2)^4 = 1/16."]');
 
-  -- e) padnú práve dva znaky
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'easy',
-    '\\begin{aligned}
-     &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
-     &\\text{Určte pravdepodobnosť, že padnú práve dva znaky.} \\\\
+    '\begin{aligned}
+     &\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\
+     &\text{Určte pravdepodobnosť, že padnú práve dva znaky.} \\
     &\textbf{Odpoveď zapíšte ako zlomok.}
-     \\end{aligned}',
+     \end{aligned}',
     1, '6/16', '["Zisti, koľko rôznych spôsobov môže padnúť práve 2 znaky zo 4 hodov.", "Počet takýchto možností je kombinácia: C(4,2) = 6.", "Každá z týchto možností má pravdepodobnosť (1/2)^4 = 1/16, takže celková pravdepodobnosť je 6·(1/16) = 6/16."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
-  -- a) čísla na vytiahnutých lístkoch sa líšia o viac ako 2
   (0, 'medium',
    '\begin{aligned}
      &\text{V škatuli je 9 lístkov očíslovaných číslami }1,2,3,\dots,9.\\
      &\text{Náhodne vyberieme naraz dva lístky.}\\
      &\text{Aká je pravdepodobnosť, že čísla na vytiahnutých lístkoch}\\
-     &\quad\text{sa líšia o viac ako 2?} \\\\
+     &\quad\text{sa líšia o viac ako 2?} \\
     &\textbf{Odpoveď zapíšte ako zlomok.}
    \end{aligned}',
    3,
    '7/12',
-   '["Zisti, koľko dvojíc čísel sa dá vybrať zo 9 lístkov – to je počet všetkých možností.", "Prejdi si všetky dvojice a spočítaj, koľko z nich sa líši o viac ako 2.", "Pravdepodobnosť je počet vyhovujúcich dvojíc delený všetkými možnosťami."]'
-  ),
-  -- b) súčet čísel na vytiahnutých lístkoch je aspoň 7
+   '["Zisti, koľko dvojíc čísel sa dá vybrať zo 9 lístkov - to je počet všetkých možností.", "Prejdi si všetky dvojice a spočítaj, koľko z nich sa líši o viac ako 2.", "Pravdepodobnosť je počet vyhovujúcich dvojíc delený všetkými možnosťami."]'
+  );
+
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'medium',
    '\begin{aligned}
      &\text{V škatuli je 9 lístkov očíslovaných číslami }1,2,3,\dots,9.\\
      &\text{Náhodne vyberieme naraz dva lístky.}\\
      &\text{Aká je pravdepodobnosť, že súčet čísel na vytiahnutých lístkoch}\\
-     &\quad\text{je aspoň 7?} \\\\
+     &\quad\text{je aspoň 7?} \\
     &\textbf{Odpoveď zapíšte ako zlomok.}
    \end{aligned}',
    3,
    '5/6',
-   '["Zisti, koľko dvojíc čísel sa dá vybrať zo 9 lístkov – to je počet všetkých možností.", "Prejdi všetky dvojice a spočítaj, pri ktorých je ich súčet aspoň 7.", "Pravdepodobnosť je počet týchto dvojíc delený všetkými možnosťami."]'
-  ),
-  -- c) súčet čísel na vytiahnutých lístkoch je aspoň 9
+   '["Zisti, koľko dvojíc čísel sa dá vybrať zo 9 lístkov - to je počet všetkých možností.", "Prejdi všetky dvojice a spočítaj, pri ktorých je ich súčet aspoň 7.", "Pravdepodobnosť je počet týchto dvojíc delený všetkými možnosťami."]'
+  );
+
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'medium',
    '\begin{aligned}
      &\text{V škatuli je 9 lístkov očíslovaných číslami }1,2,3,\dots,9.\\
      &\text{Náhodne vyberieme naraz dva lístky.}\\
      &\text{Aká je pravdepodobnosť, že súčet čísel na vytiahnutých lístkoch}\\
-     &\quad\text{je aspoň 9?} \\\\
+     &\quad\text{je aspoň 9?} \\
     &\textbf{Odpoveď zapíšte ako zlomok.}
    \end{aligned}',
    3,
    '3/4',
-   '["Zisti celkový počet dvojíc, ktoré sa dajú vybrať z 9 lístkov – je to kombinácia C(9,2).", "Prejdi všetky dvojice a vyber tie, ktorých súčet je aspoň 9.", "Pravdepodobnosť je počet týchto dvojíc delený celkovým počtom možností."]'
+   '["Zisti celkový počet dvojíc, ktoré sa dajú vybrať z 9 lístkov - je to kombinácia C(9,2).", "Prejdi všetky dvojice a vyber tie, ktorých súčet je aspoň 9.", "Pravdepodobnosť je počet týchto dvojíc delený celkovým počtom možností."]'
   );
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
-  -- a) nie je nepodarak?
   (0, 'medium',
    '\begin{aligned}
      &\text{V škatuli máme 100 výrobkov a medzi nimi 10 nepodarok.}\\
@@ -354,25 +338,27 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.280437',
-   '["Zo 100 výrobkov je 10 nepodarkov, takže po výbere 20, kde bol 1 nepodarok, ostáva 9 nepodarkov a 71 dobrých.", "Ďalších 10 výrobkov vyberáš zo zvyšných 80, a chceš, aby medzi nimi nebol žiadny nepodarok.", "Spočítaj pravdepodobnosť, že všetkých 10 vybraných bude z 71 dobrých – je to kombinácia dobrých nad 10 delená kombináciou zvyšných 80 nad 10."]'
-  ),
-  -- b) je jeden nepodarok?
+   '["Zo 100 výrobkov je 10 nepodarkov, takže po výbere 20, kde bol 1 nepodarok, ostáva 9 nepodarkov a 71 dobrých.", "Ďalších 10 výrobkov vyberáš zo zvyšných 80, a chceš, aby medzi nimi nebol žiadny nepodarok.", "Spočítaj pravdepodobnosť, že všetkých 10 vybraných bude z 71 dobrých - je to kombinácia dobrých nad 10 delená kombináciou zvyšných 80 nad 10."]'
+  );
+
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'medium',
    '\begin{aligned}
      &\text{V škatuli máme 100 výrobkov a medzi nimi 10 nepodarok.}\\
      &\text{Náhodne vyberieme 20 (bez vrátenia) a zistíme, že medzi}\\
      &\quad\text{vybranými je jeden nepodarok. S akou pravdepodobnosťou}\\
      &\quad\text{medzi ďalšími desiatimi náhodne vybranými (opäť bez vrátenia)}\\
+     &\quad\text{je práve jeden nepodarok?}\\
     &\textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na šesť desatinných miest.}
-     &\quad\text{je práve jeden nepodarok?}
    \end{aligned}',
    3,
    '0.407087',
    '["Po prvom výbere zostáva v škatuli 80 výrobkov, z toho 9 nepodarkov a 71 dobrých.",
     "Chceme, aby v ďalších 10 kusoch bol presne jeden nepodarok a zvyšných 9 bolo dobrých.",
-     "Použi hypergeometrické rozdelenie: spočítaj kombinácie pre výber 1 z 9 a 9 z 71, potom vydel celkovým počtom možností – kombináciou 80 nad 10."]'
-  ),
-  -- c) sú dva nepodarky?
+     "Použi hypergeometrické rozdelenie: spočítaj kombinácie pre výber 1 z 9 a 9 z 71, potom vydel celkovým počtom možností - kombináciou 80 nad 10."]'
+  );
+
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'medium',
    '\begin{aligned}
      &\text{V škatuli máme 100 výrobkov a medzi nimi 10 nepodarok.}\\
@@ -387,8 +373,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    '["Po prvom výbere ostáva v škatuli 80 výrobkov, z toho 9 nepodarkov a 71 dobrých.", 
    "Chceme, aby medzi ďalšími 10 vybranými boli presne 2 nepodarky a 8 dobrých.", 
    "Použi hypergeometrické rozdelenie: spočítaj kombinácie 9 nad 2 a 71 nad 8, a vydel ich celkovou kombináciou 80 nad 10."]'
-  ),
-  -- d) sú najviac dva nepodarky?
+  );
+
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'medium',
    '\begin{aligned}
      &\text{V škatuli máme 100 výrobkov a medzi nimi 10 nepodarok.}\\
@@ -405,25 +392,21 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    "Spočítaj pravdepodobnosti pre 0, 1 a 2 nepodarky pomocou hypergeometrického rozdelenia a výsledky sčítaj."]'
   );
 
--- =========================================
--- podmienena pravdepodobnost
-
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
-  -- 1.5.7 a) Aká je nepodarkovosť celej produkcie?
   (1, 'easy',
    '\begin{aligned}
     &\text{Produkcia je tvorená tromi automatickými linkami, ktoré sa}\\
     &\text{podelia na celkovej produkcii (po rade) 50\%, 30\%, resp.\ 20\%.}\\
     &\text{Nepodarkovosť jednotlivých liniek je rovná (po rade) 2\%, 3\%, resp.\ 4\%.}\\
     &\text{Aká je nepodarkovosť celej produkcie?}\\
-    &\textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na dve desatiné miesta.}
-    
+    &\textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na tri desatiné miesta.}
    \end{aligned}',
    3,
    '0.027',
    NULL
-  ),
-  -- 1.5.7 b) P(linka 3 | nepodarok)
+  );
+
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (1, 'medium',
    '\begin{aligned}
     &\text{Produkcia je tvorená tromi automatickými linkami, ktoré sa}\\
@@ -442,7 +425,6 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
   );
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
-  -- 1.5.8 a) Pravdepodobnosť správnej odpovede
   (1, 'medium',
    '\begin{aligned}
     &\text{Študent odpovedá formou testu, v ktorom ku každej otázke má ponúknutých 7 alternatívnych odpovedí.}\\
@@ -455,11 +437,12 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '52/70',
-   '["Študent má 70 % pravdepodobnosť, že otázku ovláda – vtedy odpovie určite správne.",
+   '["Študent má 70 % pravdepodobnosť, že otázku ovláda - vtedy odpovie určite správne.",
     "V 30 % prípadov tipuje, a vtedy má šancu 1/7 na správnu odpoveď.",
     "Vypočítaj celkovú pravdepodobnosť ako súčet: 0.7 × 1 + 0.3 × (1/7)."]'
-  ),
-  -- 1.5.8 b) Pravdepodobnosť, že správna odpoveď nebola hádaná
+  );
+
+INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (1, 'medium',
    '\begin{aligned}
     &\text{Študent odpovedá formou testu, v ktorom ku každej otázke má ponúknutých 7 alternatívnych odpovedí.}\\
@@ -476,6 +459,10 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    "V čitateli bude pravdepodobnosť, že vedel a odpovedal správne: 0.7 × 1.", 
    "V menovateli bude celková pravdepodobnosť správnej odpovede: 0.7 × 1 + 0.3 × (1/7)."]'
   );
+
+
+
+-- ========================================
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   -- 1.5.10 a) Pravdepodobnosť, že zariadenie hlási zmenu
