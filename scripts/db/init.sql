@@ -98,7 +98,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{Máme k dispozícii 10 vzoriek označených v1...v10.} \\\\
     & \\text{Náhodne vyberieme 3 vzorky. Aká je pravdepodobnosť, že vyberieme }\\{v1, v3, v6\\}\\text{?}
    \\end{aligned}',
-   3, '0.0083', '[Spočítaj C(10,3),Pravdepodobnosť = 1 / C(10,3)., n!/(n-k)!k!]');
+   3, '0.0083', '["Spočítaj C(10,3)" , "Pravdepodobnosť = 1 / C(10,3).", "n!/(n-k)!k!]"');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'easy',
@@ -106,7 +106,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{Máme skupinu piatich študentov A=\\{Boris, Elena, Igor, Jana, Táňa\\}.} \\\\
     & \\text{Koľko dvojíc z nich je možné zostaviť?}
    \\end{aligned}',
-   2, '10', '[Poradie nezálezí, kombinácie, C(5,2)]');
+   2, '10', '["Poradie nezálezí", "kombinácie, C(5,2)"]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES --TODO
   (0, 'hard',
@@ -124,7 +124,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{Ak A, B sú náhodné udalosti a P je pravdepodobnosť, platí:} \\\\
     & \\text{P(A \\cap B) = P(A) + P(B) - P(A \\cup B)}
    \\end{aligned}',
-   2, 'Pravda', '[Rozbor inklúzia/exklklúza, Preusporiadaj rovnosť]');
+   2, 'Pravda', '["Rozbor inklúzia/exklklúza", "Preusporiadaj rovnosť"]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES --TODO
   (3, 'medium',
@@ -151,9 +151,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{Prvý: 90\\% I. kategórie, druhý: 95\\% I. kategórie.} \\\\
     & \\text{Aká je pravdepodobnosť, že náhodne vybraný rám je I. kategórie?}
    \\end{aligned}',
-   3, '0.9275', '[Najprv vypočítaj príspevok prvého závodu k I. kategórii ako 0.45 * 0.90.,
-   Potom vypočítaj príspevok druhého závodu k I. kategórii ako 0.55 * 0.95.,
-   Spočítaj tieto dva príspevky, aby si dostal celkovú pravdepodobnosť I. kategórie.,]');
+   3, '0.9275', '["Najprv vypočítaj príspevok prvého závodu k I. kategórii ako 0.45 * 0.90.",
+   "Potom vypočítaj príspevok druhého závodu k I. kategórii ako 0.55 * 0.95.",
+   "Spočítaj tieto dva príspevky, aby si dostal celkovú pravdepodobnosť I. kategórie."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (2, 'medium',
@@ -161,10 +161,10 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{V lietadle je 20\\% cestujúcich zo SR. 60\\% SR pije pivo, 20\\% cudzinci.} \\\\
     & \\text{Cestujúci si vypýtal pivo. Aká je pravdepodobnosť, že je to občan SR?}
    \\end{aligned}',
-   3, '0.42857', '[Najprv vypočítaj, akú časť všetkých cestujúcich predstavujú Slováci, ktorí pijú pivo: 0.20 * 0.60.,
-   Potom zistite, akú časť všetkých cestujúcich tvoria cudzinci, ktorí pijú pivo: 0.80 * 0.20.,
-   Spočítaj tieto dve hodnoty, aby si dostal celkovú pravdepodobnosť, že niekto pýta pivo.,
-   Nakoniec vydel prienik Slovák–pivo celkovou pravdepodobnosťou piva, aby si dostal P(SR|PIVO).
+   3, '0.42857', '["Najprv vypočítaj, akú časť všetkých cestujúcich predstavujú Slováci, ktorí pijú pivo: 0.20 * 0.60.",
+   "Potom zistite, akú časť všetkých cestujúcich tvoria cudzinci, ktorí pijú pivo: 0.80 * 0.20.",
+   "Spočítaj tieto dve hodnoty, aby si dostal celkovú pravdepodobnosť, že niekto pýta pivo.",
+   "Nakoniec vydel prienik Slovák–pivo celkovou pravdepodobnosťou piva, aby si dostal P(SR|PIVO)."
    ]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
@@ -173,7 +173,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{V ročníku 100 študentov má 10 mien Jozef.} \\\\
     & \\text{Aká je pravdepodobnosť, že náhodne vybraný študent sa volá Jozef?}
    \\end{aligned}',
-   2, '0.1', '[Vyjadri pravdepodobnosť ako pomer počtu Jozefov k celkovému počtu študentov: 10/100]');
+   2, '0.1', '["Vyjadri pravdepodobnosť ako pomer počtu Jozefov k celkovému počtu študentov: 10/100"]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (2, 'easy',
@@ -182,9 +182,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{Krabica 2: 8 bielych, 12 modrých balónov.} \\\\
     & \\text{Náhodne vyberieme krabicu a balón. Aká je pravdepodobnosť červeného?}
    \\end{aligned}',
-   2, '0.1667', '[ Pre krabicu 1 spočítaj pravdepodobnosť červeného balónu: 1/2 * 5/(10+5).,
-    Pre krabicu 2 spočítaj pravdepodobnosť červeného balónu: 1/2 * 0/8+12.,
-    Oba výsledky spočítaj dokopy.
+   2, '0.1667', '["Pre krabicu 1 spočítaj pravdepodobnosť červeného balónu: 1/2 * 5/(10+5).",
+    "Pre krabicu 2 spočítaj pravdepodobnosť červeného balónu: 1/2 * 0/8+12.",
+    "Oba výsledky spočítaj dokopy."
    ]');
 
 -- 4. Náhodná premenná a rozdelenia
@@ -195,7 +195,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{Rozdelenie X: }t=2,3,4,5,6; P(X=t)=0.1,0.3,0.3,0.2,0.1. \\\\
     & \\text{Vypočítajte strednú hodnotu }E(X).
    \\end{aligned}',
-   3, '3.9', '[Vynásob každú hodnotu t jej pravdepodobnosťou., Sčítaj tieto súčiny.]');
+   3, '3.9', '["Vynásob každú hodnotu t jej pravdepodobnosťou.", "Sčítaj tieto súčiny."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
@@ -203,9 +203,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{Hádžeme štyrmi kockami. Náhodná premenná X = minimum z hodov.} \\\\
     & \\text{Koľko výsledkov má množina \\{\\omega: X=2\\}?}
    \\end{aligned}',
-   3, '369', '[Pre X=2 platí, že v hodoch nie je žiadna 1 a aspoň jeden hod je 2.,
-   Počet sekvencií bez 1 je 5^4, bez 1 aj 2 je 4^4.,
-   Výsledok je rozdiel týchto dvoch hodnôot.
+   3, '369', '["Pre X=2 platí, že v hodoch nie je žiadna 1 a aspoň jeden hod je 2.",
+   "Počet sekvencií bez 1 je 5^4, bez 1 aj 2 je 4^4.",
+   "Výsledok je rozdiel týchto dvoch hodnôot."
 ]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES --TODO
@@ -222,14 +222,20 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{Náhodná premenná }X\\sim\\mathrm{Bi}(n=9,p=0.7). \\\\
     & \\text{Vypočítajte }D(2X-1)\\text{, ak }E(X)=6.3, D(X)=1.89.
    \\end{aligned}',
-   4, '25.2', '[]');
+   4, '25.2', '["Skontroluj, akú hodnotu rozptylu D(X) uvádza zadanie - je to 6,3",
+   "Pripomeň si, že pre lineárnu transformáciu Y = aX + b platí D(Y) = a^2 * D(X).",
+   "Tu je a=2 takže D(2X - 1) = 2^2 * 6.3 = 4 * 6.3 = 25.2."
+   ]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
    '\\begin{aligned}
     & \\text{Nech }X\\sim N(4,1). \\text{Nájdite }a\\text{ tak, že }P(2X+1\\le a)=0.9.
    \\end{aligned}',
-   3, '11.5621', '[]');
+   3, '11.5621', '["Najprv preveď udalosť 2X + 1 <= a na udalosť X <= (a-1)/2.",
+   "Potom zisti pri akej hodnote x má X ∼ N(4,1) pravdepodobnosť 0.9.",
+   "Nakoniec vyjadri a = 2(4 + 1.2816) + 1 = 11.5621."
+   ]');
 
 
 -- =========================================
@@ -242,15 +248,19 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
      &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
      &\\text{Určte pravdepodobnosť, že na druhej minci padne znak.}
      \\end{aligned}',
-    1, '1/2', NULL),
+    1, '1/2', '[
+  "Uvedom si, že každý hod mincou je nezávislý od ostatných.",
+  "Pravdepodobnosť, že konkrétna (druhá) minca padne na znak, je 1/2.",
+  "Ostatné hody (prvá, tretia, štvrtá) neovplyvňujú výsledok druhej mince."
+]'),
 
-  -- b) znak padne len na druhej minci
-  (0, 'easy',
+  -- b) znak padne len na druhej minci 
+  (0, 'easy', 
     '\\begin{aligned}
      &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
      &\\text{Určte pravdepodobnosť, že znak padne len na druhej minci.}
      \\end{aligned}',
-    1, '1/16', NULL),
+    1, '1/16', '["Každá minca má pravdepodobnosť 1/2 na znak aj orla.", "Potrebujeme, aby druhá minca padla na znak a ostatné tri na orla.", "Celková pravdepodobnosť je (1/2)^4 = 1/16."]'),
 
   -- c) na prvej a na tretej minci padne znak
   (0, 'easy',
@@ -258,7 +268,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
      &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
      &\\text{Určte pravdepodobnosť, že na prvej a na tretej minci padne znak.}
      \\end{aligned}',
-    1, '1/4', NULL),
+    1, '1/4', '["Každá minca má pravdepodobnosť 1/2 na znak aj orla.", "Potrebujeme, aby prvá a tretia minca padli na znak – ostatné môžu padnúť akokoľvek.", "Výsledná pravdepodobnosť je (1/2)·(1/2) = 1/4."]'),
 
   -- d) znak padne len na prvej a tretej minci
   (0, 'easy',
@@ -266,7 +276,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
      &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
      &\\text{Určte pravdepodobnosť, že znak padne len na prvej a tretej minci.}
      \\end{aligned}',
-    1, '1/16', NULL),
+    1, '1/16', '["Každá minca padne na znak s pravdepodobnosťou 1/2.", "Potrebujeme, aby prvá a tretia padli na znak a druhá a štvrtá na opačnú stranu.", "Vynásob všetky štyri pravdepodobnosti: (1/2)^4 = 1/16."]'),
 
   -- e) padnú práve dva znaky
   (0, 'easy',
@@ -274,7 +284,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
      &\\text{Náhodný pokus spočíva v hode štyrmi riadnymi, ale označenými mincami.}\\\\
      &\\text{Určte pravdepodobnosť, že padnú práve dva znaky.}
      \\end{aligned}',
-    1, '6/16', NULL);
+    1, '6/16', '["Zisti, koľko rôznych spôsobov môže padnúť práve 2 znaky zo 4 hodov.", "Počet takýchto možností je kombinácia: C(4,2) = 6.", "Každá z týchto možností má pravdepodobnosť (1/2)^4 = 1/16, takže celková pravdepodobnosť je 6·(1/16) = 6/16."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   -- a) čísla na vytiahnutých lístkoch sa líšia o viac ako 2
@@ -287,7 +297,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '7/12',
-   NULL
+   '["Zisti, koľko dvojíc čísel sa dá vybrať zo 9 lístkov – to je počet všetkých možností.", "Prejdi si všetky dvojice a spočítaj, koľko z nich sa líši o viac ako 2.", "Pravdepodobnosť je počet vyhovujúcich dvojíc delený všetkými možnosťami."]'
   ),
   -- b) súčet čísel na vytiahnutých lístkoch je aspoň 7
   (0, 'medium',
@@ -299,7 +309,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '5/6',
-   NULL
+   '["Zisti, koľko dvojíc čísel sa dá vybrať zo 9 lístkov – to je počet všetkých možností.", "Prejdi všetky dvojice a spočítaj, pri ktorých je ich súčet aspoň 7.", "Pravdepodobnosť je počet týchto dvojíc delený všetkými možnosťami."]'
   ),
   -- c) súčet čísel na vytiahnutých lístkoch je aspoň 9
   (0, 'medium',
@@ -311,7 +321,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '3/4',
-   NULL
+   '["Zisti celkový počet dvojíc, ktoré sa dajú vybrať z 9 lístkov – je to kombinácia C(9,2).", "Prejdi všetky dvojice a vyber tie, ktorých súčet je aspoň 9.", "Pravdepodobnosť je počet týchto dvojíc delený celkovým počtom možností."]'
   );
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
@@ -326,7 +336,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.280437',
-   NULL
+   '["Zo 100 výrobkov je 10 nepodarkov, takže po výbere 20, kde bol 1 nepodarok, ostáva 9 nepodarkov a 71 dobrých.", "Ďalších 10 výrobkov vyberáš zo zvyšných 80, a chceš, aby medzi nimi nebol žiadny nepodarok.", "Spočítaj pravdepodobnosť, že všetkých 10 vybraných bude z 71 dobrých – je to kombinácia dobrých nad 10 delená kombináciou zvyšných 80 nad 10."]'
   ),
   -- b) je jeden nepodarok?
   (0, 'medium',
@@ -339,7 +349,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.407087',
-   NULL
+   '["Po prvom výbere zostáva v škatuli 80 výrobkov, z toho 9 nepodarkov a 71 dobrých.",
+    "Chceme, aby v ďalších 10 kusoch bol presne jeden nepodarok a zvyšných 9 bolo dobrých.",
+     "Použi hypergeometrické rozdelenie: spočítaj kombinácie pre výber 1 z 9 a 9 z 71, potom vydel celkovým počtom možností – kombináciou 80 nad 10."]'
   ),
   -- c) sú dva nepodarky?
   (0, 'medium',
@@ -352,7 +364,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.232621',
-   NULL
+   '["Po prvom výbere ostáva v škatuli 80 výrobkov, z toho 9 nepodarkov a 71 dobrých.", 
+   "Chceme, aby medzi ďalšími 10 vybranými boli presne 2 nepodarky a 8 dobrých.", 
+   "Použi hypergeometrické rozdelenie: spočítaj kombinácie 9 nad 2 a 71 nad 8, a vydel ich celkovou kombináciou 80 nad 10."]'
   ),
   -- d) sú najviac dva nepodarky?
   (0, 'medium',
@@ -365,7 +379,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.920145',
-   NULL
+   '["Po prvom výbere zostáva 80 výrobkov, z toho 9 nepodarkov a 71 dobrých.", 
+   "Potrebujeme, aby medzi ďalšími 10 vybranými boli 0, 1 alebo 2 nepodarky.", 
+   "Spočítaj pravdepodobnosti pre 0, 1 a 2 nepodarky pomocou hypergeometrického rozdelenia a výsledky sčítaj."]'
   );
 
 -- =========================================
@@ -395,7 +411,10 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.2963',
-   NULL
+   '["Linka 1 vyrába 50 % produktov, z nich 2 % sú nepodarky ⇒ jej príspevok je 0.5 × 0.02.",
+    "Linka 2 vyrába 30 % produktov, z nich 3 % sú nepodarky ⇒ jej príspevok je 0.3 × 0.03.",
+     "Linka 3 vyrába 20 % produktov, z nich 4 % sú nepodarky ⇒ jej príspevok je 0.2 × 0.04.", 
+     "Súčet týchto troch je celková nepodarkovosť."]'
   );
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
@@ -411,7 +430,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '52/70',
-   NULL
+   '["Študent má 70 % pravdepodobnosť, že otázku ovláda – vtedy odpovie určite správne.",
+    "V 30 % prípadov tipuje, a vtedy má šancu 1/7 na správnu odpoveď.",
+    "Vypočítaj celkovú pravdepodobnosť ako súčet: 0.7 × 1 + 0.3 × (1/7)."]'
   ),
   -- 1.5.8 b) Pravdepodobnosť, že správna odpoveď nebola hádaná
   (1, 'medium',
@@ -425,7 +446,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '49/52',
-   NULL
+   '["Použi Bayesovu vetu: zaujíma nás pravdepodobnosť, že otázku vedel, ak odpovedal správne.", 
+   "V čitateli bude pravdepodobnosť, že vedel a odpovedal správne: 0.7 × 1.", 
+   "V menovateli bude celková pravdepodobnosť správnej odpovede: 0.7 × 1 + 0.3 × (1/7)."]'
   );
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
@@ -440,7 +463,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.097',
-   NULL
+   '["Použi zákon úplnej pravdepodobnosti: hlásenie môže vzniknúť pri skutočnej zmene aj pri falošnom poplachu.",
+    "Spočítaj: 0.05 × 0.99 (správne hlásenie pri zmene) + 0.95 × 0.05 (falošné hlásenie pri nezmene).",
+    "Súčet týchto dvoch pravdepodobností je celková pravdepodobnosť, že zariadenie hlási zmenu."]'
   ),
   -- 1.5.10 b) Pravdepodobnosť, že pri hlásení zmeny skutočne došlo k zmene
   (1, 'medium',
@@ -454,7 +479,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.510',
-   NULL
+   '["Použi Bayesovu vetu: chceme pravdepodobnosť, že zmena nastala, ak zariadenie hlási zmenu.", 
+   "V čitateli bude: 0.05 × 0.99 (pravdepodobnosť, že zmena nastala a bola zachytená).", 
+   "V menovateli bude celková pravdepodobnosť hlásenia zmeny: 0.05 × 0.99 + 0.95 × 0.05."]'
   );
 
 
@@ -471,7 +498,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  &\\text{trojciferných čísel tvorených prvkami }A.\\\\
  &\\text{Koľko prvkov má množina }\\Omega?
  \\end{aligned}',
- '3', '27', NULL);
+ '3', '27', '["Množina A obsahuje 3 čísla: 1, 2, 3.", 
+ "Hľadáme všetky trojciferné čísla vytvorené z týchto číslic.",
+  "Ak sa číslice môžu opakovať, počet všetkých takých čísel je 3 × 3 × 3 = 27."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
 (3, 'easy',
@@ -481,7 +510,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  &\\text{použiť iba raz.}\\\\
  &\\text{Koľko prvkov má množina }\\Omega_1?
  \\end{aligned}',
- '3', '6', NULL);
+ '3', '6', '["Množina A obsahuje 3 čísla: 1, 2, 3.",
+  "Tvoríme trojciferné čísla, v ktorých sa číslice neopakujú.",
+  "Ide o počet permutácií troch prvkov: 3! = 3 × 2 × 1 = 6."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
 (3, 'easy',
@@ -491,7 +522,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  &\\text{sa môžu použiť iba raz (1 môže byť opakovane).}\\\\
  &\\text{Koľko prvkov má množina }\\Omega_2?
  \\end{aligned}',
- '3', '13', NULL);
+ '3', '13', '["Množina A obsahuje čísla 1, 2, 3 – pričom 1 sa môže opakovať, ale 2 a 3 len raz.",
+  "Pre každý trojmiestny tvar treba zvoliť pozície pre čísla 2 a 3 (0, 1 alebo 2 z nich použiť), zvyšné miesta doplniť jednotkami.", 
+ "Spočítaj všetky možné usporiadania: s 0, 1 alebo 2 výskytmi číslic 2 alebo 3 a zvyšok doplň číslom 1."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
 (3, 'easy',
@@ -500,7 +533,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  &\\text{a nech }0 \\le P(A\\cap B) \\le 0{,}5.\\\\
  &\\text{Môžu byť }A,B\\text{ navzájom nezávislé?}
  \\end{aligned}',
- '2', 'Áno', NULL);
+ '2', 'Áno', '["Pre nezávislé udalosti platí: P(A ∩ B) = P(A) × P(B).", 
+ "Vypočítaj tento súčin: 0,3 × 0,6 = 0,18.", 
+ "Hodnota 0,18 spadá do povoleného intervalu pre P(A ∩ B) (0 až 0,5), takže nezávislosť je možná."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
 (3, 'easy',
@@ -512,7 +547,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  &\\text{Aká je pravdepodobnosť, že ich vytiahneme v poradí}\\
  &1,3,2,4,5,6,1,1,1,1?
  \\end{aligned}',
- '1', '1/30240', NULL),
+ '1', '1/30240', '["Všetky loptíčky sú rozlíšiteľné podľa čísla, no 5 z nich má rovnaké označenie 1.", 
+ "Počet všetkých možných usporiadaní týchto 10 lôpt je 10! / 5! (kvôli piatim rovnakým jednotkám).", 
+ "Počet priaznivých usporiadaní je len 1 (konkrétny daný sled), takže pravdepodobnosť je 1 / (10! / 5!) = 5! / 10!."]'),
 (3, 'easy',
  '\\begin{aligned}
  &\\text{V urne je 12 loptíčok označených }1,2,3,\\text{ tak, že 5 z nich}\\
@@ -522,7 +559,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  &\\text{Aká je pravdepodobnosť, že ich vytiahneme v poradí}\\
  &1,2,2,2,3,1,1,1,1,3,3?
  \\end{aligned}',
- '1', '1/27720', NULL),
+ '1', '1/27720', '["Spočítaj, koľko lôpt je označených každým číslom: 5× jednotka, 4× dvojka, 3× trojka.",
+  "Celkový počet rôznych usporiadaní týchto 12 lôpt je 12! / (5!·4!·3!).", 
+ "Počet priaznivých usporiadaní (dané konkrétne poradie) je len 1, takže pravdepodobnosť je 1 / (12! / (5!·4!·3!)) = (5!·4!·3!) / 12!."]'),
 (3, 'easy',
  '\\begin{aligned}
  &\\text{V urne je 12 loptíčok označených }1,2,3,\\text{ tak, že 5 z nich}\\
@@ -531,7 +570,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  &\\text{opakujeme 4-krát.}\\
  &\\text{Aká je pravdepodobnosť, že všetky budú označené }1?
  \\end{aligned}',
- '1', '5/495', NULL);
+ '1', '5/495', '["Loptičiek s označením 1 je 5 z celkových 12.",
+  "Pri ťahaní bez vrátenia sa pravdepodobnosť mení pri každom kroku.", 
+ "Spočítaj pravdepodobnosť ako súčin: 5/12 × 4/11 × 3/10 × 2/9."]');
 
 
 
@@ -545,4 +586,6 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  &\\text{Na seminári s 30 účastníkmi.}\\
  &\\text{Aká je pravdepodobnosť, že najviac traja sú ľaváci?}
  \\end{aligned}',
- '1', '0.03745', NULL);
+ '1', '0.03745', '["Úloha má charakter binomického rozdelenia: počet ľavákov z 30 účastníkov, kde pravdepodobnosť ľaváka je 0,25.", 
+ "Počet úspechov (ľavákov) má teda rozdelenie Bi(n=30, p=0,25).", 
+ "Hľadáme pravdepodobnosť, že ich bude najviac 3 – teda P(X ≤ 3), čo je súčet pravdepodobností pre 0, 1, 2 a 3 ľavákov."]');
