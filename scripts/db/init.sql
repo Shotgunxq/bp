@@ -126,7 +126,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
     & \\text{P(A \\cap B) = P(A) + P(B) - P(A \\cup B)} \\\\
     & \textbf{Odpoveď: pravda / nepravda}
    \\end{aligned}',
-   2, 'Pravda', '["Rozbor inklúzia/exklklúza", "Preusporiadaj rovnosť"]');
+   2, 'pravda', '["Rozbor inklúzia/exklklúza", "Preusporiadaj rovnosť"]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES --TODO
   (3, 'medium',
