@@ -107,8 +107,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    '\begin{aligned}
     & \text{V urne je 12 loptičiek: 5 označených "1", 2 označené "2" a 5 označených inak.} \\
     & \text{Aká je pravdepodobnosť, že pri postupnom ťahaní bez vrátenia vytiahneme v poradí }1,2,3\text{?}
+    & \textbf{Odpoveď zapíšte ako zlomok.}
    \end{aligned}',
-   4, '3.6075E-5', '[]');
+   4, '5/132', '["Loptičiek s číslom 1 je 5, s číslom 2 sú 2, a zvyšných 5 je iných.", "Pravdepodobnosť, že prvá loptička je '1' = 5/12, druhá je '2' = 2/11, a tretia je iná (už len z tých 5 iných) = 5/10.", "Výslednú pravdepodobnosť získaš vynásobením týchto troch zlomkov."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'easy',
@@ -132,8 +133,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    '\begin{aligned}
     & \text{Prístupový kód: 5 rôznych znakov z \{1,2,3,4,5,6\}.} \\
     & \text{Aká je pravdepodobnosť, že ho uhádneme na prvýkrát?}
+    &\textbf{Odpoveď zapíšte ako zlomok.}
    \end{aligned}',
-   3, '0.0013888', '[]');
+   3, '1/720', '["Prístupový kód je tvorený z 5 rôznych znakov, teda záleží na poradí – ide o variácie bez opakovania.", "Spočítaj počet všetkých možných kódov: V(6,5) = 6 × 5 × 4 × 3 × 2 = 720.", "Len jeden z týchto kódov je správny, takže pravdepodobnosť uhádnutia je 1/720."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (2, 'medium',
@@ -207,8 +209,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    '\begin{aligned}
     & \text{Hádžeme piatimi kockami. X = maximum z hodov.} \\
     & \text{Vypočítajte }P(X<3)\text{ a }E(X).
+    & \textbf{Odpoveď zapíš ako dve desatinné čísla oddelené bodkočiarkou, v poradí: pravdepodobnosť; stredná hodnota. Priklad: 0.0082; 1.3223}
    \end{aligned}',
-   4, 'P(X<3)=0.9688; E(X)=4.67', '[]');
+   4, 'P(X<3)=0.9688; E(X)=4.67', '["Pre P(X<3) musia všetky kocky padnúť len ako 1 alebo 2, teda pravdepodobnosť je (2/6)^5.", "Na E(X) použi: P(X=k)=P(X≤k)−P(X≤k−1), potom spočítaj ∑k⋅P(X=k).", "Výsledok zaokrúhli na 4 desatinné miesta a zapíš v tvare: pravdepodobnosť; stredná hodnota."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'hard',
@@ -401,7 +404,10 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
    \end{aligned}',
    3,
    '0.027',
-   NULL
+    '["Linka 1 vyrába 50 % produktov, z nich 2 % sú nepodarky ⇒ jej príspevok je 0.5 × 0.02.",
+      "Linka 2 vyrába 30 % produktov, z nich 3 % sú nepodarky ⇒ jej príspevok je 0.3 × 0.03.",
+      "Linka 3 vyrába 20 % produktov, z nich 4 % sú nepodarky ⇒ jej príspevok je 0.2 × 0.04.", 
+      "Súčet týchto troch je celková nepodarkovosť."]'
   );
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
