@@ -3,23 +3,49 @@ const db = require('./db');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { authenticate } = require('ldap-authentication');
+const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
 
 const app = express();
 const PORT = 3000;
+app.disable('etag');
 
-app.use(cors());
-app.use(express.json());
-const session = require('express-session');
-
-app.use(bodyParser.json());
+// Enable CORS with credentials for Angular dev server
 app.use(
-  session({
-    secret: '1', // Replace with a strong secret in production
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }, // Set to `true` if using HTTPS
+  cors({
+    origin: 'http://localhost:4200',
+    credentials: true,
   })
 );
+
+app.use(bodyParser.json());
+app.use(express.json());
+
+// Session store: default in-memory (suitable for dev, not production)
+app.use(
+  session({
+    store: new PgSession({
+      pool: db.pool, // your PG Pool
+      tableName: 'user_sessions',
+      createTableIfMissing: true, // ← will CREATE TABLE for you
+    }),
+    secret: '1', // use a strong secret in prod
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: false, // false on HTTP dev; true on HTTPS
+      httpOnly: true,
+      sameSite: 'lax',
+    },
+  })
+);
+
+// Middleware to protect routes
+function ensureLoggedIn(req, res, next) {
+  if (req.session.user) return next();
+  res.status(401).json({ error: 'Not authenticated' });
+}
 
 // LDAP authentication function
 async function ldapAuth(username, password) {
@@ -33,8 +59,7 @@ async function ldapAuth(username, password) {
       username: username,
     };
 
-    const user = await authenticate(options);
-    return user;
+    return await authenticate(options);
   } catch (error) {
     throw new Error('LDAP bind failed: ' + error.message);
   }
@@ -43,38 +68,50 @@ async function ldapAuth(username, password) {
 // User login route using LDAP authentication
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const user = await ldapAuth(username, password);
     const processedUser = {
-      userId: user.uisId, // Map uisId to userId
+      userId: user.uisId,
       employeeType: user.employeeType,
       givenName: user.givenName,
-      lastName: user.sn, // Map sn to lastName
+      lastName: user.sn,
       email: user.mailLocalAddress[1],
     };
 
+    // Insert into DB if new
     try {
-      const existingUser = await db.findUserById(processedUser.userId);
-      console.log('Existing user:', existingUser);
-      console.log('Processed user AIS ID:', processedUser.userId);
-      if (!existingUser) {
-        console.log('User not found in database, inserting new user...');
+      const existing = await db.findUserById(processedUser.userId);
+      if (!existing) {
         await db.insertUser(processedUser);
       }
-    } catch (dbError) {
-      console.error('Database operation failed:', dbError.message);
+    } catch (dbErr) {
+      console.error('DB error:', dbErr.message);
     }
 
-    res.status(200).json(processedUser); // Send processed user data
-    console.log('User authenticated:', processedUser);
-    // console.log('LDAP user data:', user);
-    // res.status(200).json(user);
-  } catch (error) {
-    res.status(401).send('Authentication failed: ' + error.message);
+    // Save user to session
+    req.session.user = processedUser;
+    res.status(200).json(processedUser);
+  } catch (err) {
+    res.status(401).json({ error: 'Authentication failed: ' + err.message });
   }
 });
 
+// Current user info
+app.get('/me', ensureLoggedIn, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.json(req.session.user);
+});
+
+// Logout
+app.post('/logout', ensureLoggedIn, (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    res.clearCookie('connect.sid');
+    res.json({ message: 'Logged out' });
+  });
+});
 // Basic hello route
 app.get('/', (req, res) => {
   res.send('Hello World');
@@ -257,35 +294,38 @@ app.post('/tests', async (req, res) => {
 });
 
 // Submit a test
-app.post('/submit', async (req, res) => {
-  const { user_id, points, timestamp, total_hints_used, exercises } = req.body;
-  console.log('Parsed Request Body:', req.body);
+// …earlier requires & middleware…
 
-  // (1) Validate user_id, points, timestamp, etc. omitted for brevity
+// Submit a test
+app.post('/submit', async (req, res) => {
+  const {
+    user_id,
+    test_id,
+    submitted_at,
+    total_score,
+    total_hints,
+    answers, // ← [ { exercise_id, user_answer }, … ]
+  } = req.body;
+
+  if (!user_id || !test_id || !submitted_at || total_score == null || total_hints == null || !Array.isArray(answers)) {
+    return res.status(400).json({ error: 'Missing or invalid payload fields' });
+  }
 
   try {
-    // (2) Insert the test row with the JSON of exercises
-    const testResult = await db.query(
-      `INSERT INTO tests (writing_time, exercises)
-       VALUES (NULL, $1)
-       RETURNING test_id`,
-      [JSON.stringify(exercises)]
-    );
-    const test_id = testResult.rows[0].test_id;
+    const insert = `
+      INSERT INTO test_submissions
+        (user_id, test_id, total_score, submitted_at, total_hints, answers)
+      VALUES
+        ($1, $2, $3, $4, $5, $6::jsonb)
+      RETURNING *;
+    `;
+    const values = [user_id, test_id, total_score, submitted_at, total_hints, JSON.stringify(answers)];
 
-    // (3) Insert into test_submissions
-    const submissionResult = await db.query(
-      `INSERT INTO test_submissions
-         (user_id, test_id, points_scored, submitted_at, hints_used)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING *`,
-      [user_id, test_id, points, timestamp, total_hints_used ?? 0]
-    );
-
-    return res.status(201).json(submissionResult.rows[0]);
+    const result = await db.query(insert, values);
+    res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error('ERROR: ', err);
-    return res.status(403).json({ error: 'Bad Request' });
+    console.error('Error in /submit:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -349,19 +389,20 @@ app.post('/admin/exercises', async (req, res) => {
 app.get('/admin/statistics', async (req, res) => {
   try {
     const query = `
-        SELECT 
-  CONCAT(u.first_name, ' ', u.last_name) AS full_name,
-  ts.points_scored,
-  ts.submitted_at AS submission_date,
-  t.exercises AS test_exercises,
+SELECT
+  CONCAT(u.first_name, ' ', u.last_name)        AS full_name,
+  ts.total_score                               AS points_scored,   -- ← use the real column name
+  ts.submitted_at                              AS submission_date,
+  t.exercises                                  AS test_exercises,
   COALESCE((
     SELECT SUM((ex ->> 'points')::int)
-    FROM jsonb_array_elements(t.exercises) AS ex
-  ), 0) AS max_points
-FROM Test_Submissions ts
-JOIN Users u ON ts.user_id = u.user_id
-JOIN Tests t ON ts.test_id = t.test_id
-ORDER BY ts.submitted_at DESC;
+    FROM   jsonb_array_elements(t.exercises) AS ex
+  ), 0)                                         AS max_points
+FROM   test_submissions ts
+  JOIN users u ON ts.user_id = u.user_id
+  JOIN tests t ON ts.test_id = t.test_id
+ORDER  BY ts.submitted_at DESC;
+
     `;
     const result = await db.query(query);
     res.json(result.rows);
@@ -373,37 +414,39 @@ ORDER BY ts.submitted_at DESC;
 
 app.get('/statistics/:user_id', async (req, res) => {
   try {
-    // Retrieve and parse the user_id from the URL parameter
     const userId = parseInt(req.params.user_id, 10);
     if (isNaN(userId)) {
       return res.status(400).json({ error: 'Invalid user_id parameter' });
     }
+
     const query = `
-SELECT
-  ts.test_id,
-  ts.points_scored,
-  ts.submitted_at AS submission_date,
-  t.exercises AS test_exercises,
-  COALESCE((
-    SELECT SUM((ex ->> 'points')::int)
-    FROM jsonb_array_elements(t.exercises) ex
-  ), 0) AS max_points,
-  COALESCE((
-    SELECT SUM((ex ->> 'hintsUsed')::int)
-    FROM jsonb_array_elements(t.exercises) ex
-  ), 0) AS total_hints_used,
-  (SELECT th.theme_name FROM Themes th, jsonb_array_elements(t.exercises) ex
-   WHERE (ex ->> 'theme_id')::int = th.theme_id LIMIT 1) AS theme
-FROM test_submissions ts
-JOIN tests t ON ts.test_id = t.test_id
-WHERE ts.user_id = $1
-ORDER BY ts.submitted_at DESC;
-
-
+      SELECT
+        ts.test_id,
+        ts.total_score      AS points_scored,
+        ts.submitted_at     AS submission_date,
+        ts.total_hints      AS total_hints_used,
+        ts.answers          AS submitted_answers,   -- ← our per‐exercise JSON
+        t.exercises         AS test_exercises,      -- template questions
+        COALESCE((
+          SELECT SUM((ex ->> 'points')::int)
+          FROM jsonb_array_elements(t.exercises) AS ex
+        ), 0)                  AS max_points,
+        (
+          SELECT th.theme_name
+          FROM themes th
+          , jsonb_array_elements(t.exercises) AS ex
+          WHERE (ex ->> 'theme_id')::int = th.theme_id
+          LIMIT 1
+        )                     AS theme
+      FROM test_submissions ts
+      JOIN tests t
+        ON t.test_id = ts.test_id
+      WHERE ts.user_id = $1
+      ORDER BY ts.submitted_at DESC;
     `;
 
-    const result = await db.query(query, [userId]);
-    res.json(result.rows);
+    const { rows } = await db.query(query, [userId]);
+    res.json(rows);
   } catch (error) {
     console.error('Error fetching statistics for user:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -431,13 +474,12 @@ ORDER BY submission_date;
 app.get('/admin/avg-percentage-scores', async (req, res) => {
   try {
     const query = `
-SELECT 
-    t.test_id,
-    AVG(ts.points_scored) AS avg_points
-FROM test_scores ts
-JOIN tests t ON t.test_id = ts.test_id
-GROUP BY t.test_id
-ORDER BY t.test_id;
+      SELECT
+        ts.test_id,
+        AVG(ts.total_score) AS avg_score
+      FROM test_submissions ts
+      GROUP BY ts.test_id
+      ORDER BY ts.test_id;
     `;
     const result = await db.query(query);
     res.json(result.rows);
@@ -450,17 +492,21 @@ ORDER BY t.test_id;
 app.get('/admin/avg-points-per-exercise', async (req, res) => {
   try {
     const query = `
-SELECT 
-    ts.points_scored,
-    COUNT(*) AS frequency
-FROM test_scores ts
-GROUP BY ts.points_scored
-ORDER BY ts.points_scored;
+      SELECT
+        ts.test_id,
+        -- divide each submission’s total_score by how many answers they gave
+        AVG( 
+          ts.total_score::float 
+          / NULLIF(jsonb_array_length(ts.answers),0)
+        ) AS avg_points_per_exercise
+      FROM test_submissions ts
+      GROUP BY ts.test_id
+      ORDER BY ts.test_id;
     `;
     const result = await db.query(query);
     res.json(result.rows);
   } catch (error) {
-    console.error('Error fetching statistics:', error);
+    console.error('Error fetching avg points/exercise:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -472,9 +518,9 @@ app.get('/api/percentile/overall/:userId', async (req, res) => {
       return res.status(400).json({ error: 'Invalid userId parameter' });
     }
 
-    // Aggregate total points for each user from test_submissions.
+    // Aggregate total_score for each user from test_submissions.
     const aggregateQuery = `
-      SELECT user_id, SUM(points_scored) AS total_points
+      SELECT user_id, SUM(total_score) AS total_points
       FROM test_submissions
       GROUP BY user_id;
     `;
@@ -485,20 +531,18 @@ app.get('/api/percentile/overall/:userId', async (req, res) => {
       return res.status(404).json({ error: 'No submissions found' });
     }
 
-    // Find the total points for the current user.
-    const userRecord = totals.find(record => parseInt(record.user_id) === userId);
+    // Find this user’s total
+    const userRecord = totals.find(r => parseInt(r.user_id, 10) === userId);
     if (!userRecord) {
       return res.status(404).json({ error: 'User has no submissions' });
     }
     const userTotal = parseInt(userRecord.total_points, 10);
 
-    // Count how many users have total_points less than or equal to the user's total.
-    const countBelowOrEqual = totals.filter(record => parseInt(record.total_points, 10) <= userTotal).length;
-
-    // Calculate the percentile rank.
+    // Count how many users are ≤ this total
+    const countBelowOrEqual = totals.filter(r => parseInt(r.total_points, 10) <= userTotal).length;
     const percentile = (countBelowOrEqual / totals.length) * 100;
 
-    res.json({ percentile: percentile });
+    res.json({ percentile });
   } catch (error) {
     console.error('Error computing overall percentile:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -508,11 +552,14 @@ app.get('/api/percentile/overall/:userId', async (req, res) => {
 app.get('/api/leaderboard', async (req, res) => {
   try {
     const query = `
-      SELECT u.email, SUM(ts.points_scored) AS total_points
-FROM test_submissions ts
-JOIN Users u ON ts.user_id = u.user_id
-GROUP BY u.email
-ORDER BY total_points DESC;
+      SELECT
+        u.email        AS username,
+        SUM(ts.total_score)::float AS total_points
+      FROM test_submissions ts
+      JOIN users u
+        ON ts.user_id = u.user_id
+      GROUP BY u.email
+      ORDER BY total_points DESC;
     `;
     const result = await db.query(query);
     res.json(result.rows);

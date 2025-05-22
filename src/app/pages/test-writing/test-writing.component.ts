@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
-import { ApiService } from '../../services/apiServices';
-import { TimeUpDialogComponent } from '../../components/Modals/Dialog/time-up-dialog/time-up-dialog.component';
+import { ApiService } from '../../services/api.services';
+import { TimeUpDialogComponent } from '../../components/modals/dialogs/time-up-dialog/time-up-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { InfoModalTestWritingComponent } from '../../components/Modals/Dialog/info-modal-test-writing/info-modal-test-writing.component';
+import { InfoModalTestWritingComponent } from '../../components/modals/dialogs/info-modal-test-writing/info-modal-test-writing.component';
+import { filter, take } from 'rxjs';
 @Component({
   selector: 'app-test-writing',
   templateUrl: './test-writing.component.html',
@@ -31,6 +32,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
   // New property to track how many hints have been revealed
   hintsRevealed: number = 0;
+  testId: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,13 +43,17 @@ export class TestWritingComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const userString = sessionStorage.getItem('user');
-    if (userString) {
-      const userObj = JSON.parse(userString);
-      this.userId = userObj.userId;
-    } else {
-      this.userId = '';
-    }
+    this.apiService
+      .getCurrentUser()
+      .pipe(
+        filter(u => !!u),
+        take(1)
+      )
+      .subscribe(u => (this.userId = u.userId));
+
+    // ← PULL IN testId from state (or wherever you passed it)
+    const nav = history.state || {};
+    this.testId = nav.testId ?? 0;
 
     const stateData = history.state.data;
     this.data = stateData || [];
@@ -293,53 +299,45 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.saveUserAnswers();
     }
   }
+
   submitTest(): void {
+    // 1) calculate totals & slim answers
     let totalPoints = 0;
-    let totalHintsUsed = 0;
-
-    // 1) Update each exercise with finalPoints & hintsUsed
-    this.data.forEach(exercise => {
-      // Calculate the final points for this single exercise
-      const finalPoints = this.calculateExerciseScore(exercise);
-
-      // Store the final points in the exercise object
-      exercise.finalPoints = finalPoints;
-      // Also store the user’s used hints in a consistent field
-      exercise.hintsUsed = exercise.hintsRevealed || 0;
-
-      // Tally into the test’s totals
-      // Only add to totalPoints if user’s answer is correct & not blank
-      if (exercise.userAnswer && exercise.userAnswer.trim() !== '' && exercise.userAnswer === (exercise.correct_answer || exercise.answer)) {
-        totalPoints += finalPoints;
+    let totalHints = 0;
+    const answers = this.data.map(ex => {
+      const pts = this.calculateExerciseScore(ex);
+      if (ex.userAnswer?.trim() && ex.userAnswer === (ex.correct_answer || ex.answer)) {
+        totalPoints += pts;
       }
-
-      totalHintsUsed += exercise.hintsUsed;
+      totalHints += ex.hintsRevealed || 0;
+      return {
+        exercise_id: ex.exercise_id,
+        user_answer: ex.userAnswer,
+      };
     });
 
-    // 2) Build the submission body
-    const submissionBody = {
+    // 2) assemble payload
+    const payload = {
       user_id: this.userId,
-      points: totalPoints, // total final points for the entire test
-      total_hints_used: totalHintsUsed, // total hints used for the entire test
-      timestamp: new Date().toISOString(),
-      exercises: this.data, // store the *entire* array, which now has finalPoints & hintsUsed
+      test_id: this.testId,
+      submitted_at: new Date().toISOString(),
+      total_score: totalPoints,
+      total_hints: totalHints,
+      answers,
     };
 
-    console.log('Submitting test score with body:', submissionBody);
-
-    // 3) Send everything to your API
-    this.apiService.submitTestScore(submissionBody).subscribe(
-      response => {
-        console.log('Test submitted successfully:', response);
+    // 3) one-shot API call
+    this.apiService.submitTestScore(payload).subscribe({
+      next: () => {
         this.snackBar.open('Test odovzdaný úspešne!', 'Close', { duration: 7000 });
         this.resetTestState();
         this.router.navigate(['/test'], { state: { points: totalPoints } });
       },
-      error => {
-        console.error('Error submitting test:', error);
+      error: err => {
+        console.error('Error submitting test:', err);
         this.snackBar.open('Failed to submit the test. Please try again.', 'Close', { duration: 7000 });
-      }
-    );
+      },
+    });
   }
 
   calculateExerciseScore(exercise: any): number {

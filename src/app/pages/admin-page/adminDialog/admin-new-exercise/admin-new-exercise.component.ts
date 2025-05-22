@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AdminService } from '../../../../services/adminServices';
-import { ApiService } from '../../../../services/apiServices';
+import { AdminService } from '../../../../services/admin.services';
+import { ApiService } from '../../../../services/api.services';
 
 @Component({
   selector: 'app-admin-new-exercise',

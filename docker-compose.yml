@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
   angular-frontend:
     container_name: frontend
@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile.angular
     ports:
-      - "80:80"
+      - '80:80'
     depends_on:
       - node-backend
 
@@ -16,19 +16,21 @@ services:
       context: .
       dockerfile: Dockerfile.node
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - postgres-db
 
   postgres-db:
-    image: postgres:latest
+    image: postgres:17
     container_name: postgres-db
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: myappdb
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - ./data:/var/lib/postgresql/data
+      # any .sql/.sh in ./scripts/db will be run at container start
       - ./scripts/db:/docker-entrypoint-initdb.d

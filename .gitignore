@@ -404,3 +404,4 @@ package-lock.json
 .package-lock.json
 dist/
 data/
+*.tar

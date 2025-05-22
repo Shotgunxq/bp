@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { ApiService } from '../../services/apiServices';
-import { PdfService } from '../../services/pdf.service';
+import { ApiService } from '../../services/api.services';
+import { PdfService } from '../../services/pdf.helper';
 
 // Import your exercise generation functions
-import { binomialProbabilityRandom } from '../../services/binomialProbability';
-import { hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality';
-import { geometricProbabilityRandom } from '../../services/geometricProbability';
+import { binomialProbabilityRandom } from '../../services/binomialProbability.helper';
+import { hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality.helper';
+import { geometricProbabilityRandom } from '../../services/geometricProbability.helper';
 
 @Component({
   selector: 'app-export-page',
@@ -155,13 +155,11 @@ export class ExportPageComponent implements OnInit {
 
   // --- User Statistics Methods ---
   fetchDataFromDatabase(): void {
-    const userString = sessionStorage.getItem('user');
-    if (userString) {
-      const userObj = JSON.parse(userString);
-      this.userId = userObj.userId;
-    } else {
-      this.userId = '';
-    }
+    // Grab the logged-in user from the ApiService’s BehaviorSubject
+    const user = this.apiService.getUserFromStorage();
+    this.userId = user ? user.userId : '';
+
+    // Now call your stats endpoint as before
     this.apiService.getStatistics(Number(this.userId)).subscribe(
       (data: any[]) => {
         console.log('Test data:', data[0]?.testId);

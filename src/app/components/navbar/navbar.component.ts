@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { ApiService } from '../../services/apiServices';
-import { navbarService } from '../../services/navbarService';
+import { ApiService } from '../../services/api.services';
+import { navbarService } from '../../services/navbar.helper';
 import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service';
 
 @Component({
@@ -18,7 +18,7 @@ export class NavbarComponent {
   showBackButton = false;
   isAdminRoute = false;
   isStatisticsPage: boolean = false;
-  isAdmin = false; // New flag to track admin user
+  isAdmin = false; // Flag to track admin user (anyone not a student)
 
   constructor(
     private navbarService: navbarService,
@@ -31,8 +31,8 @@ export class NavbarComponent {
     const user = this.apiService.getUserFromStorage();
     if (user) {
       this.username = user.givenName;
-      // Set the admin flag based on employeeType (assuming admin type is 'admin')
-      this.isAdmin = user.employeeType === 'teacher';
+      // Grant admin rights to anyone whose employeeType is not 'student'
+      this.isAdmin = user.employeeType !== 'student';
       this.navbarService.setUsername(this.username!);
     }
 
