@@ -1,24 +1,23 @@
-# Use an official Node.js runtime as a base image
-FROM node:20.11.1 as builder
-
-# Set the working directory
+# Stage 1: build Angular
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copy package files and install dependencies
+# install only deps and Angular CLI
 COPY package*.json ./
-RUN npm install --force
+RUN npm ci --legacy-peer-deps \
+  && npm install -g @angular/cli@18
 
-# Copy the application code and build
+# copy & build
 COPY . .
-RUN npm install -g @angular/cli && ng build --configuration production
+RUN ng build --configuration production
 
-# Use a smaller image for serving the Angular app
+# Stage 2: serve via nginx
 FROM nginx:alpine
-# Copy the built Angular app to the nginx public directory
+# remove default nginx content
+RUN rm -rf /usr/share/nginx/html/*
+
+# copy build output
 COPY --from=builder /app/dist/browser /usr/share/nginx/html
 
-# Expose port 80
 EXPOSE 80
-
-# Default command
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,18 +1,18 @@
-# Use an official Node.js runtime as a base image
-FROM node:20.11.1
+# Stage 1: deps & cache
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps
 
-# Set the working directory
+# Stage 2: final
+FROM node:20-alpine
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm install -g npm@10.9.0
-RUN npm install --force
-# Copy the rest of the application code
+# bring in deps
+COPY --from=deps /app/node_modules ./node_modules
+
+# copy app code
 COPY . .
 
-# Expose port 3000 for the Node.js app
 EXPOSE 3000
-
-# Default command
 CMD ["node", "server.js"]

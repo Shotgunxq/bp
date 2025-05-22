@@ -57,7 +57,7 @@ function factorial(n: number): number {
 function generatePoissonDescription(lambda: number, k: number): string {
   return `\\begin{aligned}
     \\text{Do serverovne prichádzajú v priemere } ${lambda} \\text{ požiadavky na minútu. } \\\\
-    \\text{Aká je pravdepodobnosť, že v nasledujúcej minute dorazí presne } ${k} \\text{ požiadaviek?} \\\\
+    \\text{Aká je pravdepodobnosť, že v nasledujúcej minúte dorazí presne } ${k} \\text{ požiadaviek?} \\\\
     \\text{Zaokrúhlite výsledok na 3 desatinné miesta.}
     \\end{aligned}`;
 }
