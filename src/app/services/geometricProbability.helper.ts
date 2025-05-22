@@ -1,67 +1,60 @@
-// Define interface for exercise
-export interface geometricExercise {
-  n: number;
-  k: number;
-  p: number;
-  probability: number;
-  description: string;
-  correct_answer: number;
+// Define interface for geometric distribution exercise
+export interface GeometricExercise {
+  k: number; // trial on which first success occurs
+  p: number; // success probability in each trial
+  probability: number; // the raw computed probability
+  description: string; // problem statement (LaTeX)
+  correct_answer: number; // rounded to 3 decimals
   points: number;
   hints: string[];
 }
 
-// Function to generate exercises with random values
-export function geometricProbabilityRandom(): geometricExercise[] {
-  // Generate multiple exercises based on geometric distribution
-  const exercises: geometricExercise[] = [];
-  // Adjust the number of exercises as needed
-  const numberOfExercises = 1;
+// Generate one or more geometric‐distribution exercises
+export function geometricProbabilityRandom(): GeometricExercise[] {
+  const exercises: GeometricExercise[] = [];
+  const numberOfExercises = 1; // adjust as needed
 
   for (let i = 0; i < numberOfExercises; i++) {
-    // Randomly generate values
-    const p: number = Math.round(Math.random() * 100) / 100; // Random probability between 0 and 1
-    const k: number = Math.floor(Math.random() * 3) + 2; // Random integer between 2 and 4 for k
+    // Random p between 0.01 and 0.99
+    const p = parseFloat((Math.random() * 0.98 + 0.01).toFixed(2));
+    // Random k between 2 and 5
+    const k = Math.floor(Math.random() * 4) + 2;
 
-    // Generate description
-    const description: string = generateDescription(k, p);
+    // Compute P(X = k) = (1 - p)^(k-1) * p
+    const rawProb = calculateGeometricProbability(k, p);
+    const correct = parseFloat(rawProb.toFixed(3));
 
-    // Calculate the number of trials needed to achieve first success
-    const numberOfTrials = geometricDistribution(p);
+    const description = generateDescription(k, p);
 
-    // Calculate probability
-    const probability = geometricProbabilityMoreThanOrEqual(k, p);
-
-    // Calculate correct_answer
-    const correct_answer = 1 - Math.pow(1 - p, k);
-
-    const hints: string[] = [
-      `Pravdepodobnosť úspechu je ${p}.`,
-      `Počet pokusov je ${k}.`,
-      `Počet pokusov na dosiahnutie prvého úspechu je ${numberOfTrials}.`,
+    const hints = [
+      'Použi geometrické rozdelenie – modeluje počet pokusov do prvého úspechu.',
+      'Pravdepodobnosť, že prvý úspech nastane až na ${p}. pokus, je (1 - ${k}) na ${p - 1} * ${k}.',
+      'Výsledok vypočítaj a zaokrúhli na 4 desatinné miesta.',
     ];
-
-    // Push exercise to exercises array
-    exercises.push({ n: numberOfTrials, k, p, probability, description, correct_answer, points: 3, hints });
+    exercises.push({
+      k,
+      p,
+      probability: rawProb,
+      description,
+      correct_answer: correct,
+      points: 3,
+      hints,
+    });
   }
 
-  // Return array of exercises
   return exercises;
 }
 
-// Function to generate description
+// First-success-on-kth-trial probability
+function calculateGeometricProbability(k: number, p: number): number {
+  return Math.pow(1 - p, k - 1) * p;
+}
+
+// Build the LaTeX description
 function generateDescription(k: number, p: number): string {
   return `\\begin{aligned}
-  \\text{Mikrokontrolér opakovane odosiela dátový paket cez sériovú linku, pričom pravdepodobnosť úspešného prenosu paketu je } ${k} \\
-  \\text{. Aká je pravdepodobnosť, že prvý úspešný prenos nastane až na } ${p}\\text{. pokus?}
-  \\end{aligned}`;
-}
-
-// Function to generate geometric distribution
-function geometricDistribution(p: number): number {
-  return Math.ceil(Math.log(Math.random()) / Math.log(1 - p));
-}
-
-// Function to calculate geometric probability
-function geometricProbabilityMoreThanOrEqual(k: number, p: number): number {
-  return 1 - Math.pow(1 - p, k);
+&\\text{Mikrokontrolér opakovane odosiela dátový paket cez sériovú linku,}\\\\
+&\\text{kde pravdepodobnosť úspešného prenosu je } p = ${p}.\\\\
+&\\text{Aká je pravdepodobnosť, že prvý úspešný prenos nastane až na } k = ${k}\\text{. pokus?}
+\\end{aligned}`;
 }

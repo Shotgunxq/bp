@@ -31,8 +31,11 @@ export function binomialProbabilityRandom(): binomialExercise[] {
     // Calculate correct_answer
     const correct_answer: number = calculateAnswer(n, k, p);
 
-    const hints: string[] = [`Pravdepodobnosť úspechu je ${p}.`, `Počet pokusov je ${n}.`, `Počet úspechov je ${k}.`];
-
+    const hints: string[] = [
+      'Úloha sa riadi binomickým rozdelením – opakuje sa pevný počet nezávislých pokusov s rovnakou pravdepodobnosťou úspechu.',
+      'Použi vzorec: C(n, k) × p^k × (1 - p)^(n - k).',
+      'Dosad konkrétne hodnoty za n, k a p a výsledok zaokrúhli na 3 desatinné miesta.',
+    ];
     // Push exercise to exercises array
     exercises.push({ n, k, p, probability, description, correct_answer, points: 3, hints });
   }
@@ -75,9 +78,11 @@ function calculateProbability(n: number, k: number, p: number): number {
 function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
   // console.log(`n=${n}, k=${k}, p=${p}`);
-  return `\\begin{aligned}
-  & \\text{Softvérový tester vykonáva } ${n} \\text{ automatizovaných testov softvéru. Pravdepodobnosť úspešného prebehnutia jedného testu je } ${p} \\text{. } \\\\
-  & \\text{Aká je pravdepodobnosť, že presne } ${k}\\text{ testov skončí úspešne} \\\\
-  & \\text{Zaokrúhlite na 3 desatinné miesta.}
-  \\end{aligned}`;
+  return `\begin{aligned}
+&\text{Softvérový tester vykonáva } ${n} \text{ automatizovaných testov softvéru.} \\
+&\text{Pravdepodobnosť úspešného prebehnutia jedného testu je } ${p} \text{.} \\
+&\text{Nech } X \text{ je počet testov, ktoré sa skončia úspešne.} \\
+&\text{Aká je pravdepodobnosť, že } X = ${k} \text{? Zaokrúhlite na 3 desatinné miesta.}
+\end{aligned}
+`;
 }
