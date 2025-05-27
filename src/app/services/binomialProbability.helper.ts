@@ -78,11 +78,10 @@ function calculateProbability(n: number, k: number, p: number): number {
 function generateDescription(n: number, k: number, p: number): string {
   // return `Binomial exercise: n=${n}, k=${k}, p=${p}`;
   // console.log(`n=${n}, k=${k}, p=${p}`);
-  return `\begin{aligned}
-&\text{Softvérový tester vykonáva } ${n} \text{ automatizovaných testov softvéru.} \\
-&\text{Pravdepodobnosť úspešného prebehnutia jedného testu je } ${p} \text{.} \\
-&\text{Nech } X \text{ je počet testov, ktoré sa skončia úspešne.} \\
-&\text{Aká je pravdepodobnosť, že } X = ${k} \text{? Zaokrúhlite na 3 desatinné miesta.}
-\end{aligned}
-`;
+  return `\\begin{aligned}
+&\\text{Softvérový tester vykonáva } ${n} \\text{ automatizovaných testov softvéru.} \\\\
+&\\text{Pravdepodobnosť úspešného prebehnutia jedného testu je } ${p} \\text{.} \\\\
+&\\text{Nech } X \\text{ je počet testov, ktoré sa skončia úspešne.} \\\\
+&\\text{Aká je pravdepodobnosť, že } X = ${k} \\text{? Zaokrúhlite na 3 desatinné miesta.}
+\\end{aligned}`;
 }

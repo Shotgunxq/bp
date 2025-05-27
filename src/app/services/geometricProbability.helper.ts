@@ -56,5 +56,6 @@ function generateDescription(k: number, p: number): string {
 &\\text{Mikrokontrolér opakovane odosiela dátový paket cez sériovú linku,}\\\\
 &\\text{kde pravdepodobnosť úspešného prenosu je } p = ${p}.\\\\
 &\\text{Aká je pravdepodobnosť, že prvý úspešný prenos nastane až na } k = ${k}\\text{. pokus?}
-\\end{aligned}`;
+\\end{aligned}
+`;
 }

@@ -78,10 +78,11 @@ CREATE TABLE IF NOT EXISTS test_submissions (
 
 
 INSERT INTO themes (theme_id, theme_name) VALUES
-  (0, 'Uplatnenie kombinatoriky');
+  (0, 'Uplatnenie kombinatoriky'),
   (1, 'Podmienená pravdepodobnosť'),
   (2, 'Náhodná premenná a rozdelenia'),
-  (3, 'Teória pravdepodobnosti'),
+  (3, 'Teória pravdepodobnosti');
+
 
 
 

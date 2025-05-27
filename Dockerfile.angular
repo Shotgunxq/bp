@@ -1,23 +1,25 @@
 # Stage 1: build Angular
 FROM node:20-alpine AS builder
 WORKDIR /app
-
-# install only deps and Angular CLI
 COPY package*.json ./
 RUN npm ci --legacy-peer-deps \
-  && npm install -g @angular/cli@18
-
-# copy & build
+ && npm install -g @angular/cli@18
 COPY . .
 RUN ng build --configuration production
 
 # Stage 2: serve via nginx
-FROM nginx:alpine
-# remove default nginx content
-RUN rm -rf /usr/share/nginx/html/*
+FROM nginx:stable-alpine
 
-# copy build output
+# remove the default main config
+RUN rm -f /etc/nginx/nginx.conf
+
+# copy in your full config (worker_processes, events, http, server)
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+# remove default static content & copy your build
+RUN rm -rf /usr/share/nginx/html/*
 COPY --from=builder /app/dist/browser /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+

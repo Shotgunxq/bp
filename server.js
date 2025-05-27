@@ -13,9 +13,7 @@ app.disable('etag');
 // Enable CORS with credentials for Angular dev server
 app.use(
   cors({
-    origin: ['http://localhost', 'http://localhost:80'], // <— allow the Docker‐mapped host:port
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: 'http://localhost',
     credentials: true,
   })
 );
