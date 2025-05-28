@@ -3,9 +3,9 @@ import { ApiService } from '../../services/api.services';
 import { PdfService } from '../../services/pdf.helper';
 
 // Import your exercise generation functions
-import { binomialProbabilityRandom } from '../../services/binomialProbability.helper';
-import { hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality.helper';
-import { geometricProbabilityRandom } from '../../services/geometricProbability.helper';
+import { binomialProbabilityRandom } from '../../services/helper/binomialProbability.helper';
+import { hypergeometricProbabilityRandom } from '../../services/helper/hypergeometricProbality.helper';
+import { geometricProbabilityRandom } from '../../services/helper/geometricProbability.helper';
 
 @Component({
   selector: 'app-export-page',

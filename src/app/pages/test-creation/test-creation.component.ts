@@ -2,12 +2,12 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.services';
-import { binomialProbabilityRandom } from '../../services/binomialProbability.helper';
-import { hypergeometricProbabilityRandom } from '../../services/hypergeometricProbality.helper';
-import { geometricProbabilityRandom } from '../../services/geometricProbability.helper';
+import { binomialProbabilityRandom } from '../../services/helper/binomialProbability.helper';
+import { hypergeometricProbabilityRandom } from '../../services/helper/hypergeometricProbality.helper';
+import { geometricProbabilityRandom } from '../../services/helper/geometricProbability.helper';
 import { MatDialog } from '@angular/material/dialog';
 import { InfoModalTestCreationComponent } from '../../components/modals/dialogs/info-moda-test-creation/info-modal-test-creation';
-import { uniformDistributionRandom } from '../../services/uniformDistribution.helper';
+import { uniformDistributionRandom } from '../../services/helper/uniformDistribution.helper';
 @Component({
   selector: 'app-test-creation',
   templateUrl: './test-creation.component.html',
