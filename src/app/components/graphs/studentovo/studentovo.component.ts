@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexMarkers, ApexAnnotations } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexAnnotations } from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
-  markers?: ApexMarkers;
   annotations?: ApexAnnotations;
 };
 
@@ -21,7 +20,6 @@ export class StudentovoComponent {
   public rangeA: number = -2;
   public rangeB: number = 2;
   public calculatedArea: number = 0;
-  public showMarkers: boolean = true;
 
   constructor() {
     this.updateTChart();
@@ -76,10 +74,6 @@ export class StudentovoComponent {
         height: 350,
         type: 'line',
         toolbar: { show: false },
-      },
-      markers: {
-        size: this.showMarkers ? 5 : 0,
-        shape: 'circle',
       },
       xaxis: {
         type: 'numeric',

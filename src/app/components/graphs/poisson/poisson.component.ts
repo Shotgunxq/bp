@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexAnnotations, ApexMarkers } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexAnnotations } from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
-  markers?: ApexMarkers;
   annotations?: ApexAnnotations;
 };
 
@@ -21,7 +20,6 @@ export class PoissonComponent {
   public rangeA: number = 1; // Start of range
   public rangeB: number = 5; // End of range
   public calculatedArea: number = 0; // Calculated area under the curve
-  public showMarkers: boolean = true; // Toggle for markers visibility
 
   constructor() {
     this.updatePoissonChart();
@@ -76,10 +74,6 @@ export class PoissonComponent {
         height: 350,
         type: 'line',
         toolbar: { show: false },
-      },
-      markers: {
-        size: this.showMarkers ? 5 : 0,
-        shape: 'circle',
       },
       xaxis: {
         type: 'numeric',

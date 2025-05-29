@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.services';
-import { PdfService } from '../../services/pdf.helper';
+import { PdfService } from '../../services/helper/pdf.helper';
 
 // Import your exercise generation functions
 import { binomialProbabilityRandom } from '../../services/helper/binomialProbability.helper';

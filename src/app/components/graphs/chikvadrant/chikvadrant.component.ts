@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexMarkers, ApexAnnotations } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexAnnotations } from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
-  markers?: ApexMarkers;
   annotations?: ApexAnnotations;
 };
 
@@ -21,14 +20,12 @@ export class ChikvadrantComponent {
     chart: { height: 350, type: 'line', toolbar: { show: false } },
     xaxis: { type: 'numeric', title: { text: 'x' }, tickAmount: 20, labels: { formatter: val => parseFloat(val).toFixed(1) } },
     yaxis: { title: { text: 'f(x)' }, min: 0, labels: { formatter: value => value.toFixed(3) } },
-    markers: { size: 0, shape: 'circle' },
     annotations: { xaxis: [] },
   }; // Default initialization
   public degreesOfFreedom: number = 4;
   public rangeA: number = 1;
   public rangeB: number = 5;
   public calculatedArea: number = 0;
-  public showMarkers: boolean = true;
 
   constructor() {
     this.updateChiChart();
@@ -89,10 +86,6 @@ export class ChikvadrantComponent {
         height: 350,
         type: 'line',
         toolbar: { show: false },
-      },
-      markers: {
-        size: this.showMarkers ? 5 : 0,
-        shape: 'circle',
       },
       xaxis: {
         type: 'numeric',

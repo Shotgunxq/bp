@@ -29,13 +29,6 @@
       <input matInput type="number" [(ngModel)]="rangeB" [ngModelOptions]="{ standalone: true }" (input)="updatePoissonChart()" step="1" min="0" />
     </mat-form-field>
   </div>
-
-  <!-- Show Markers Checkbox -->
-  <div class="col-md-12 d-flex align-items-center">
-    <mat-checkbox [(ngModel)]="showMarkers" [ngModelOptions]="{ standalone: true }" (change)="updatePoissonChart()" class="me-2">
-      Show Markers
-    </mat-checkbox>
-  </div>
 </form>
 
 <!-- Calculated Area Display -->
@@ -56,6 +49,5 @@
     [chart]="poissonChartOptions.chart || { type: 'line' }"
     [xaxis]="poissonChartOptions.xaxis || {}"
     [yaxis]="poissonChartOptions.yaxis || {}"
-    [markers]="poissonChartOptions.markers || {}"
     [annotations]="poissonChartOptions.annotations || {}"></apx-chart>
 </div>

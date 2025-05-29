@@ -22,13 +22,6 @@
       <input matInput type="number" [(ngModel)]="rangeB" [ngModelOptions]="{ standalone: true }" (input)="updateChiChart()" step="0.1" />
     </mat-form-field>
   </div>
-
-  <!-- Show Markers Checkbox -->
-  <div class="col-md-12 d-flex align-items-center">
-    <mat-checkbox [(ngModel)]="showMarkers" [ngModelOptions]="{ standalone: true }" (change)="updateChiChart()" class="me-2">
-      Show Markers
-    </mat-checkbox>
-  </div>
 </form>
 
 <!-- Calculated Area Display -->
@@ -49,6 +42,5 @@
     [chart]="chiChartOptions.chart || { type: 'line' }"
     [xaxis]="chiChartOptions.xaxis || {}"
     [yaxis]="chiChartOptions.yaxis || {}"
-    [markers]="chiChartOptions.markers || {}"
     [annotations]="chiChartOptions.annotations || {}"></apx-chart>
 </div>
