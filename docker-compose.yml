@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.angular
+    image: myapp/frontend:latest
     ports:
       - '80:80'
     depends_on:
@@ -15,6 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.node
+    image: myapp/backend:latest
     ports:
       - '3000:3000'
     depends_on:
@@ -27,8 +29,8 @@ services:
       POSTGRES_PASSWORD: postgres123
 
   postgres-db:
-    image: postgres:17
     container_name: postgres-db
+    image: postgres:17
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -37,6 +39,9 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - ./data:/var/lib/postgresql/data
-      # any .sql/.sh in ./scripts/db will be run at container start
+      # named volume is nicer for first-run init
+      - pgdata:/var/lib/postgresql/data
       - ./scripts/db:/docker-entrypoint-initdb.d
+
+volumes:
+  pgdata:

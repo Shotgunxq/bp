@@ -1,18 +1,13 @@
-# Stage 1: deps & cache
+# Stage 1: install deps (cacheable)
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --legacy-peer-deps
 
-# Stage 2: final
+# Stage 2: copy code & run
 FROM node:20-alpine
 WORKDIR /app
-
-# bring in deps
 COPY --from=deps /app/node_modules ./node_modules
-
-# copy app code
 COPY . .
-
 EXPOSE 3000
 CMD ["node", "server.js"]
