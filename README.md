@@ -22,8 +22,8 @@ Before you begin, ensure you have installed:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-organization/bakalar.git
-   cd bakalar
+   git clone https://github.com/Shotgunxq/bp.git
+   cd bp
    ```
 
 2. **Copy or download the Docker images archive** (if provided separately):
