@@ -267,4 +267,46 @@ export class MaterialsPageComponent {
     </ul>
   </li>
 </ul>`;
+
+  vyberVzorky: string = `<strong>Úloha:</strong> Máme k dispozícii 10 vzoriek označených $v_1,\\dots,v_{10}$. Náhodne vyberieme 3 vzorky. Aká je pravdepodobnosť, že vyberieme $\\{v_1,v_3,v_6\\}$? Odpoveď zapíšte ako desatinné číslo zaokrúhlené na štyri desatinné miesta.<br>
+<strong>Riešenie:</strong>
+<ol>
+  <li>Celkový počet trojíc je $\\binom{10}{3}=120$.</li>
+  <li>Iba jedna trojica je $\\{v_1,v_3,v_6\\}$.</li>
+  <li>Pravdepodobnosť je $P=\\frac{1}{120}\\approx0{,}0083$.</li>
+</ol>
+<strong>Detailné vysvetlenie:</strong>
+<p>Keď vyberáme 3 vzorky súčasne a nezáleží na poradí, každá kombinácia troch rôznych vzoriek je rovnako pravdepodobná. Preto používame kombinácie. Výsledok 120 hovorí, že existuje 120 rôznych množín trojíc. Keď chceme práve jednu konkrétnu trojicu, pravdepodobnosť, že vyberieme túto jedinú, je 1 vydelené všetkými možnosťami.</p>`;
+
+  celkovaNepodarkovost: string = `<strong>Úloha:</strong> Produkcia je tvorená tromi linkami s podielmi 50 %, 30 % a 20 %. Nepodarkovosť liniek je 2 %, 3 % a 4 %. Aká je celková nepodarkovosť produkcie? Odpoveď zapíšte ako desatinné číslo zaokrúhlené na tri desatinné miesta.<br>
+<strong>Riešenie:</strong>
+<ol>
+  <li>Linka 1: $0{,}50\\times0{,}02=0{,}010$.</li>
+  <li>Linka 2: $0{,}30\\times0{,}03=0{,}009$.</li>
+  <li>Linka 3: $0{,}20\\times0{,}04=0{,}008$.</li>
+  <li>Spolu: $0{,}010+0{,}009+0{,}008=0{,}027$.</li>
+</ol>
+<strong>Detailné vysvetlenie:</strong>
+<p>Celková nepodarkovosť je vážený priemer nepodarkovosti jednotlivých liniek, kde váhy predstavujú ich podiel na celkovej produkcii. Každá linka prispieva k výsledku s pravdepodobnosťou, že produkt bude z daného zdroja a zároveň bude nepodarok. Preto vynásobíme podiel produkcie pravdepodobnosťou nepodarku a výsledky spočítame.</p>`;
+
+  podmienenaPravdepodobnost: string = `<strong>Úloha:</strong> V lietadle je 20 % cestujúcich zo SR, z nich 60 % pije pivo. Medzi cudzincami (80 %) pije pivo 20 %. Cestujúci si vypýtal pivo. Aká je pravdepodobnosť, že je to občan SR? Odpoveď zapíšte ako desatinné číslo zaokrúhlené na päť desatinných miest.<br>
+<strong>Riešenie:</strong>
+<ol>
+  <li>$P(SR\\land pivo)=0{,}20\\times0{,}60=0{,}12$.</li>
+  <li>$P(cudzinec\\land pivo)=0{,}80\\times0{,}20=0{,}16$.</li>
+  <li>Celkom pivo: $0{,}12+0{,}16=0{,}28$.</li>
+  <li>$P(SR\\mid pivo)=\\frac{0{,}12}{0{,}28}\\approx0{,}42857$.</li>
+</ol>
+<strong>Detailné vysvetlenie:</strong>
+<p>Toto je aplikácia Bayesovej vety. Najprv vypočítame spoločné pravdepodobnosti oboch prípadov – Slovák pijúci pivo a cudzinec pijúci pivo. Potom delíme pravdepodobnosťou spoločného javu "niekto pije pivo". Bayesova veta nám umožňuje prehodiť podmieňovanie a vypočítať pravdepodobnosť pôvodu osoby na základe pozorovaného správania (pitia piva).</p>`;
+
+  strednaHodnotaX: string = `<strong>Úloha:</strong> Náhodná premenná $X$ nadobúda hodnoty 2, 3, 4, 5, 6 s pravdepodobnosťami 0{,}1; 0{,}3; 0{,}3; 0{,}2; 0{,}1. Vypočítajte $E(X)$. Odpoveď zapíšte ako desatinné číslo zaokrúhlené na jedno desatinné miesto.<br>
+<strong>Riešenie:</strong>
+<ol>
+  <li>$2\\cdot0{,}1=0{,}2$; $3\\cdot0{,}3=0{,}9$; $4\\cdot0{,}3=1{,}2$; $5\\cdot0{,}2=1{,}0$; $6\\cdot0{,}1=0{,}6$.</li>
+  <li>Sum: $0{,}2+0{,}9+1{,}2+1{,}0+0{,}6=3{,}9$.</li>
+  <li>$E(X)=3{,}9$.</li>
+</ol>
+<strong>Detailné vysvetlenie:</strong>
+<p>Stredná hodnota je očakávaná dlhodobá priemerná hodnota náhodného pokusu. Pre diskrétnu premennú sa počíta ako vážený súčet všetkých možných hodnôt, kde váhami sú ich pravdepodobnosti. Každá hodnota prispieva k výsledku úmerne svojej pravdepodobnosti.</p>`;
 }

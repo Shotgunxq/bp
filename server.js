@@ -13,7 +13,7 @@ app.disable('etag');
 // Enable CORS with credentials for Angular dev server
 app.use(
   cors({
-    origin: 'http://localhost:4200',
+    origin: 'http://localhost',
     credentials: true,
   })
 );

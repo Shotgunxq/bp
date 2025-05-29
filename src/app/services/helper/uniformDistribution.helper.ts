@@ -33,7 +33,6 @@ export function uniformDistributionRandom(): UniformDistributionExercise[] {
     const hints: string[] = [
       `Rozsah výstupu prevodníka je \\([${a}, ${b}]\\), čiže ide o rovnomerné rozdelenie.`,
       `Použi vzorec: \\( P(x_1 \\leq X \\leq x_2) = \\frac{x_2 - x_1}{b - a} \\).`,
-      `Zaokrúhli výsledok na 3 desatinné miesta.`,
     ];
 
     exercises.push({

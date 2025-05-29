@@ -238,4 +238,17 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
+
+  <!-- exercises.component.html -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Príklady</mat-panel-title>
+      <mat-panel-description>Kombinácie, Bayesova veta, Diskrétne náhodné premenné</mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <p [mathjax]="vyberVzorky"></p>
+    <p [mathjax]="celkovaNepodarkovost"></p>
+    <p [mathjax]="podmienenaPravdepodobnost"></p>
+    <p [mathjax]="strednaHodnotaX"></p>
+  </mat-expansion-panel>
 </div>

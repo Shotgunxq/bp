@@ -22,11 +22,6 @@
       <input matInput type="number" [(ngModel)]="rangeB" [ngModelOptions]="{ standalone: true }" (input)="updateTChart()" step="0.1" />
     </mat-form-field>
   </div>
-
-  <!-- Show Markers Checkbox -->
-  <div class="col-md-12 d-flex align-items-center">
-    <mat-checkbox [(ngModel)]="showMarkers" [ngModelOptions]="{ standalone: true }" (change)="updateTChart()" class="me-2">Show Markers</mat-checkbox>
-  </div>
 </form>
 
 <!-- Calculated Area Display -->
@@ -47,6 +42,5 @@
     [chart]="tChartOptions.chart || { type: 'line' }"
     [xaxis]="tChartOptions.xaxis || {}"
     [yaxis]="tChartOptions.yaxis || {}"
-    [markers]="tChartOptions.markers || {}"
     [annotations]="tChartOptions.annotations || {}"></apx-chart>
 </div>

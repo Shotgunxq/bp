@@ -3,6 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../../../services/admin.services';
 import { ApiService } from '../../../../services/api.services';
+import { InfoModalLatexComponent } from '../../../../components/modals/dialogs/info-modal-latex/info-modal-latex';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-admin-new-exercise',
@@ -30,6 +32,7 @@ export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private adminService: AdminService,
     private apiService: ApiService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     // Build form with all necessary fields.
@@ -108,5 +111,11 @@ export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  openInfoDialog(): void {
+    this.dialog.open(InfoModalLatexComponent, {
+      width: '500px', // Adjust width as needed
+    });
   }
 }

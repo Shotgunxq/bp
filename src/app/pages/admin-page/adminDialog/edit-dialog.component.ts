@@ -85,9 +85,13 @@ export class EditDialogComponent implements AfterViewInit {
     let description = this.data.exercise.description || '';
 
     if (description.includes('\\begin{aligned}') && description.includes('\\end{aligned}')) {
-      description = description.replace(/\\begin\{aligned\}/g, '').replace(/\\end\{aligned\}/g, '');
-      description = description.replace(/\\\\/g, ' ');
-      description = description.replace(/&/g, ' ');
+      description = description
+        .replace(/\\begin\{aligned\}/g, '')
+        .replace(/\\end\{aligned\}/g, '')
+        .replace(/\\\\/g, ' ')
+        .replace(/&/g, ' ');
+      description = description.replace(/\.\.\./g, '\\dots');
+      description = description.replace(/\\emptyset/g, '\\varnothing');
     }
 
     this.mathField = this.MQ.MathField(this.mathFieldContainer.nativeElement, {

@@ -19,6 +19,12 @@ services:
       - '3000:3000'
     depends_on:
       - postgres-db
+    environment:
+      POSTGRES_HOST: postgres-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: myappdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
 
   postgres-db:
     image: postgres:17
