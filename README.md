@@ -1,27 +1,81 @@
 # Bakalar
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.7.
+A Dockerized Angular application generated with Angular CLI version 17.0.7.
 
-## Development server
+## Table of Contents
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Docker Setup](#docker-setup)
+- [Running the Application](#running-the-application)
+- [Development Server (Optional)](#development-server-optional)
 
-## Code scaffolding
+## Prerequisites
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Before you begin, ensure you have installed:
 
-## Build
+- [Docker](https://docs.docker.com/get-docker/) (version 20.10+)
+- [Git](https://git-scm.com/downloads)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Installation
 
-## Running unit tests
+1. **Clone the repository**
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+   ```bash
+   git clone https://github.com/your-organization/bakalar.git
+   cd bakalar
+   ```
 
-## Running end-to-end tests
+2. **Copy or download the Docker images archive** (if provided separately):
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+   ```bash
+   # Place bp-images.tar in the project root or specify the path
+   ```
 
-## Further help
+## Docker Setup
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+1. **Load prebuilt Docker images**
+
+   ```bash
+   docker load -i bp-images.tar
+   ```
+
+2. **Build the application containers**
+
+   ```bash
+   docker-compose build
+   ```
+
+## Running the Application
+
+Launch the application in detached mode:
+
+```bash
+docker-compose up -d
+```
+
+After the services start, the app will be accessible at:
+
+```
+http://localhost/
+```
+
+## Development Server (Optional)
+
+To run the application without Docker:
+
+```bash
+npm ci --legacy-peer-deps    # install dependencies
+npm run start                # start Angular frontend
+```
+
+- The frontend will be served at `http://localhost:4200/`.
+- In a new terminal window, start the backend:
+
+  ```bash
+  node server
+  ```
+
+> **Note:** The database still requires Docker.
+
+---
