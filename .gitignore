@@ -398,10 +398,10 @@ FodyWeavers.xsd
 *.sln.iml
 
 node_modules/
-angular/
+#angular/
 .angular
-package-lock.json
-.package-lock.json
+#package-lock.json
+#.package-lock.json
 dist/
 data/
 *.tar
