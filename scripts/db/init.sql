@@ -89,18 +89,18 @@ INSERT INTO themes (theme_id, theme_name) VALUES
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'medium',
    '\begin{aligned}
-    & \text{Máme k dispozícii 10 vzoriek označených v1...v10.} \\
-    & \text{Náhodne vyberieme 3 vzorky. Aká je pravdepodobnosť, že vyberieme }\{v1, v3, v6\}\text{?} \\
-    & \textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na štyri desatinné miesta.}
-   \end{aligned}',
+  &\text{Máme k dispozícii 10 vzoriek označených }v_1,\dots,v_{10}.\\
+  &\text{Náhodne vyberieme 3 vzorky. Aká je pravdepodobnosť, že vyberieme } {v_1,v_3,v_6}\text{?}\\
+  &\mathbf{Odpoveď\ zapíšte\ ako\ desatinné\ číslo\ zaokrúhlené\ na\ štyri\ desatinné miesta.}
+\end{aligned}',
    3, '0.0083', '["Spočítaj C(10,3)" , "Pravdepodobnosť = 1 / C(10,3).", "n!/(n-k)!k!"]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (0, 'easy',
    '\begin{aligned}
-    & \text{Máme skupinu piatich študentov A=\{Boris, Elena, Igor, Jana, Táňa\}.} \\
-    & \text{Koľko dvojíc z nich je možné zostaviť?}
-   \end{aligned}',
+  &\text{Máme skupinu piatich študentov }A = {Boris, Elena, Igor, Jana, Táňa}.\\
+  &\text{Koľko dvojíc z nich je možné zostaviť?}
+\end{aligned}',
    2, '10', '["Poradie nezálezí", "kombinácie, C(5,2)"]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
@@ -124,18 +124,19 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
    '\begin{aligned}
-    & \text{Nech }\Omega=\{1,2,3,4,5,6\}. \text{Ktoré zo systémov podmnožín tvorí algebru?} \\
-    & S1 = \{\emptyset,\Omega\}, S2 = \{\emptyset,\{1\},\{2,3,4,5,6\},\Omega\}, ...
-   \end{aligned}',
+    & \text{Nech }\Omega={1,2,3,4,5,6}. \\
+ 	& \text{Ktoré zo systémov podmnožín tvorí algebru?} \\
+    & S1 = {\emptyset,\Omega}, S2 = {\emptyset,{1},{2,3,4,5,6},\Omega}, ...
+\end{aligned}',
    3, 'S1, S4', '["Skontroluj prázdnu množinu a Omegu v systéme.", "Skontroluj uzáver k doplnkám aj zjednoteniam."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
    '\begin{aligned}
-    & \text{Prístupový kód: 5 rôznych znakov z \{1,2,3,4,5,6\}.} \\
-    & \text{Aká je pravdepodobnosť, že ho uhádneme na prvýkrát?}
-    &\textbf{Odpoveď zapíšte ako zlomok.}
-   \end{aligned}',
+  &\text{Prístupový kód: 5 rôznych znakov z }{1,2,3,4,5,6}.\\
+  &\text{Aká je pravdepodobnosť, že ho uhádneme na prvýkrát?}\\
+  &\mathbf{Odpoveď zapíšte ako zlomok.}
+  \end{aligned}',
    3, '1/720', '["Prístupový kód je tvorený z 5 rôznych znakov, teda záleží na poradí – ide o variácie bez opakovania.", "Spočítaj počet všetkých možných kódov: V(6,5) = 6 × 5 × 4 × 3 × 2 = 720.", "Len jeden z týchto kódov je správny, takže pravdepodobnosť uhádnutia je 1/720."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
@@ -197,9 +198,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'medium',
    '\begin{aligned}
-    & \text{Hádžeme štyrmi kockami. Náhodná premenná X = minimum z hodov.} \\
-    & \text{Koľko výsledkov má množina} \{\omega: X=2\}?
-   \end{aligned}',
+  &\text{Hádžeme štyrmi kockami. Náhodná premenná X = minimum z hodov.}\\
+  &\text{Koľko výsledkov má množina }{\omega\mid X=2}\text{?}
+\end{aligned}',
    3, '369', '["Pre X=2 platí, že v hodoch nie je žiadna 1 a aspoň jeden hod je 2.",
    "Počet sekvencií bez 1 je 5^4, bez 1 aj 2 je 4^4.",
    "Výsledok je rozdiel týchto dvoch hodnôot."
@@ -208,11 +209,12 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'hard',
    '\begin{aligned}
-    & \text{Hádžeme piatimi kockami. X = maximum z hodov.} \\
-    & \text{Vypočítajte }P(X<3)\text{ a }E(X).
-    & \textbf{Odpoveď zapíš ako dve desatinné čísla oddelené bodkočiarkou, v poradí: pravdepodobnosť; stredná hodnota. Priklad: 0.0082; 1.3223}
-   \end{aligned}',
-   4, 'P(X<3)=0.9688; E(X)=4.67', '["Pre P(X<3) musia všetky kocky padnúť len ako 1 alebo 2, teda pravdepodobnosť je (2/6)^5.", "Na E(X) použi: P(X=k)=P(X≤k)−P(X≤k−1), potom spočítaj ∑k⋅P(X=k).", "Výsledok zaokrúhli na 4 desatinné miesta a zapíš v tvare: pravdepodobnosť; stredná hodnota."]');
+  &\text{Hádžeme piatimi kockami. X = maximum z hodov.}\\
+  &\text{Vypočítajte }P(X<3)\text{ a }E(X).\\
+  &\mathbf{Odpoveď\ zapíšte\ ako\ dve\ desatinné\ čísla\ oddelené\ bodkočiarkou,\ v\ poradí:\ pravdepodobnosť;\ stredná\ hodnota.}\\
+  &\mathbf{Príklad:\ 0.0082;\ 1.3223}
+\end{aligned}',
+   4, '0.9688; 4.67', '["Pre P(X<3) musia všetky kocky padnúť len ako 1 alebo 2, teda pravdepodobnosť je (2/6)^5.", "Na E(X) použi: P(X=k)=P(X≤k)−P(X≤k−1), potom spočítaj ∑k⋅P(X=k).", "Výsledok zaokrúhli na 4 desatinné miesta a zapíš v tvare: pravdepodobnosť; stredná hodnota."]');
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (3, 'hard',
@@ -397,12 +399,12 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
   (1, 'easy',
    '\begin{aligned}
-    &\text{Produkcia je tvorená tromi automatickými linkami, ktoré sa}\\
-    &\text{podelia na celkovej produkcii (po rade) 50%, 30%, resp. 20%.}\\
-    &\text{Nepodarkovosť jednotlivých liniek je rovná (po rade) 2%, 3%, resp. 4%.}\\
-    &\text{Aká je nepodarkovosť celej produkcie?}\\
-    &\textbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na tri desatiné miesta.}
-   \end{aligned}',
+  &\text{Produkcia je tvorená tromi automatickými linkami, ktoré sa podelia}\\
+  &\text{na celkovej produkcii 50%, 30% a 20%.}\\
+  &\text{Nepodarkovosť jednotlivých liniek je 2%, 3% a 4%.}\\
+  &\text{Aká je nepodarkovosť celej produkcie?}\\
+  &\mathbf{Odpoveď zapíšte ako desatinné číslo zaokrúhlené na tri desatinné miesta.}
+\end{aligned}',
    3,
    '0.027',
     '["Linka 1 vyrába 50 % produktov, z nich 2 % sú nepodarky ⇒ jej príspevok je 0.5 × 0.02.",
@@ -514,7 +516,7 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
 (3, 'easy',
  '\begin{aligned}
-  &\text{Nech množina }A=\{1,2,3\}\text{ a }\Omega\text{ je množina všetkých}\\
+  &\text{Nech množina }A={1,2,3}\text{ a }\Omega\text{ je množina všetkých}\\
   &\text{trojciferných čísel tvorených prvkami }A.\\
   &\text{Koľko prvkov má množina }\Omega?
 \end{aligned}',
@@ -525,10 +527,9 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
 (3, 'easy',
  '\begin{aligned}
-  &\text{Nech množina }A=\{1,2,3\}\text{ a }\Omega_1\text{ je množina}\\
-  &\text{trojciferných čísel z }A,\text{ v ktorých sa každé číslo môže}\\
-  &\text{použiť iba raz.}\\
-  &\text{Koľko prvkov má množina }\Omega_1?
+  &\text{Nech množina }A = {1,2,3}\text{ a }\Omega_1\text{ je množina trojciferných čísel z }A\text{,}\\
+  &\text{v ktorých sa každé číslo môže použiť iba raz.}\\
+  &\text{Koľko prvkov má množina }\Omega_1\text{?}
 \end{aligned}',
  3, '6', '["Množina A obsahuje 3 čísla: 1, 2, 3.",
   "Tvoríme trojciferné čísla, v ktorých sa číslice neopakujú.",
@@ -537,10 +538,10 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
 (3, 'easy',
  '\begin{aligned}
-  &\text{Nech množina }A=\{1,2,3\}\text{ a }\Omega_2\text{ je množina}\\
-  &\text{trojciferných čísel z }A,\text{ v ktorých čísla 2 a 3}\\
-  &\text{sa môžu použiť iba raz (1 môže byť opakovane).}\\
-  &\text{Koľko prvkov má množina }\Omega_2?
+  &\text{Nech množina }A = {1,2,3}\text{ a }\Omega_2\text{ je množina}\\
+  &\text{trojciferných čísel z }A\text{, v ktorých sa čísla 2 a 3 môžu použiť}\\
+  &\text{iba raz (1 môže byť opakovane).}\\
+  &\text{Koľko prvkov má množina }\Omega_2\text{?}
 \end{aligned}',
  3, '13', '["Množina A obsahuje čísla 1, 2, 3 – pričom 1 sa môže opakovať, ale 2 a 3 len raz.",
   "Pre každý trojmiestny tvar treba zvoliť pozície pre čísla 2 a 3 (0, 1 alebo 2 z nich použiť), zvyšné miesta doplniť jednotkami.", 
@@ -548,12 +549,12 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
 
 INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_answer, hints) VALUES
 (3, 'easy',
- '\begin{aligned}
-  &\text{Máme udalosti }A\text{ a }B\text{. Nech }P(A)=0{,}3,\;P(B)=0{,}6\\
-  &\text{a nech }0 \le P(A\cap B) \le 0{,}5.\\
+ '\begin{aligned} 
+  &\text{Máme udalosti }A \text{ a } B. P(A)=0,3; P(B)=0,6.\\
+  &\text{Nech }0 \le P(A\cap B) \le 0{,}5.\\
   &\text{Môžu byť }A,B\text{ navzájom nezávislé?}\\
-  &\mathbf{Odpoveď\ zapíšte\ ako\ ano\ /\ nie.}
-\end{aligned}',
+  &\text{Odpoveď zapíšte ako ano / nie.}
+   \end{aligned}',
  2, 'ano', '["Pre nezávislé udalosti platí: P(A ∩ B) = P(A) × P(B).", 
  "Vypočítaj tento súčin: 0,3 × 0,6 = 0,18.", 
  "Hodnota 0,18 spadá do povoleného intervalu pre P(A ∩ B) (0 až 0,5), takže nezávislosť je možná."]');
@@ -573,25 +574,25 @@ INSERT INTO exercises (theme_id, difficulty_level, description, points, correct_
  "Počet všetkých možných usporiadaní týchto 10 lôpt je 10! / 5! (kvôli piatim rovnakým jednotkám).", 
  "Počet priaznivých usporiadaní je len 1 (konkrétny daný sled), takže pravdepodobnosť je 1 / (10! / 5!) = 5! / 10!."]'),
 (3, 'easy',
- '\\begin{aligned}
- &\\text{V urne je 12 loptíčok označených }1,2,3,\\text{ tak, že 5 z nich}\\
- &\\text{je označených }1, 4\\text{ je označených }2\\text{ a zvyšné }3.\\
- &\\text{Ťaháme postupne po jednej loptíčke bez vrátenia,}\\
- &\\text{opakujeme, kým urna nie je prázdna.}\\
- &\\text{Aká je pravdepodobnosť, že ich vytiahneme v poradí}\\
- &1,2,2,2,3,1,1,1,1,3,3? \\
-    &\textbf{Odpoveď zapíšte ako zlomok.}
- \\end{aligned}',
+ '\begin{aligned}
+  &\text{V urne je 12 loptíčok označených 1, 2, 3 tak, že 5 z nich}\\
+  &\text{je označených 1, 4 je označených 2 a zvyšné 3.}\\
+  &\text{Ťaháme postupne po jednej loptíčke bez vrátenia,}\\
+  &\text{opakujeme, kým urna nie je prázdna.}\\
+  &\text{Aká je pravdepodobnosť, že ich vytiahneme v poradí}\\
+  &1,2,2,2,3,1,1,1,1,3,3?\\
+  &\mathbf{Odpoveď\ zapíšte\ ako\ zlomok.}
+\end{aligned}',
  1, '1/27720', '["Spočítaj, koľko lôpt je označených každým číslom: 5× jednotka, 4× dvojka, 3× trojka.",
   "Celkový počet rôznych usporiadaní týchto 12 lôpt je 12! / (5!·4!·3!).", 
  "Počet priaznivých usporiadaní (dané konkrétne poradie) je len 1, takže pravdepodobnosť je 1 / (12! / (5!·4!·3!)) = (5!·4!·3!) / 12!."]'),
 (3, 'easy',
  '\begin{aligned}
-  &\text{V urne je 12 loptíčok označených }1,2,3,\text{ tak, že 5 z nich}\\
-  &\quad\text{je označených }1,\;4\text{ je označených }2\text{ a zvyšné }3.\\
+  &\text{V urne je 12 loptíčok označených 1, 2, 3 tak, že 5 z nich}\\
+  &\text{je označených 1, 4 je označených 2 a zvyšné 3.}\\
   &\text{Ťaháme postupne po jednej loptíčke bez vrátenia,}\\
-  &\quad\text{opakujeme 4-krát.}\\
-  &\text{Aká je pravdepodobnosť, že všetky budú označené }1?\\
+  &\text{opakujeme 4-krát.}\\
+  &\text{Aká je pravdepodobnosť, že všetky budú označené 1?}\\
   &\mathbf{Odpoveď\ zapíšte\ ako\ zlomok.}
 \end{aligned}',
  1, '5/495', '["Loptičiek s označením 1 je 5 z celkových 12.",

@@ -6,7 +6,7 @@ import { binomialProbabilityRandom } from '../../services/helper/binomialProbabi
 import { hypergeometricProbabilityRandom } from '../../services/helper/hypergeometricProbality.helper';
 import { geometricProbabilityRandom } from '../../services/helper/geometricProbability.helper';
 import { MatDialog } from '@angular/material/dialog';
-import { InfoModalTestCreationComponent } from '../../components/modals/dialogs/info-moda-test-creation/info-modal-test-creation';
+import { InfoModalTestCreationComponent } from '../../components/modals/dialogs/info-modal-test-creation/info-modal-test-creation';
 import { uniformDistributionRandom } from '../../services/helper/uniformDistribution.helper';
 @Component({
   selector: 'app-test-creation',
@@ -34,7 +34,7 @@ export class TestCreationComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private apiService: ApiService,
-    private dialog: MatDialog // <-- Inject MatDialog
+    private dialog: MatDialog
   ) {}
 
   @HostListener('window:resize', ['$event'])
