@@ -5,6 +5,7 @@ COPY package*.json ./
 RUN npm ci --legacy-peer-deps \
  && npm install -g @angular/cli@18
 COPY . .
+RUN echo "** Dumping /app **" && ls -R /app
 RUN ng build --configuration production
 
 # Stage 2: serve with nginx
