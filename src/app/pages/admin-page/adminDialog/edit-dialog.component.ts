@@ -3,11 +3,16 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AdminService } from '../../../services/admin.services';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { InfoModalLatexComponent } from '../../../components/modals/dialogs/info-modal-latex/info-modal-latex';
 
 @Component({
   selector: 'app-edit-dialog',
   template: `
-    <h2 mat-dialog-title>Upraviť úlohu</h2>
+    <h2 mat-dialog-title>
+      Upraviť úlohu
+      <mat-icon (click)="openInfoDialog()" style="cursor: pointer">info</mat-icon>
+    </h2>
     <mat-dialog-content [formGroup]="editForm">
       <!-- MathQuill Editor for Description (outside of mat-form-field) -->
       <div style="margin-bottom: 16px;">
@@ -62,7 +67,8 @@ export class EditDialogComponent implements AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public data: { exercise: any },
     private fb: FormBuilder,
     private adminService: AdminService,
-    private snackBar: MatSnackBar // Inject MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     // Convert the hints array to a newline-separated string.
     const hintsString = data.exercise.hints && Array.isArray(data.exercise.hints) ? data.exercise.hints.join('\n') : '';
@@ -135,5 +141,11 @@ export class EditDialogComponent implements AfterViewInit {
         console.error('Error updating exercise:', error);
       }
     );
+  }
+
+  openInfoDialog(): void {
+    this.dialog.open(InfoModalLatexComponent, {
+      width: '500px', // Adjust width as needed
+    });
   }
 }
