@@ -31,9 +31,9 @@ export class NavbarComponent {
     const user = this.apiService.getUserFromStorage();
     if (user) {
       this.username = user.givenName;
-      // Grant admin rights to anyone whose employeeType is not 'student'
-      this.isAdmin = user.employeeType !== 'student';
-      this.navbarService.setUsername(this.username!);
+      // Now that the backend normalized it, simply check:
+      this.isAdmin = user.role === 'admin';
+      this.navbarService.setUsername(this.username || '');
     }
 
     // Subscribe to route changes and filter for NavigationEnd events

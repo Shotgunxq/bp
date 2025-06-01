@@ -70,25 +70,30 @@ app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await ldapAuth(username, password);
+
+    // Normalize to only two roles: "student" or "admin"
+    const rawType = (user.employeeType || '').toString().toLowerCase();
+    const role = rawType === 'student' ? 'student' : 'admin';
+
     const processedUser = {
       userId: user.uisId,
-      employeeType: user.employeeType,
+      role, // only 'student' or 'admin'
       givenName: user.givenName,
       lastName: user.sn,
       email: user.mailLocalAddress[1],
     };
 
-    // Insert into DB if new
+    // If this user is not yet in DB, insert them
     try {
       const existing = await db.findUserById(processedUser.userId);
       if (!existing) {
         await db.insertUser(processedUser);
       }
     } catch (dbErr) {
-      console.error('DB error:', dbErr.message);
+      console.error('DB error:', dbErr);
     }
 
-    // Save user to session
+    // Send the normalized user object back to the client
     req.session.user = processedUser;
     res.status(200).json(processedUser);
   } catch (err) {

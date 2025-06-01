@@ -55,7 +55,7 @@ export class StudentovoComponent {
     // Highlighted area series (only include data points between rangeA and rangeB)
     const highlightedData = tData.filter(point => point.x >= this.rangeA && point.x <= this.rangeB);
     const highlightSeries = {
-      name: 'Highlighted Area',
+      name: 'Zvýraznená plocha',
       type: 'area',
       data: highlightedData.map(point => ({ x: point.x, y: point.y })),
       fill: {

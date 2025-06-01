@@ -155,7 +155,7 @@ export class AdminPageComponent implements OnInit, AfterViewInit {
                 data.splice(index, 1);
                 theme.exercises!.data = data;
                 theme.exercises!._updateChangeSubscription();
-                this.snackBar.open('Úloha vymazaná!', 'Close', { duration: 7000 });
+                this.snackBar.open('Úloha vymazaná!', 'Zatvoriť', { duration: 7000 });
               }
             }
           },

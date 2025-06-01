@@ -44,8 +44,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onClose()">Close</button>
-      <button mat-button color="primary" (click)="onConfirm()" [disabled]="editForm.invalid">Confirm</button>
+      <button mat-button (click)="onClose()">Zatvoriť</button>
+      <button mat-button color="primary" (click)="onConfirm()" [disabled]="editForm.invalid">Potvrdiť</button>
     </mat-dialog-actions>
   `,
   styleUrls: ['./edit-dialog.component.scss'],

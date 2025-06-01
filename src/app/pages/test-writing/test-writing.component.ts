@@ -335,7 +335,7 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       },
       error: err => {
         console.error('Error submitting test:', err);
-        this.snackBar.open('Failed to submit the test. Please try again.', 'Close', { duration: 7000 });
+        this.snackBar.open('Nepodarilo sa odovzdať test. Skús to znova.', 'Zavrieť', { duration: 7000 });
       },
     });
   }
