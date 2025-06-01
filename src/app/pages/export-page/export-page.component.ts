@@ -6,6 +6,7 @@ import { PdfService } from '../../services/helper/pdf.helper';
 import { binomialProbabilityRandom } from '../../services/helper/binomialProbability.helper';
 import { hypergeometricProbabilityRandom } from '../../services/helper/hypergeometricProbality.helper';
 import { geometricProbabilityRandom } from '../../services/helper/geometricProbability.helper';
+import { filter, switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'app-export-page',
@@ -81,7 +82,7 @@ export class ExportPageComponent implements OnInit {
 
   async getData(): Promise<void> {
     if (!this.validateTotalExerciseCount()) {
-      alert('Please specify a valid total exercise count.');
+      alert('Prosím, uveďte platný celkový počet cvičení.');
       return;
     }
 
@@ -155,39 +156,81 @@ export class ExportPageComponent implements OnInit {
 
   // --- User Statistics Methods ---
   fetchDataFromDatabase(): void {
-    // Grab the logged-in user from the ApiService’s BehaviorSubject
-    const user = this.apiService.getUserFromStorage();
-    this.userId = user ? user.userId : '';
+    this.apiService
+      .getCurrentUser()
+      .pipe(
+        filter(u => !!u), // wait until we have a non-null user
+        take(1),
+        switchMap(u => {
+          this.userId = u.userId;
+          return this.apiService.getStatistics(Number(this.userId));
+        })
+      )
+      .subscribe(
+        (data: any[]) => {
+          // “data” is an array of test‐level objects; each has:
+          //   - test_exercises: Array<{ exercise_id, description, correct_answer, … }>
+          //   - submitted_answers: Array<{ exercise_id, user_answer, hints_used? }>
+          this.tests = data.map(test => {
+            // 1) Build a map from exercise_id → { user_answer, hints_used }
+            const answers: Array<{
+              exercise_id: number;
+              user_answer: string;
+              hints_used?: number;
+            }> = test.submitted_answers || [];
 
-    // Now call your stats endpoint as before
-    this.apiService.getStatistics(Number(this.userId)).subscribe(
-      (data: any[]) => {
-        console.log('Test data:', data[0]?.testId);
-        this.tests = data;
-        this.filteredTests = [...this.tests];
-        this.setPagedTests();
-      },
-      error => {
-        console.error('Error fetching data:', error);
-      }
-    );
-  }
+            const answerMap = new Map<number, { user_answer: string; hints_used: number }>();
+            answers.forEach(a =>
+              answerMap.set(a.exercise_id, {
+                user_answer: a.user_answer,
+                hints_used: a.hints_used ?? 0,
+              })
+            );
 
-  // Dummy pagination logic; customize as needed.
-  setPagedTests(): void {
-    // Implement your pagination logic here if required.
+            // 2) “Merge” that into each test_exercise
+            const mergedExercises = (test.test_exercises || []).map((ex: any) => {
+              const ans = answerMap.get(ex.exercise_id) || {
+                user_answer: '',
+                hints_used: 0,
+              };
+
+              return {
+                ...ex,
+                userAnswer: ans.user_answer,
+                hintsUsed: ans.hints_used,
+              };
+            });
+
+            return {
+              ...test,
+              test_exercises: mergedExercises,
+            };
+          });
+
+          // Copy into filteredTests (for any further UI filtering/pagination)
+          this.filteredTests = [...this.tests];
+        },
+        err => console.error('Error fetching data:', err)
+      );
   }
 
   // --- PDF Generation Methods ---
   generateExercisesPDF(): void {
-    function removeLatexCommands(text: string): string {
-      // Remove entire LaTeX environment blocks (e.g. \begin{aligned} ... \end{aligned})
-      text = text.replace(/\\begin\{[a-zA-Z]+\}[\s\S]*?\\end\{[a-zA-Z]+\}/g, '');
-      // Replace \text{...} with the inner content
+    // use the improved removeLatexCommands
+    function removeLatexCommands(input: any): string {
+      if (typeof input !== 'string') {
+        return '';
+      }
+
+      let text = input;
+      text = text.replace(/\\begin\{[a-zA-Z]+\}/g, '');
+      text = text.replace(/\\end\{[a-zA-Z]+\}/g, '');
+      text = text.replace(/\\\\/g, ' ');
+      text = text.replace(/&/g, ' ');
       text = text.replace(/\\text\{([^}]*)\}/g, '$1');
-      // Remove any remaining backslash commands
       text = text.replace(/\\[a-zA-Z]+/g, '');
-      return text.trim();
+      text = text.replace(/\s\s+/g, ' ').trim();
+      return text;
     }
 
     const documentDefinition = {
@@ -206,18 +249,23 @@ export class ExportPageComponent implements OnInit {
             headerRows: 1,
             widths: ['auto', 'auto', '*'],
             body: [
-              // Table header row with custom styling
+              // table headers
               [
                 { text: 'Zadanie', style: 'tableHeader' },
                 { text: 'Nápovedy', style: 'tableHeader' },
                 { text: 'Spravná odpoveď', style: 'tableHeader' },
               ],
-              // Dynamic rows from exercises array
-              ...this.exercises.map(ex => [
-                { text: removeLatexCommands(ex.description) || '-', style: 'tableCell' },
-                { text: ex.hints ? ex.hints.join(', ') : '-', style: 'tableCell' },
-                { text: ex.correct_answer || '-', style: 'tableCell' },
-              ]),
+              // map your exercises → each row must have exactly 3 cells
+              ...this.exercises.map(ex => {
+                // Optionally log to console, but don't put the log itself into the array:
+                console.log('full ex.description:', ex.description);
+
+                return [
+                  { text: removeLatexCommands(ex.description) || '-', style: 'tableCell' },
+                  { text: ex.hints ? ex.hints.join(', ') : '-', style: 'tableCell' },
+                  { text: ex.correct_answer || '-', style: 'tableCell' },
+                ];
+              }),
             ],
           },
           layout: 'lightHorizontalLines',
@@ -225,25 +273,10 @@ export class ExportPageComponent implements OnInit {
         },
       ],
       styles: {
-        header: {
-          fontSize: 10,
-          bold: true,
-          color: '#555555',
-        },
-        title: {
-          fontSize: 22,
-          bold: true,
-        },
-        tableHeader: {
-          fontSize: 12,
-          bold: true,
-          fillColor: '#eeeeee',
-          margin: [3, 3, 3, 3],
-        },
-        tableCell: {
-          fontSize: 11,
-          margin: [3, 3, 3, 3],
-        },
+        header: { fontSize: 10, bold: true, color: '#555555' },
+        title: { fontSize: 22, bold: true },
+        tableHeader: { fontSize: 12, bold: true, fillColor: '#eeeeee', margin: [3, 3, 3, 3] },
+        tableCell: { fontSize: 11, margin: [3, 3, 3, 3] },
       },
       defaultStyle: {
         fontSize: 11,
@@ -255,19 +288,38 @@ export class ExportPageComponent implements OnInit {
   }
 
   generateStatisticsPDF(): void {
-    function removeLatexCommands(text: string): string {
-      // Remove entire LaTeX environment blocks (e.g. \begin{aligned} ... \end{aligned})
-      text = text.replace(/\\begin\{[a-zA-Z]+\}[\s\S]*?\\end\{[a-zA-Z]+\}/g, '');
-      // Replace \text{...} with the inner content
+    // A more robust helper that only strips LaTeX markup, but preserves inner text.
+    function removeLatexCommands(input: any): string {
+      if (typeof input !== 'string') {
+        return '';
+      }
+
+      let text = input;
+
+      // 1) Remove just the \begin{…} and \end{…} markers (but keep inner content)
+      text = text.replace(/\\begin\{[a-zA-Z]+\}/g, '');
+      text = text.replace(/\\end\{[a-zA-Z]+\}/g, '');
+
+      // 2) Remove LaTeX line‐breaks (\\) and alignment markers (&)
+      text = text.replace(/\\\\/g, ' ');
+      text = text.replace(/&/g, ' ');
+
+      // 3) Pull out the inside of \text{…}
       text = text.replace(/\\text\{([^}]*)\}/g, '$1');
-      // Remove any remaining backslash commands
+
+      // 4) Remove any remaining backslash commands like \alpha, \frac, etc.
       text = text.replace(/\\[a-zA-Z]+/g, '');
-      return text.trim();
+
+      // 5) Collapse multiple spaces into one, then trim
+      text = text.replace(/\s\s+/g, ' ').trim();
+
+      return text;
     }
-    // Build the content array dynamically
+
+    // Build the PDF content array
     const content: any[] = [];
 
-    // Report title
+    // ----- 1) Report title -----
     content.push({
       text: 'User Statistics Report',
       style: 'title',
@@ -275,92 +327,109 @@ export class ExportPageComponent implements OnInit {
       margin: [0, 0, 0, 20],
     });
 
-    // Loop through each test
+    // ----- 2) Loop through each test -----
     this.tests.forEach((test, testIndex) => {
-      // Add a page break before each test except the first
+      // Page‐break before every test except the first
       if (testIndex > 0) {
         content.push({ text: '', pageBreak: 'before' });
       }
 
-      // Group test header details in a stack
+      // 2a) Test header block (stack of lines)
       content.push({
         stack: [
           { text: `Test ID: ${test.test_id}`, style: 'testHeader' },
           {
             columns: [
               { text: `Dosiahnuté body: ${test.points_scored}`, style: 'subHeader' },
-              { text: `Max počet bodov: ${test.max_points}`, style: 'subHeader', alignment: 'right' },
+              {
+                text: `Max počet bodov: ${test.max_points}`,
+                style: 'subHeader',
+                alignment: 'right',
+              },
             ],
             margin: [0, 5, 0, 5],
           },
-          { text: `Dátum odovzdania: ${new Date(test.submission_date).toLocaleDateString()}`, style: 'subHeader', margin: [0, 0, 0, 15] },
+          {
+            text: `Dátum odovzdania: ${new Date(test.submission_date).toLocaleDateString()}`,
+            style: 'subHeader',
+            margin: [0, 0, 0, 15],
+          },
         ],
       });
 
-      // If there are exercises in the test, loop through each and create a table
-      if (test.test_exercises && test.test_exercises.length > 0) {
-        test.test_exercises.forEach(
-          (
-            ex: {
-              description: any;
-              difficulty_level: any;
-              correct_answer: any;
-              userAnswer: any;
-              hints_used: { toString: () => any } | undefined;
-              theme_name: any;
-              theme: any;
-            },
-            exIndex: number
-          ) => {
-            // Optionally, add an exercise header
-            content.push({
-              text: `Úloha ${exIndex + 1}`,
-              style: 'exerciseHeader',
-              margin: [0, 10, 0, 5],
-            });
-
-            // Build a table with two columns (Field and Value)
-            content.push({
-              table: {
-                headerRows: 1,
-                widths: ['auto', '*'],
-                body: [
-                  [
-                    { text: 'Znenie úlohy', style: 'tableField' },
-                    { text: removeLatexCommands(ex.description) || '-', style: 'tableValue' },
-                  ],
-                  [
-                    { text: 'Obtiažnosť', style: 'tableField' },
-                    { text: ex.difficulty_level || '-', style: 'tableValue' },
-                  ],
-                  [
-                    { text: 'Spravná odpoveď', style: 'tableField' },
-                    { text: ex.correct_answer || '-', style: 'tableValue' },
-                  ],
-                  [
-                    { text: 'Zadaná odpoveď', style: 'tableField' },
-                    { text: ex.userAnswer || '-', style: 'tableValue' },
-                  ],
-                  [
-                    { text: 'Použité nápovedy', style: 'tableField' },
-                    { text: ex.hints_used !== undefined ? ex.hints_used.toString() : '0', style: 'tableValue' },
-                  ],
-                ],
+      // 2b) If there are exercises in this test, build a small 2‐column table for each one
+      if (Array.isArray(test.test_exercises) && test.test_exercises.length > 0) {
+        console.log('exercise:', test.test_exercises),
+          test.test_exercises.forEach(
+            (
+              ex: {
+                description: any;
+                difficulty_level: any;
+                correct_answer: any;
+                userAnswer: any;
+                hints_used: { toString: () => any } | undefined;
+                theme_name: any;
+                theme: any;
               },
-              layout: 'lightHorizontalLines',
-              margin: [0, 0, 0, 10],
-            });
-          }
-        );
+              exIndex: number
+            ) => {
+              // 2b(i) Section header for this exercise
+              content.push({
+                text: `Úloha ${exIndex + 1}`,
+                style: 'exerciseHeader',
+                margin: [0, 10, 0, 5],
+              });
+
+              // 2b(ii) Build a 2‐column “Field / Value” table
+              const tableBody = [
+                [
+                  { text: 'Znenie úlohy', style: 'tableField' },
+                  {
+                    text: removeLatexCommands(ex.description) || '-',
+                    style: 'tableValue',
+                  },
+                ],
+                [
+                  { text: 'Obtiažnosť', style: 'tableField' },
+                  { text: ex.difficulty_level || '-', style: 'tableValue' },
+                ],
+                [
+                  { text: 'Spravná odpoveď', style: 'tableField' },
+                  { text: ex.correct_answer || '-', style: 'tableValue' },
+                ],
+                [
+                  { text: 'Zadaná odpoveď', style: 'tableField' },
+                  { text: ex.userAnswer || '-', style: 'tableValue' },
+                ],
+                [
+                  { text: 'Použité nápovedy', style: 'tableField' },
+                  {
+                    text: ex.hints_used !== undefined ? ex.hints_used.toString() : '0',
+                    style: 'tableValue',
+                  },
+                ],
+              ];
+
+              content.push({
+                table: {
+                  headerRows: 0, // we’re not repeating a header row here
+                  widths: ['auto', '*'],
+                  body: tableBody,
+                },
+                layout: 'lightHorizontalLines',
+                margin: [0, 0, 0, 10],
+              });
+            }
+          );
       }
     });
 
-    // Define the document with dynamic header and custom styles
+    // ----- 3) Define the PDF documentDefinition -----
     const documentDefinition = {
       pageSize: 'A4',
       pageMargins: [40, 60, 40, 60],
       header: (currentPage: number, pageCount: number) => ({
-        text: `Napísane testy — Strana ${currentPage} z ${pageCount}`,
+        text: `Napísané testy — Strana ${currentPage} z ${pageCount}`,
         style: 'header',
         alignment: 'center',
         margin: [0, 10, 0, 10],
@@ -392,12 +461,6 @@ export class ExportPageComponent implements OnInit {
           bold: true,
           margin: [0, 5, 0, 5],
         },
-        tableHeader: {
-          bold: true,
-          fontSize: 11,
-          fillColor: '#eeeeee',
-          margin: [3, 3, 3, 3],
-        },
         tableField: {
           bold: true,
           fontSize: 11,
@@ -414,6 +477,7 @@ export class ExportPageComponent implements OnInit {
       },
     };
 
+    // ----- 4) Generate the PDF -----
     this.pdfService.generatePDF(documentDefinition, 'user-statistics.pdf');
   }
 }

@@ -1,10 +1,11 @@
 <div class="container">
   <div *ngIf="data && data.length > 0">
-    <!-- Display exercises fetched from the database -->
+    <!-- Scoreboard (only when gamification is on) -->
     <div *ngIf="gamificationEnabled" class="score-board" [ngClass]="{ 'score-animation': animateScore }">Aktuálne skóre: {{ currentScore }}</div>
 
     <div *ngIf="data.length > 0">
       <div class="exerciseModal" *ngIf="currentExercise">
+        <!-- Navigation Buttons -->
         <div class="exercise-buttons">
           <button
             id="exerciseNavButton"
@@ -12,7 +13,7 @@
             (click)="jumpToExercise(i)"
             [ngClass]="{
               selected: i === currentExerciseIndex,
-              answered: exercise.userAnswer !== undefined && exercise.userAnswer !== '',
+              answered: exercise.userAnswer != null && exercise.userAnswer !== '',
               correct: exercise.isCorrect,
               wrong: exercise.isWrong,
             }">
@@ -20,17 +21,19 @@
           </button>
         </div>
 
+        <!-- Timer -->
         <div class="timer-container">
           <div class="timer">Zostávajúci čas: {{ formatTime(timeLeft) }}</div>
         </div>
 
+        <!-- Exercise Description -->
         <div class="exerciseDesc">
           <p>Znenie úlohy:</p>
           <div class="mathjax-content" [mathjax]="'$$' + currentExercise.description + '$$'"></div>
           <mat-icon (click)="openInfoDialog()" style="cursor: pointer">info</mat-icon>
         </div>
 
-        <!-- Hints Section -->
+        <!-- Hints (only if gamification is on and there are hints) -->
         <mat-card class="hints-container" *ngIf="gamificationEnabled && currentExercise.hints && currentExercise.hints.length">
           <mat-card-content>
             <button
@@ -46,26 +49,31 @@
             </button>
 
             <div class="hint" *ngFor="let hint of currentExercise.hints | slice: 0 : currentExercise.hintsRevealed">
-              <mat-card class="hint-card">
-                {{ hint }}
-              </mat-card>
+              <mat-card class="hint-card">{{ hint }}</mat-card>
             </div>
           </mat-card-content>
         </mat-card>
 
+        <!-- Answer / Lock Section -->
         <div class="answer-lock">
-          <input
-            matInput
-            type="text"
-            [(ngModel)]="userAnswer"
-            placeholder="Odpoveď"
-            [disabled]="currentExercise.answerLocked"
-            [value]="currentExercise.userAnswer ? currentExercise.userAnswer : ''" />
-          <button mat-flat-button color="primary" id="answerCheck" (click)="toggleAnswerLock()">
-            {{ currentExercise.answerLocked ? 'Skusiť znova' : 'Odpovedať' }}
+          <!-- 1) Bind to userAnswer. 2) Disable if answerLocked === true -->
+          <input matInput type="text" [(ngModel)]="userAnswer" placeholder="Odpoveď" [disabled]="currentExercise.answerLocked" />
+
+          <!--
+            Button always calls lockInAnswer().
+            - If answerLocked is false, it locks and runs correctness (if gamification).
+            - If answerLocked is true, it unlocks so they can edit again.
+          -->
+          <button mat-flat-button color="primary" id="answerCheck" (click)="lockInAnswer()">
+            {{ currentExercise.answerLocked ? 'Zmeniť odpoveď' : 'Odpovedať' }}
           </button>
 
-          <p *ngIf="answerChecked">{{ answerMessage }}</p>
+          <!--
+            Only show “Correct!” / “Incorrect.” when:
+              • gamificationEnabled === true
+              • answerChecked === true
+          -->
+          <p *ngIf="gamificationEnabled && answerChecked">{{ answerMessage }}</p>
         </div>
       </div>
 
@@ -73,8 +81,9 @@
         <p>No exercises available</p>
       </div>
 
+      <!-- Submit Button -->
       <div class="submit-but">
-        <button mat-flat-button color="Warning" (click)="submitTest()">Odoslať test</button>
+        <button mat-flat-button color="secondary" (click)="submitTest()">Odoslať test</button>
       </div>
     </div>
   </div>

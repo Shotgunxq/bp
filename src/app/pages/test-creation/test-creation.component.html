@@ -18,7 +18,8 @@
               placeholder="Počet úloh"
               id="easyCount"
               [disabled]="!isEasyEnabled"
-              (input)="preventNegativeValue($event)" />
+              (input)="preventNegativeValue($event)"
+              [ngClass]="{ 'invalid-input': isEasyEnabled && easyCount <= 0 }" />
           </div>
         </div>
       </mat-grid-tile>
@@ -38,7 +39,8 @@
               placeholder="Počet úloh"
               id="mediumCount"
               [disabled]="!isMediumEnabled"
-              (input)="preventNegativeValue($event)" />
+              (input)="preventNegativeValue($event)"
+              [ngClass]="{ 'invalid-input': isMediumEnabled && mediumCount <= 0 }" />
           </div>
         </div>
       </mat-grid-tile>
@@ -58,7 +60,8 @@
               placeholder="Počet úloh"
               id="hardCount"
               [disabled]="!isHardEnabled"
-              (input)="preventNegativeValue($event)" />
+              (input)="preventNegativeValue($event)"
+              [ngClass]="{ 'invalid-input': isHardEnabled && hardCount <= 0 }" />
           </div>
         </div>
       </mat-grid-tile>

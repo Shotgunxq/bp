@@ -14,11 +14,11 @@ export class MenuPageComponent {
 
   // Define the menu items
   menuItems = [
-    { imgSrc: '/assets/pictures/test_writing.png', text: 'Pisat test', link: '../test' },
-    { imgSrc: '/assets/pictures/done_tests.png', text: 'Napisane testy', link: '../done' },
+    { imgSrc: '/assets/pictures/test_writing.png', text: 'Písať test', link: '../test' },
+    { imgSrc: '/assets/pictures/done_tests.png', text: 'Napísané testy', link: '../done' },
     // { imgSrc: '/assets/pictures/statistics.png', text: 'Statistika', link: '../stats' },
     { imgSrc: '/assets/pictures/export.png', text: 'Export', link: '../export' },
-    { imgSrc: '/assets/pictures/materials.png', text: 'Materialy', link: '../mats' },
+    { imgSrc: '/assets/pictures/materials.png', text: 'Materiály', link: '../mats' },
   ];
 
   // Detect window resize to adjust grid column count

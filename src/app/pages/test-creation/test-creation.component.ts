@@ -1,3 +1,4 @@
+// test-creation.component.ts
 import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -5,9 +6,10 @@ import { ApiService } from '../../services/api.services';
 import { binomialProbabilityRandom } from '../../services/helper/binomialProbability.helper';
 import { hypergeometricProbabilityRandom } from '../../services/helper/hypergeometricProbality.helper';
 import { geometricProbabilityRandom } from '../../services/helper/geometricProbability.helper';
+import { uniformDistributionRandom } from '../../services/helper/uniformDistribution.helper';
 import { MatDialog } from '@angular/material/dialog';
 import { InfoModalTestCreationComponent } from '../../components/modals/dialogs/info-modal-test-creation/info-modal-test-creation';
-import { uniformDistributionRandom } from '../../services/helper/uniformDistribution.helper';
+
 @Component({
   selector: 'app-test-creation',
   templateUrl: './test-creation.component.html',
@@ -71,6 +73,23 @@ export class TestCreationComponent implements OnInit {
   }
 
   async getData(): Promise<void> {
+    // ──────────────────────────────────────────────────────
+    // 1) If a category is Toggled ON but its count is zero (or less),
+    //    show an alert and stop immediately.
+    if (this.isEasyEnabled && this.easyCount <= 0) {
+      alert('Ľahké: Ak je prepínač zapnutý, musí byť počet úloh > 0.');
+      return;
+    }
+    if (this.isMediumEnabled && this.mediumCount <= 0) {
+      alert('Stredné: Ak je prepínač zapnutý, musí byť počet úloh > 0.');
+      return;
+    }
+    if (this.isHardEnabled && this.hardCount <= 0) {
+      alert('Ťažké: Ak je prepínač zapnutý, musí byť počet úloh > 0.');
+      return;
+    }
+    // ──────────────────────────────────────────────────────
+
     const selectedThemes = this.getSelectedThemeIds();
     const queryParams = `?easy=${this.easyCount}&medium=${this.mediumCount}&hard=${this.hardCount}&themes=${selectedThemes.join(',')}`;
 
