@@ -1,15 +1,15 @@
-<mat-toolbar [ngClass]="{ navbar: true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
+<mat-toolbar *ngIf="showNavbar" [ngClass]="{ navbar: true, 'navbar-menu': isMenuRoute, 'navbar-other': !isMenuRoute }">
   <!-- Back Button -->
   <button mat-icon-button *ngIf="showBackButton" (click)="goBack()">
     <mat-icon>arrow_back</mat-icon>
   </button>
 
-  <!-- For admin users: show a button to go to /admin -->
+  <!-- Admin users: show button to go to /admin -->
   <div *ngIf="isAdmin; else regularUser">
     <button mat-button routerLink="/admin">Administrátorský panel</button>
   </div>
 
-  <!-- For non-admin users: show the typewriter greeting -->
+  <!-- Non-admins on /menu: typewriter greeting -->
   <ng-template #regularUser>
     <div class="typewriter" *ngIf="isMenuRoute">
       <div class="typewriter-wrapper">
@@ -19,13 +19,13 @@
     </div>
   </ng-template>
 
-  <!-- Admin buttons for admin functionalities if already on an admin route -->
+  <!-- Admin sub-buttons (only if already on /admin routes) -->
   <div class="admin-buttons" *ngIf="isAdminRoute">
     <button *ngIf="!isStatisticsPage" mat-button routerLink="/admin/statistics">Štatistika</button>
     <button mat-button (click)="triggerExerciseDialog()">Pridať novú úlohu</button>
   </div>
 
-  <!-- Logout and Settings Buttons -->
+  <!-- Always show Logout -->
   <div class="holder">
     <button id="logout" mat-button (click)="logout()">Odhlásenie</button>
   </div>

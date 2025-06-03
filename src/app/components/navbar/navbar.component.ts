@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ApiService } from '../../services/api.services';
@@ -10,15 +10,16 @@ import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.s
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   @Output() openExerciseDialogEvent = new EventEmitter<void>();
 
   username: string | null = '';
   isMenuRoute = false;
   showBackButton = false;
   isAdminRoute = false;
-  isStatisticsPage: boolean = false;
-  isAdmin = false; // Flag to track admin user (anyone not a student)
+  isStatisticsPage = false;
+  isAdmin = false;
+  showNavbar = true;
 
   constructor(
     private navbarService: navbarService,
@@ -28,33 +29,29 @@ export class NavbarComponent {
   ) {}
 
   ngOnInit() {
-    const user = this.apiService.getUserFromStorage();
-    if (user) {
-      this.username = user.givenName;
-      // Now that the backend normalized it, simply check:
-      this.isAdmin = user.role === 'admin';
-      this.navbarService.setUsername(this.username || '');
-    }
+    // Instead of grabbing the user just once here, move user checks into the route subscriber:
+    this.router.events.pipe(filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd)).subscribe((nav: NavigationEnd) => {
+      const url = nav.urlAfterRedirects;
 
-    // Subscribe to route changes and filter for NavigationEnd events
-    this.router.events.pipe(filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-      this.isMenuRoute = event.urlAfterRedirects === '/menu';
-      this.showBackButton = !this.isMenuRoute; // Show Back button if not on /menu
-      console.log('Route:', event.urlAfterRedirects, 'isMenuRoute:', this.isMenuRoute);
-      // isAdminRoute is set based on the current URL starting with '/admin'
-      this.isAdminRoute = event.urlAfterRedirects.startsWith('/admin');
-    });
+      // 1) Hide navbar on login:
+      this.showNavbar = url !== '/login' && url !== '/';
 
-    // Listen for username updates dynamically
-    this.navbarService.currentUsername$.subscribe(name => {
-      if (name) {
-        this.username = name;
+      // 2) Re-read user from storage on every navigation end:
+      const user = this.apiService.getUserFromStorage();
+      if (user) {
+        this.username = user.givenName;
+        this.isAdmin = user.role === 'admin';
+        this.navbarService.setUsername(this.username ?? '');
+      } else {
+        this.username = '';
+        this.isAdmin = false;
       }
-    });
 
-    // Subscribe to router events to determine if the current page is the statistics page
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-      this.isStatisticsPage = event.urlAfterRedirects === '/admin/statistics';
+      // 3) Update “which page am I on?” flags:
+      this.isMenuRoute = url === '/menu';
+      this.showBackButton = !this.isMenuRoute;
+      this.isAdminRoute = url.startsWith('/admin');
+      this.isStatisticsPage = url === '/admin/statistics';
     });
   }
 
@@ -62,7 +59,7 @@ export class NavbarComponent {
     if (this.router.url === '/admin/statistics') {
       this.router.navigate(['/admin']);
     } else {
-      this.router.navigate(['/menu']); // Always navigate to /menu
+      this.router.navigate(['/menu']);
     }
   }
 
@@ -73,7 +70,6 @@ export class NavbarComponent {
   }
 
   triggerExerciseDialog() {
-    // Trigger the dialog via the shared service
     this.adminExerciseDialogService.triggerAdminDialog();
   }
 }

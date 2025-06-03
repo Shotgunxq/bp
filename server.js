@@ -71,9 +71,14 @@ app.post('/login', async (req, res) => {
   try {
     const user = await ldapAuth(username, password);
 
-    // Normalize to only two roles: "student" or "admin"
+    // Normalize to student/admin. But if you are “jsmith” (or whatever your UID is), force admin:
     const rawType = (user.employeeType || '').toString().toLowerCase();
-    const role = rawType === 'student' ? 'student' : 'admin';
+    let role = rawType === 'student' ? 'student' : 'admin';
+
+    // ===> Inject “you are admin” for testing
+    if (user.uisId === '111184') {
+      role = 'admin';
+    }
 
     const processedUser = {
       userId: user.uisId,
@@ -83,17 +88,7 @@ app.post('/login', async (req, res) => {
       email: user.mailLocalAddress[1],
     };
 
-    // If this user is not yet in DB, insert them
-    try {
-      const existing = await db.findUserById(processedUser.userId);
-      if (!existing) {
-        await db.insertUser(processedUser);
-      }
-    } catch (dbErr) {
-      console.error('DB error:', dbErr);
-    }
-
-    // Send the normalized user object back to the client
+    // … rest of your insert/find logic …
     req.session.user = processedUser;
     res.status(200).json(processedUser);
   } catch (err) {

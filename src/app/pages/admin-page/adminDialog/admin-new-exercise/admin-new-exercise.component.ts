@@ -17,9 +17,9 @@ export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
 
   // Define difficulty options.
   difficultyLevels = [
-    { value: 'easy', viewValue: 'Easy' },
-    { value: 'medium', viewValue: 'Medium' },
-    { value: 'hard', viewValue: 'Hard' },
+    { value: 'easy', viewValue: 'Ľahké' },
+    { value: 'medium', viewValue: 'Stredné' },
+    { value: 'hard', viewValue: 'Ťažké' },
   ];
 
   // For MathQuill integration.
