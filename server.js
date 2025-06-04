@@ -79,6 +79,12 @@ app.post('/login', async (req, res) => {
     if (user.uisId === '111184') {
       role = 'admin';
     }
+    if (user.uisId === '733') {
+      role = 'admin';
+    }
+    if (user.uisId === '1967') {
+      role = 'admin';
+    }
 
     const processedUser = {
       userId: user.uisId,
