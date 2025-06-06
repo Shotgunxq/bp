@@ -1,8 +1,12 @@
+<!-- export-page.component.html -->
 <div class="container">
   <div class="export-modal">
     <!-- Exercise Generation Section -->
     <div class="section exercise-generation">
-      <h1>Generovanie cvičení</h1>
+      <h1>
+        Generovanie cvičení
+        <mat-icon (click)="openInfoDialogTest()" style="cursor: pointer">info</mat-icon>
+      </h1>
 
       <div class="input-group">
         <h2>Výber úloh</h2>
@@ -16,7 +20,7 @@
               [disabled]="!isEasyEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <mat-slide-toggle color="primary" type="checkbox" [(ngModel)]="isEasyEnabled" />
+              <mat-slide-toggle color="primary" [(ngModel)]="isEasyEnabled"></mat-slide-toggle>
             </label>
           </div>
           <div class="difficulty-option">
@@ -28,7 +32,7 @@
               [disabled]="!isMediumEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <mat-slide-toggle color="primary" type="checkbox" [(ngModel)]="isMediumEnabled" />
+              <mat-slide-toggle color="primary" [(ngModel)]="isMediumEnabled"></mat-slide-toggle>
             </label>
           </div>
           <div class="difficulty-option">
@@ -40,7 +44,7 @@
               [disabled]="!isHardEnabled"
               (input)="preventNegativeValue($event)" />
             <label>
-              <mat-slide-toggle color="primary" type="checkbox" [(ngModel)]="isHardEnabled" />
+              <mat-slide-toggle color="primary" [(ngModel)]="isHardEnabled"></mat-slide-toggle>
             </label>
           </div>
         </div>
@@ -57,7 +61,8 @@
       </div>
 
       <div class="buttons">
-        <button mat-raised-button color="primary" (click)="getData()">Generovať úlohy do PDF</button>
+        <!-- Disable button until at least one checkbox is selected -->
+        <button mat-raised-button color="primary" (click)="getData()" [disabled]="!isAnyThemeSelected()">Generovať úlohy do PDF</button>
         <button mat-raised-button color="primary" (click)="generateExercisesPDF()" *ngIf="exercises.length">Export do PDF</button>
       </div>
     </div>
@@ -66,7 +71,10 @@
 
     <!-- User Statistics Section -->
     <div class="section user-statistics">
-      <h1>Napisané testy používateľa</h1>
+      <h1>
+        Napisané testy používateľa
+        <mat-icon (click)="openInfoDialogStats()" style="cursor: pointer">info</mat-icon>
+      </h1>
       <div class="buttons">
         <button mat-raised-button color="primary" (click)="generateStatisticsPDF()">Export do PDF</button>
       </div>

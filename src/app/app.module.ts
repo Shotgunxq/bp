@@ -63,6 +63,9 @@ import { InfoModalTestCreationComponent } from './components/modals/dialogs/info
 import { InfoModalLatexComponent } from './components/modals/dialogs/info-modal-latex/info-modal-latex';
 import { ApiService } from './services/api.services';
 import { catchError, of, take } from 'rxjs';
+import { InfoModalExportTestComponent } from './components/modals/dialogs/info-modal-export/info-modal-export-test';
+import { InfoModalExportStatsComponent } from './components/modals/dialogs/info-modal-export/info-modal-export-stats';
+import { InfoModalPercentilComponent } from './components/modals/dialogs/info-modal-percentil/info-modal-percentil';
 
 export function initApp(api: ApiService) {
   // call the real HTTP loader, and swallow any error into `null`
@@ -103,6 +106,9 @@ export function initApp(api: ApiService) {
     InfoModalTestWritingComponent,
     InfoModalTestCreationComponent,
     InfoModalLatexComponent,
+    InfoModalExportTestComponent,
+    InfoModalExportStatsComponent,
+    InfoModalPercentilComponent,
   ],
   imports: [
     MatCardModule,

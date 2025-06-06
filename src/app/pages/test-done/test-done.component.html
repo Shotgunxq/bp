@@ -73,7 +73,10 @@
     aria-label="Select page of test submissions"></mat-paginator>
 
   <!-- New informational paragraph -->
-  <p class="info-text">Nižšie nájdete podrobné štatistiky a informácie o všetkých odovzdaných testoch vrátane témy každej úlohy.</p>
+  <p class="info-text">
+    Nižšie nájdete podrobné štatistiky a informácie o všetkých odovzdaných testoch vrátane témy každej úlohy.
+    <mat-icon (click)="openInfoDialog()" style="cursor: pointer">info</mat-icon>
+  </p>
 
   <div class="percentile-card" *ngIf="userOverallPercentile">
     Tvoj celkový výkon je v

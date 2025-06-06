@@ -91,6 +91,7 @@
 
     <br />
 
-    <button mat-raised-button color="primary" (click)="getData()">Generovať</button>
+    <!-- Disable the button until at least one theme is selected -->
+    <button mat-raised-button color="primary" (click)="getData()" [disabled]="!isAnyThemeSelected()">Generovať</button>
   </div>
 </div>

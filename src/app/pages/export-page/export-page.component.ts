@@ -2,11 +2,13 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.services';
 import { PdfService } from '../../services/helper/pdf.helper';
 
-// Import your exercise generation functions
 import { binomialProbabilityRandom } from '../../services/helper/binomialProbability.helper';
 import { hypergeometricProbabilityRandom } from '../../services/helper/hypergeometricProbality.helper';
 import { geometricProbabilityRandom } from '../../services/helper/geometricProbability.helper';
 import { filter, switchMap, take } from 'rxjs';
+import { InfoModalExportTestComponent } from '../../components/modals/dialogs/info-modal-export/info-modal-export-test';
+import { InfoModalExportStatsComponent } from '../../components/modals/dialogs/info-modal-export/info-modal-export-stats';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-export-page',
@@ -34,7 +36,8 @@ export class ExportPageComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -80,11 +83,24 @@ export class ExportPageComponent implements OnInit {
     return this.themes.filter(theme => theme.selected).map(theme => theme.theme_id);
   }
 
+  /** NEW: returns true if at least one theme is checked */
+  isAnyThemeSelected(): boolean {
+    return this.themes.some(theme => theme.selected);
+  }
+
   async getData(): Promise<void> {
     if (!this.validateTotalExerciseCount()) {
       alert('Prosím, uveďte platný celkový počet cvičení.');
       return;
     }
+
+    // ──────────────────────────────────────────────────────
+    // NEW: If no theme is selected, show an alert and stop
+    if (!this.isAnyThemeSelected()) {
+      alert('Prosím, vyberte aspoň jednu tému.');
+      return;
+    }
+    // ──────────────────────────────────────────────────────
 
     const selectedThemes = this.getSelectedThemeIds();
 
@@ -172,7 +188,6 @@ export class ExportPageComponent implements OnInit {
           //   - test_exercises: Array<{ exercise_id, description, correct_answer, … }>
           //   - submitted_answers: Array<{ exercise_id, user_answer, hints_used? }>
           this.tests = data.map(test => {
-            // 1) Build a map from exercise_id → { user_answer, hints_used }
             const answers: Array<{
               exercise_id: number;
               user_answer: string;
@@ -187,7 +202,6 @@ export class ExportPageComponent implements OnInit {
               })
             );
 
-            // 2) “Merge” that into each test_exercise
             const mergedExercises = (test.test_exercises || []).map((ex: any) => {
               const ans = answerMap.get(ex.exercise_id) || {
                 user_answer: '',
@@ -207,7 +221,6 @@ export class ExportPageComponent implements OnInit {
             };
           });
 
-          // Copy into filteredTests (for any further UI filtering/pagination)
           this.filteredTests = [...this.tests];
         },
         err => console.error('Error fetching data:', err)
@@ -257,7 +270,6 @@ export class ExportPageComponent implements OnInit {
               ],
               // map your exercises → each row must have exactly 3 cells
               ...this.exercises.map(ex => {
-                // Optionally log to console, but don't put the log itself into the array:
                 console.log('full ex.description:', ex.description);
 
                 return [
@@ -288,38 +300,24 @@ export class ExportPageComponent implements OnInit {
   }
 
   generateStatisticsPDF(): void {
-    // A more robust helper that only strips LaTeX markup, but preserves inner text.
     function removeLatexCommands(input: any): string {
       if (typeof input !== 'string') {
         return '';
       }
 
       let text = input;
-
-      // 1) Remove just the \begin{…} and \end{…} markers (but keep inner content)
       text = text.replace(/\\begin\{[a-zA-Z]+\}/g, '');
       text = text.replace(/\\end\{[a-zA-Z]+\}/g, '');
-
-      // 2) Remove LaTeX line‐breaks (\\) and alignment markers (&)
       text = text.replace(/\\\\/g, ' ');
       text = text.replace(/&/g, ' ');
-
-      // 3) Pull out the inside of \text{…}
       text = text.replace(/\\text\{([^}]*)\}/g, '$1');
-
-      // 4) Remove any remaining backslash commands like \alpha, \frac, etc.
       text = text.replace(/\\[a-zA-Z]+/g, '');
-
-      // 5) Collapse multiple spaces into one, then trim
       text = text.replace(/\s\s+/g, ' ').trim();
-
       return text;
     }
 
-    // Build the PDF content array
     const content: any[] = [];
 
-    // ----- 1) Report title -----
     content.push({
       text: 'User Statistics Report',
       style: 'title',
@@ -327,14 +325,11 @@ export class ExportPageComponent implements OnInit {
       margin: [0, 0, 0, 20],
     });
 
-    // ----- 2) Loop through each test -----
     this.tests.forEach((test, testIndex) => {
-      // Page‐break before every test except the first
       if (testIndex > 0) {
         content.push({ text: '', pageBreak: 'before' });
       }
 
-      // 2a) Test header block (stack of lines)
       content.push({
         stack: [
           { text: `Test ID: ${test.test_id}`, style: 'testHeader' },
@@ -357,74 +352,67 @@ export class ExportPageComponent implements OnInit {
         ],
       });
 
-      // 2b) If there are exercises in this test, build a small 2‐column table for each one
       if (Array.isArray(test.test_exercises) && test.test_exercises.length > 0) {
-        console.log('exercise:', test.test_exercises),
-          test.test_exercises.forEach(
-            (
-              ex: {
-                description: any;
-                difficulty_level: any;
-                correct_answer: any;
-                userAnswer: any;
-                hints_used: { toString: () => any } | undefined;
-                theme_name: any;
-                theme: any;
-              },
-              exIndex: number
-            ) => {
-              // 2b(i) Section header for this exercise
-              content.push({
-                text: `Úloha ${exIndex + 1}`,
-                style: 'exerciseHeader',
-                margin: [0, 10, 0, 5],
-              });
+        test.test_exercises.forEach(
+          (
+            ex: {
+              description: any;
+              difficulty_level: any;
+              correct_answer: any;
+              userAnswer: any;
+              hints_used: { toString: () => any } | undefined;
+            },
+            exIndex: number
+          ) => {
+            content.push({
+              text: `Úloha ${exIndex + 1}`,
+              style: 'exerciseHeader',
+              margin: [0, 10, 0, 5],
+            });
 
-              // 2b(ii) Build a 2‐column “Field / Value” table
-              const tableBody = [
-                [
-                  { text: 'Znenie úlohy', style: 'tableField' },
-                  {
-                    text: removeLatexCommands(ex.description) || '-',
-                    style: 'tableValue',
-                  },
-                ],
-                [
-                  { text: 'Obtiažnosť', style: 'tableField' },
-                  { text: ex.difficulty_level || '-', style: 'tableValue' },
-                ],
-                [
-                  { text: 'Spravná odpoveď', style: 'tableField' },
-                  { text: ex.correct_answer || '-', style: 'tableValue' },
-                ],
-                [
-                  { text: 'Zadaná odpoveď', style: 'tableField' },
-                  { text: ex.userAnswer || '-', style: 'tableValue' },
-                ],
-                [
-                  { text: 'Použité nápovedy', style: 'tableField' },
-                  {
-                    text: ex.hints_used !== undefined ? ex.hints_used.toString() : '0',
-                    style: 'tableValue',
-                  },
-                ],
-              ];
-
-              content.push({
-                table: {
-                  headerRows: 0, // we’re not repeating a header row here
-                  widths: ['auto', '*'],
-                  body: tableBody,
+            const tableBody = [
+              [
+                { text: 'Znenie úlohy', style: 'tableField' },
+                {
+                  text: removeLatexCommands(ex.description) || '-',
+                  style: 'tableValue',
                 },
-                layout: 'lightHorizontalLines',
-                margin: [0, 0, 0, 10],
-              });
-            }
-          );
+              ],
+              [
+                { text: 'Obtiažnosť', style: 'tableField' },
+                { text: ex.difficulty_level || '-', style: 'tableValue' },
+              ],
+              [
+                { text: 'Spravná odpoveď', style: 'tableField' },
+                { text: ex.correct_answer || '-', style: 'tableValue' },
+              ],
+              [
+                { text: 'Zadaná odpoveď', style: 'tableField' },
+                { text: ex.userAnswer || '-', style: 'tableValue' },
+              ],
+              [
+                { text: 'Použité nápovedy', style: 'tableField' },
+                {
+                  text: ex.hints_used !== undefined ? ex.hints_used.toString() : '0',
+                  style: 'tableValue',
+                },
+              ],
+            ];
+
+            content.push({
+              table: {
+                headerRows: 0,
+                widths: ['auto', '*'],
+                body: tableBody,
+              },
+              layout: 'lightHorizontalLines',
+              margin: [0, 0, 0, 10],
+            });
+          }
+        );
       }
     });
 
-    // ----- 3) Define the PDF documentDefinition -----
     const documentDefinition = {
       pageSize: 'A4',
       pageMargins: [40, 60, 40, 60],
@@ -477,7 +465,18 @@ export class ExportPageComponent implements OnInit {
       },
     };
 
-    // ----- 4) Generate the PDF -----
     this.pdfService.generatePDF(documentDefinition, 'user-statistics.pdf');
+  }
+
+  openInfoDialogTest(): void {
+    this.dialog.open(InfoModalExportTestComponent, {
+      width: '500px', // Adjust width as needed
+    });
+  }
+
+  openInfoDialogStats(): void {
+    this.dialog.open(InfoModalExportStatsComponent, {
+      width: '500px', // Adjust width as needed
+    });
   }
 }
