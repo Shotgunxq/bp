@@ -84,33 +84,33 @@ export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
   }
 
   onConfirm(): void {
-    if (this.exerciseForm.valid) {
-      const newExercise = this.exerciseForm.value;
+    if (!this.exerciseForm.valid) return;
 
-      // Automatically convert the description to multiline LaTeX format.
-      newExercise.description = this.convertToMultiline(newExercise.description);
+    const newExercise = this.exerciseForm.value;
 
-      // Process hints: split by newline, trim, filter out empty lines,
-      // then stringify the array so it is stored as valid JSON.
-      const hintsArray = newExercise.hints
-        .split('\n')
-        .map((hint: string) => hint.trim())
-        .filter((hint: string) => hint.length > 0);
-      newExercise.hints = JSON.stringify(hintsArray);
-
-      // Create the new exercise.
-      this.adminService.createExercise(newExercise).subscribe(
-        response => {
-          console.log('Exercise created successfully:', response);
-          this.snackBar.open('Úloha vytvorená! Načítajte znovu stránku', 'Zatvoriť', { duration: 13000 });
-
-          this.dialogRef.close(response);
-        },
-        error => {
-          console.error('Error creating exercise:', error);
-        }
-      );
+    // Convert theme_id to a string if it’s zero (so backend’s `!theme_id` check no longer fails)
+    if (newExercise.theme_id === 0) {
+      newExercise.theme_id = '0';
     }
+
+    // ... the rest of your code stays the same:
+    newExercise.description = this.convertToMultiline(newExercise.description);
+    const hintsArray = newExercise.hints
+      .split('\n')
+      .map((hint: string) => hint.trim())
+      .filter((hint: string) => hint.length > 0);
+    newExercise.hints = JSON.stringify(hintsArray);
+
+    this.adminService.createExercise(newExercise).subscribe(
+      response => {
+        console.log('Exercise created successfully:', response);
+        this.snackBar.open('Úloha vytvorená! Načítajte znovu stránku', 'Zatvoriť', { duration: 13000 });
+        this.dialogRef.close(response);
+      },
+      error => {
+        console.error('Error creating exercise:', error);
+      }
+    );
   }
 
   onCancel(): void {
