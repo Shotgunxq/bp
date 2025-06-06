@@ -14,9 +14,8 @@ export class MenuPageComponent {
 
   // Define the menu items
   menuItems = [
-    { imgSrc: '/assets/pictures/test_writing.png', text: 'Písať test', link: '../test' },
+    { imgSrc: '/assets/pictures/test_writing.png', text: 'Preskúšať sa', link: '../test' },
     { imgSrc: '/assets/pictures/done_tests.png', text: 'Napísané testy', link: '../done' },
-    // { imgSrc: '/assets/pictures/statistics.png', text: 'Statistika', link: '../stats' },
     { imgSrc: '/assets/pictures/export.png', text: 'Export', link: '../export' },
     { imgSrc: '/assets/pictures/materials.png', text: 'Materiály', link: '../mats' },
   ];

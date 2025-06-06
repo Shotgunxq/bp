@@ -4,6 +4,8 @@ import { filter } from 'rxjs/operators';
 import { ApiService } from '../../services/api.services';
 import { navbarService } from '../../services/helper/navbar.helper';
 import { AdminExerciseDialogService } from '../../services/adminExerciseDialog.service';
+import { AdminNewExerciseComponent } from '../../pages/admin-page/adminDialog/admin-new-exercise/admin-new-exercise.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-navbar',
@@ -25,7 +27,8 @@ export class NavbarComponent implements OnInit {
     private navbarService: navbarService,
     private router: Router,
     private apiService: ApiService,
-    private adminExerciseDialogService: AdminExerciseDialogService
+    private adminExerciseDialogService: AdminExerciseDialogService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -70,6 +73,10 @@ export class NavbarComponent implements OnInit {
   }
 
   triggerExerciseDialog() {
-    this.adminExerciseDialogService.triggerAdminDialog();
+    // this.adminExerciseDialogService.triggerAdminDialog();
+
+    this.dialog.open(AdminNewExerciseComponent, {
+      width: '600px',
+    });
   }
 }

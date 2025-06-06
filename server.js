@@ -71,30 +71,57 @@ app.post('/login', async (req, res) => {
   try {
     const user = await ldapAuth(username, password);
 
-    // Normalize to student/admin. But if you are “jsmith” (or whatever your UID is), force admin:
+    // Normalize employeeType → role ('student' or 'admin')
     const rawType = (user.employeeType || '').toString().toLowerCase();
     let role = rawType === 'student' ? 'student' : 'admin';
 
-    // ===> Inject “you are admin” for testing
-    if (user.uisId === '111184') {
+    // If one of our test UIDs, force admin:
+    const uidString = user.uisId.toString();
+    if (['111184', '733', '1967'].includes(uidString)) {
       role = 'admin';
-    }
-    if (user.uisId === '733') {
-      role = 'admin';
-    }
-    if (user.uisId === '1967') {
-      role = 'admin';
+      console.log(`Forcing admin role for user ID: ${uidString}`);
     }
 
     const processedUser = {
-      userId: user.uisId,
-      role, // only 'student' or 'admin'
+      userId: uidString,
+      role, // 'student' or 'admin'
       givenName: user.givenName,
       lastName: user.sn,
       email: user.mailLocalAddress[1],
     };
 
-    // … rest of your insert/find logic …
+    // 4) Insert or update in DB:
+    try {
+      const existing = await db.findUserById(processedUser.userId);
+
+      if (!existing) {
+        // No row yet → INSERT (and now insertUser uses user.role, not employeeType)
+        await db.insertUser({
+          userId: processedUser.userId,
+          role: processedUser.role, // ← this now goes into user_type correctly
+          givenName: processedUser.givenName,
+          lastName: processedUser.lastName,
+          email: processedUser.email,
+        });
+      } else {
+        // Row exists. If user_type is missing or different, UPDATE it:
+        const existingRole = existing.user_type;
+        if (existingRole !== processedUser.role) {
+          await db.updateUser({
+            userId: processedUser.userId,
+            role: processedUser.role, // ← this updates user_type
+            givenName: processedUser.givenName,
+            lastName: processedUser.lastName,
+            email: processedUser.email,
+          });
+        }
+      }
+    } catch (dbErr) {
+      console.error('DB error on login insert/update:', dbErr.message);
+      // Decide if you want to abort or continue.
+    }
+
+    // 5) Save to session & return JSON
     req.session.user = processedUser;
     res.status(200).json(processedUser);
   } catch (err) {

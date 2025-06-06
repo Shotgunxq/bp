@@ -5,6 +5,7 @@ import { AdminService } from '../../../../services/admin.services';
 import { ApiService } from '../../../../services/api.services';
 import { InfoModalLatexComponent } from '../../../../components/modals/dialogs/info-modal-latex/info-modal-latex';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-admin-new-exercise',
@@ -33,6 +34,7 @@ export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
     private adminService: AdminService,
     private apiService: ApiService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     // Build form with all necessary fields.
@@ -100,6 +102,8 @@ export class AdminNewExerciseComponent implements OnInit, AfterViewInit {
       this.adminService.createExercise(newExercise).subscribe(
         response => {
           console.log('Exercise created successfully:', response);
+          this.snackBar.open('Úloha vytvorená! Načítajte znovu stránku', 'Zatvoriť', { duration: 13000 });
+
           this.dialogRef.close(response);
         },
         error => {

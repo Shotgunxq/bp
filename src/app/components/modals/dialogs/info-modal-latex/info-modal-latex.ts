@@ -9,12 +9,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
       <p>Znenie úlohy je špeciálny textový blok, kde môžete zadávať LaTeXové príkazy na pridávanie matematických symbolov či zápisov.</p>
       <p>
         Po zapísaní LaTeXovej syntaxe stačí stlačiť medzerník, aby ste videli, čo ste napísali. Predvolený režim v tomto bloku je matematický; ak
-        chcete vložiť obyčajný text, používajte ext"{{ '{' }}"..."{{ '}' }}".
+        chcete vložiť obyčajný text, používajte &bsol;text{{ '{' }}...{{ '}' }}.
       </p>
       <p>V matematickom režime medzerník reprezentuje únikový znak ,, takže na vloženie skutočnej medzery použite ; alebo quad.</p>
       <p>
-        Pozor! Ak chcete zapísať množinu čísel, napr. A = "{{ '{' }}"1,2,3"{{ '}' }}", napíšte ju priamo ako A = "{{ '{' }}"1,2,3"{{ '}' }}" (nie ako
-        A = "{{ '{' }}"1,2,3"{{ '}' }}").
+        Pozor! Ak chcete zapísať množinu čísel, napr. A = {{ '{' }}1,2,3{{ '}' }}, napíšte ju priamo ako A = {{ '{' }}1,2,3{{ '}' }} (nie ako A =
+        &bsol;{{ '{' }}1,2,3{{ '}' }}).
       </p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">

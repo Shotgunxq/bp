@@ -20,7 +20,8 @@ const findUserById = async userId => {
 
 const insertUser = async user => {
   const query = 'INSERT INTO users (user_id, user_type, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5)';
-  const values = [user.userId, user.employeeType, user.givenName, user.lastName, user.email];
+  // Use `user.role` (which is 'student' or 'admin'), not `user.employeeType`
+  const values = [user.userId, user.role, user.givenName, user.lastName, user.email];
   await pool.query(query, values);
 };
 
