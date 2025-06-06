@@ -14,7 +14,7 @@
         <table mat-table [dataSource]="theme.exercises" matSort class="mat-elevation-z8">
           <!-- Description Column -->
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="description-col">Popis úlohy</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="description-col">Znenie úlohy</th>
             <td mat-cell *matCellDef="let element" class="description-col">
               <div class="full-width-math">
                 <div class="mathjax-content" [mathjax]="'$$' + element.description + '$$'"></div>

@@ -13,7 +13,12 @@ import { AdminStatisticsComponent } from './pages/admin-page/admin-statistics/ad
 import { ExportPageComponent } from './pages/export-page/export-page.component';
 
 const routes: Routes = [
-  { path: '', component: LoginModalComponent },
+  // LOGIN
+  { path: 'login', component: LoginModalComponent },
+  // If someone goes to '/', send them to /login
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+
+  // Public routes (after login)
   { path: 'menu', component: MenuPageComponent, canActivate: [AuthGuard] },
   { path: 'test', component: TestCreationComponent, canActivate: [AuthGuard] },
   { path: 'stats', component: StatsPageComponent, canActivate: [AuthGuard] },
@@ -21,10 +26,23 @@ const routes: Routes = [
   { path: 'mats', component: MaterialsPageComponent, canActivate: [AuthGuard] },
   { path: 'test-writing', component: TestWritingComponent, canActivate: [AuthGuard] },
   { path: 'export', component: ExportPageComponent, canActivate: [AuthGuard] },
-  // Admin routes: only accessible if employeeType is 'admin'
-  { path: 'admin', component: AdminPageComponent },
-  { path: 'admin/statistics', component: AdminStatisticsComponent },
-  { path: '**', redirectTo: '' },
+
+  // ADMIN routes (only for role === 'admin')
+  {
+    path: 'admin',
+    component: AdminPageComponent,
+    canActivate: [AuthGuard],
+    data: { expectedRole: 'admin' },
+  },
+  {
+    path: 'admin/statistics',
+    component: AdminStatisticsComponent,
+    canActivate: [AuthGuard],
+    data: { expectedRole: 'admin' },
+  },
+
+  // catch‐all
+  { path: '**', redirectTo: '/login' },
 ];
 
 @NgModule({

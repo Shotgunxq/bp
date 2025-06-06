@@ -3,6 +3,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { ApiService } from '../../services/api.services';
 import { AdminService } from '../../services/admin.services';
 import { filter, switchMap, take } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { InfoModalPercentilComponent } from '../../components/modals/dialogs/info-modal-percentil/info-modal-percentil';
 
 @Component({
   selector: 'app-test-done',
@@ -32,7 +34,8 @@ export class TestDoneComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -172,5 +175,11 @@ export class TestDoneComponent implements OnInit {
     // Reset to the first page after sorting
     this.pageIndex = 0;
     this.setPagedTests();
+  }
+
+  openInfoDialog(): void {
+    this.dialog.open(InfoModalPercentilComponent, {
+      width: '500px', // Adjust width as needed
+    });
   }
 }

@@ -26,21 +26,9 @@ Before you begin, ensure you have installed:
    cd bp
    ```
 
-2. **Copy or download the Docker images archive** (if provided separately):
-
-   ```bash
-   # Place bp-images.tar in the project root or specify the path
-   ```
-
 ## Docker Setup
 
-1. **Load prebuilt Docker images**
-
-   ```bash
-   docker load -i bp-images.tar
-   ```
-
-2. **Build the application containers**
+1. **Build the application containers**
 
    ```bash
    docker-compose build

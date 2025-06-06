@@ -12,23 +12,23 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    // Retrieve the logged-in user from storage
     const user = this.apiService.getUserFromStorage();
 
+    // 1) Not logged in → redirect to /login
     if (!user) {
-      // Redirect to login if not authenticated
-      this.router.navigate(['/']);
+      this.router.navigate(['/login']);
       return false;
     }
 
-    // Check for role restrictions using the 'expectedEmployeeType' key from route data.
-    const expectedEmployeeType = route.data['expectedEmployeeType'];
-    if (expectedEmployeeType && user.employeeType !== expectedEmployeeType) {
-      // If the user does not match the expected type, redirect them (e.g., to the menu page)
+    // 2) If route requires a specific role, check it
+    const expectedRole = route.data['expectedRole'];
+    if (expectedRole && user.role !== expectedRole) {
+      // Logged in but not the right role → send back to /menu
       this.router.navigate(['/menu']);
       return false;
     }
 
+    // 3) OK to activate
     return true;
   }
 }

@@ -235,19 +235,12 @@ export class TestWritingComponent implements OnInit, OnDestroy {
     if (this.currentExercise.answerLocked) {
       this.currentExercise.answerLocked = false;
 
-      // Only clear visual feedback if gamification is on; otherwise nothing was shown anyway.
       if (this.gamificationEnabled) {
         this.currentExercise.isCorrect = false;
         this.currentExercise.isWrong = false;
         this.answerMessage = '';
         this.answerChecked = false;
       }
-
-      // (Optionally, subtract points if you want unlocking to remove them—but we keep them here.)
-      // this.currentScore -= (this.currentExercise.pointsAwardedSoFar || 0);
-      // this.currentExercise.pointsAwardedSoFar = 0;
-      // this.currentExercise.scoreAwarded = false;
-
       return;
     }
 
@@ -257,10 +250,9 @@ export class TestWritingComponent implements OnInit, OnDestroy {
 
     const userAns = this.currentExercise.userAnswer;
     const correctAns = String(this.currentExercise.correct_answer || '').trim();
-
     const isActuallyCorrect = userAns !== '' && userAns === correctAns;
 
-    // — Award base points for a first‐time correct answer (always, even if gamification is off)
+    // — Always award base points once if correct (regardless of gamification flag)
     if (isActuallyCorrect && !this.currentExercise.scoreAwarded) {
       const earnedBase = this.currentExercise.points || 0;
       this.currentScore += earnedBase;
@@ -268,38 +260,40 @@ export class TestWritingComponent implements OnInit, OnDestroy {
       this.currentExercise.scoreAwarded = true;
     }
 
-    // — If gamification is ON, also do hint/time logic and show feedback:
+    // — If gamification is ON, also apply full scoring and show feedback:
     if (this.gamificationEnabled) {
       if (isActuallyCorrect) {
-        // FULL gamified scoring: snapshot timeLeft, recalc with hints + bonus, replace basePoints
+        // FULL gamified scoring: snapshot time, recalc with hints + bonus, replace basePoints
         this.currentExercise.timeLeftWhenAnswered = this.timeLeft;
 
         const fullScore = this.calculateAndStoreScore(this.currentExercise);
-        // Remove the previously‐added base points, then add the full gamified score:
         const basePoints = this.currentExercise.points || 0;
         this.currentScore -= basePoints;
         this.currentScore += fullScore;
         this.currentExercise.scoreAwarded = true;
 
-        // Visual feedback:
+        // Visual feedback for correct
         this.currentExercise.isCorrect = true;
         this.currentExercise.isWrong = false;
         this.answerMessage = 'Správne!';
+
+        // Only play sound & animate on correct
+        this.playCorrectSound();
+        this.animateScore = true;
+        setTimeout(() => (this.animateScore = false), 1000);
       } else {
-        // Wrong answer → just show “Incorrect.” (no point change)
+        // Incorrect: show “Nesprávne” but do NOT touch score or animate
         this.currentExercise.isCorrect = false;
         this.currentExercise.isWrong = true;
         this.answerMessage = 'Nesprávne. Skús znova.';
+        // ← no animateScore here
       }
 
       this.answerChecked = true;
-      this.playCorrectSound();
-      this.animateScore = true;
-      setTimeout(() => (this.animateScore = false), 1000);
     }
 
-    // If gamification is OFF, we do NOT set isCorrect, isWrong, answerMessage, or answerChecked.
-    // The user never sees any feedback—only the input locks silently.
+    // If gamification is OFF, we already gave just the base points above, but we do NOT set
+    // isCorrect/isWrong/answerMessage → the user sees no feedback either way.
 
     this.saveUserAnswers();
   }

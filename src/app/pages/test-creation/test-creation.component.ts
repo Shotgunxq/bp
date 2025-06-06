@@ -72,8 +72,12 @@ export class TestCreationComponent implements OnInit {
     return this.themes.filter(theme => theme.selected).map(theme => theme.theme_id);
   }
 
+  /** NEW: returns true if at least one theme is checked */
+  isAnyThemeSelected(): boolean {
+    return this.themes.some(theme => theme.selected);
+  }
+
   async getData(): Promise<void> {
-    // ──────────────────────────────────────────────────────
     // 1) If a category is Toggled ON but its count is zero (or less),
     //    show an alert and stop immediately.
     if (this.isEasyEnabled && this.easyCount <= 0) {
@@ -88,7 +92,13 @@ export class TestCreationComponent implements OnInit {
       alert('Ťažké: Ak je prepínač zapnutý, musí byť počet úloh > 0.');
       return;
     }
+
     // ──────────────────────────────────────────────────────
+    // If no theme is selected, show an alert and stop:
+    if (!this.isAnyThemeSelected()) {
+      alert('Musíte vybrať aspoň jednu tému, aby ste mohli pokračovať.');
+      return;
+    }
 
     const selectedThemes = this.getSelectedThemeIds();
     const queryParams = `?easy=${this.easyCount}&medium=${this.mediumCount}&hard=${this.hardCount}&themes=${selectedThemes.join(',')}`;
