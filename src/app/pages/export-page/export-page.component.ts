@@ -319,7 +319,7 @@ export class ExportPageComponent implements OnInit {
     const content: any[] = [];
 
     content.push({
-      text: 'User Statistics Report',
+      text: 'Prehľad výsledkov',
       style: 'title',
       alignment: 'center',
       margin: [0, 0, 0, 20],

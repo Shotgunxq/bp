@@ -66,17 +66,24 @@ export class AdminStatisticsComponent implements OnInit {
     this.adminService.getAvgPointsPerExercise().subscribe(raw => {
       const chartData = raw
         // drop any tests where avg_points_per_exercise is null
-        .filter((item: { avg_points_per_exercise: null }) => item.avg_points_per_exercise !== null)
-        .map((item: { test_id: any; avg_points_per_exercise: any }) => ({
+        .filter((item: { avg_points_per_exercise: number | null }) => item.avg_points_per_exercise !== null)
+        .map((item: { test_id: any; avg_points_per_exercise: number }) => ({
           x: `Test ${item.test_id}`,
-          y: parseFloat(item.avg_points_per_exercise as any),
+          y: parseFloat(item.avg_points_per_exercise.toFixed(1)),
         }));
 
       this.avgPointsChartOptions = {
         series: [{ name: 'Avg Points per Exercise', data: chartData }],
-        chart: { type: 'bar', height: 350 },
-        xaxis: { title: { text: 'Test' } },
-        yaxis: { title: { text: 'Avg Points/exercise' } },
+        chart: {
+          type: 'bar',
+          height: 350,
+        },
+        xaxis: {
+          title: { text: 'Test' },
+        },
+        yaxis: {
+          title: { text: 'Avg Points/exercise' },
+        },
       };
     });
   }

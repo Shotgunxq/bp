@@ -1,69 +1,108 @@
 # Bakalar
 
-A Dockerized Angular application generated with Angular CLI version 17.0.7.
+A Dockerized Angular application (CLI 17.0.7) for frequency response analysis and plotting tools.
+
+**Access Note:** Login requires LDAP authorization with a valid `@stuba.sk` email (students/teachers only).
 
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Docker Setup](#docker-setup)
-- [Running the Application](#running-the-application)
-- [Development Server (Optional)](#development-server-optional)
+- [Quick Start with Docker](#quick-start-with-docker)
+- [Development without Docker](#development-without-docker)
+- [Accessing the App](#accessing-the-app)
 
 ## Prerequisites
 
-Before you begin, ensure you have installed:
+Install these tools before starting:
 
 - [Docker](https://docs.docker.com/get-docker/) (version 20.10+)
 - [Git](https://git-scm.com/downloads)
+- PostgreSQL (optional, for non-Docker DB setup)
 
-## Installation
+## Quick Start with Docker
 
-1. **Clone the repository**
+This automates building and running the full stack: Angular frontend (FE), Node.js backend (BE), and PostgreSQL database (DB).
+
+1. Clone the repository:
 
    ```bash
    git clone https://github.com/Shotgunxq/bp.git
    cd bp
    ```
 
-## Docker Setup
-
-1. **Build the application containers**
+2. Launch everything:
 
    ```bash
    docker-compose build
    ```
 
-## Running the Application
+Docker handles dependency installation, builds, and service orchestration.
 
-Launch the application in detached mode:
+## Development without Docker
 
-```bash
-docker-compose up -d
-```
+Run components separately for local development.
 
-After the services start, the app will be accessible at:
+1. Clone the repository (if not done):
 
 ```
-http://localhost/
+git clone https://github.com/Shotgunxq/bp.git
+cd bp
 ```
 
-## Development Server (Optional)
+2. Install frontend dependencies (uses `--legacy-peer-deps` for Math/LaTeX libraries):
 
-To run the application without Docker:
+```
+npm ci --legacy-peer-deps
 
-```bash
-npm ci --legacy-peer-deps    # install dependencies
-npm run start                # start Angular frontend
 ```
 
-- The frontend will be served at `http://localhost:4200/`.
-- In a new terminal window, start the backend:
+3. Start the Angular frontend:
 
-  ```bash
-  node server
+```
+ng serve
+```
+
+- Served at `http://localhost:4200`.
+
+4. In a new terminal, start the Express backend:
+
+```
+node server
+```
+
+5. Start PostgreSQL DB separately (via Docker):
+
+```
+docker-compose up postgres-db
+
+```
+
+- Uses `postgres:17` image with:
+  - User: `postgres`
+  - Password: `postgres123`
+  - DB: `myappdb`
+  - Port: `5432`
+  - Volumes: `pgdata` (persistent) + `./scripts/db` for init scripts.
+- Full service config (from `docker-compose.yml`):
+  ```
+  postgres-db:
+    container_name: postgres-db
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: myappdb
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/db:/docker-entrypoint-initdb.d
   ```
 
-> **Note:** The database still requires Docker.
+## Accessing the App
 
----
+- With Docker: `http://localhost/`
+- Frontend dev server: `http://localhost:4200`
+
+Stop services with `Ctrl+C` (Docker) or `docker-compose down`.
