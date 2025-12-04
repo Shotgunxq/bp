@@ -1,8 +1,17 @@
 # Bakalar
 
-A Dockerized Angular application (CLI 17.0.7) for frequency response analysis and plotting tools.
+A Dockerized Angular application (CLI 17.0.7) designed as a math learning tool for students and teachers, with a focus on statistics lectures.
 
 **Access Note:** Login requires LDAP authorization with a valid `@stuba.sk` email (students/teachers only).
+
+## Features
+
+- **Student Role:** Complete interactive tests with solution hints, track personal statistics, compete on leaderboards (gamification), and access study materials.
+- **Teacher (Admin) Role:** View aggregated statistics and points across all students; create, edit, or delete exercises. Certain math topics feature auto-generated exercises via scripts.
+
+### Database Layout
+
+![DB Schema](assets/pictures/dbtablefinal.png)
 
 ## Table of Contents
 
