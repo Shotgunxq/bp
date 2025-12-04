@@ -11,7 +11,7 @@ A Dockerized Angular application (CLI 17.0.7) designed as a math learning tool f
 
 ### Database Layout
 
-![DB Schema](assets/pictures/dbtablefinal.png)
+![DB Schema](./src/assets/pictures/dbtablefinal.png)
 
 ## Table of Contents
 
